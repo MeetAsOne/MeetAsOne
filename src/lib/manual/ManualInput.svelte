@@ -7,8 +7,11 @@
 
   /** Epoch timestamps for which to display the UI */
   export let dates: number[];
+  export let timeRange: [number, number];
 </script>
 
-{#each dates as date}
-    <ManualInputColumn {date} />
-{/each}
+<div class="flex flex-row">
+    {#each dates as date}
+        <ManualInputColumn {date} {timeRange} />
+    {/each}
+</div>
