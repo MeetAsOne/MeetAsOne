@@ -28,7 +28,12 @@ export function compactAvailability(availability: Availability) {
   return [formattedAvailability, weeklyAvailability] as const;
 }
 
-export function applyAvailability(dates: number[], availability: any) {
+/**
+ * Convert an availability that you know into a new Availability range based on days of the week
+ * @param dates The new timeframe you want to shift the availability into
+ * @param availability Date & time of availability that you know
+ */
+export function applyAvailability(dates: number[], availability: Availability) {
   const out: Availability = {};
   for (const date of dates) {
     out[new Date(date).toLocaleDateString()] = availability[new Date(date).getDay()] ?? [];
