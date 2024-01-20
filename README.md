@@ -1,17 +1,25 @@
 # MeetAsOne
 
-MeetAsOne is a meeting availability polling tool.
+MeetAsOne is a meeting availability polling app.
+
+## How it works
+
+1. Create an event (no account required)
+2. Add your availability manually or by importing an image of your calendar
+3. Share the event URL with the people you need to meet 
+4. People fill in their own availability
+5. Determine the best time to meet on the event page
+
+## Features
+
+* Import an image of your calendar to automatically fill in your availability
+* Saves your availability next in your browser for future events
 
 ## Developing
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
+1. Install dependencies with `npm install` (or `pnpm install` or `yarn`)
+2. Copy `sample.env.local` to `.env.local` and fill out the environment variables.
+3. Start a development server with `npm run dev`
 
 ## Building
 
