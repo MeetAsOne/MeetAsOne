@@ -4,5 +4,9 @@ query GetEvent($id: uuid) {
     name
     created_at
     id
+    availabilities {
+      availability
+      username
+    }
   }
 }
