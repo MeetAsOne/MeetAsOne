@@ -22,7 +22,7 @@
             });
             scanning = false;
             if (!response.ok) {
-                window.alert('The calendar could not be scanned');
+                window.alert("The calendar could not be scanned");
                 return;
             }
             const data = await response.json();
@@ -46,14 +46,18 @@
             bind:this={fileInput}
             bind:files
             style="display: none;"
-            accept="image/*"
+            accept="image/png, image/jpeg, image/webp, image/gif"
         />
     </Dropdown>
 </div>
 
 {#if scanning}
-    <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); display: flex; justify-content: center; align-items: center; pointer-events: auto;">
-        <div style="background: white; padding: 20px; border-radius: 10px; display: flex; align-items: center;">
+    <div
+        style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); display: flex; justify-content: center; align-items: center; pointer-events: auto;"
+    >
+        <div
+            style="background: white; padding: 20px; border-radius: 10px; display: flex; align-items: center;"
+        >
             <Spinner />
             <span style="margin-left: 10px;">Scanning...</span>
         </div>

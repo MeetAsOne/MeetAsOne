@@ -10,6 +10,7 @@
 		GradientButton
 	} from "flowbite-svelte";
 	import { InsertEventStore } from "$houdini";
+    import { goto } from "$app/navigation";
 
 	let name: string = '';
 	let timezones = [
@@ -71,10 +72,13 @@
 	);
 	let selectedOption: string = "Select timezone";
 
+	let showDropdown = false;
+
     function handleOptionSelect(option) {
         selectedOption = option;
+		showDropdown = false;
     }
-	function createEvent() {
+	async function createEvent() {
 		if(name.length == 0 || selectedOption == "Select timezone") {
 			alert("Please fill in details")
 	
@@ -82,7 +86,8 @@
 		else{
 			const updater = new InsertEventStore();
 
-			updater.mutate({ name: name, timezone: selectedOption });
+			let response = await updater.mutate({ name: name, timezone: selectedOption });
+			goto("event/" + response.data?.insert_events?.returning[0].id)
 			
 			
 		}
@@ -161,18 +166,16 @@
                 <Input id="disabled-input-2" class="mb-6" required placeholder="timezone" bind:value={timezone} /> -->
 
                 <Button>{selectedOption}<ChevronDownSolid class="w-3 h-3 ms-2 text-white dark:text-white" /></Button>
-                <Dropdown class="overflow-y-auto px-3 pb-3 text-sm h-44">
-                <div slot="header" class="p-3">
-                    <Search size="md" />
-                </div>
-				{#each timezones as time}
-					<li class="rounded p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
-						<DropdownItem on:click={() => handleOptionSelect(time)}>{time}</DropdownItem>
-					</li>
-				{/each}
-				
-                
-                </Dropdown>
+				<Dropdown class="overflow-y-auto px-3 pb-3 text-sm h-44" bind:open={showDropdown}>
+					<div slot="header" class="p-3">
+						<Search size="md" />
+					</div>
+					{#each timezones as time}
+						<li class="rounded p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
+							<DropdownItem on:click={() => handleOptionSelect(time)}>{time}</DropdownItem>
+						</li>
+					{/each}
+				</Dropdown>
 				
 				<Datepicker />
 				<label for="darkModeToggle">Save My Calendar</label>
