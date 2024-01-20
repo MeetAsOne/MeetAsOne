@@ -1,10 +1,6 @@
-export interface Availability {
-  id?: number,
-  username: string,
-  event_id: number,
-  start_time: number,
-  end_time: number,
-}
+/** Key: the date in any parsable format. Value: array of indices to time blocks.
+ * For example, if you ask for times starting at 8am and use 15 min intervals, 9:30 will be index 5  */
+export type Availability = Record<string, number[]>
 
 /** Converts availability from format in database or localstorage into format component can read */
 export function loadAvailability(...availabilities: any[]) {
