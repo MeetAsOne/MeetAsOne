@@ -8,7 +8,7 @@
   /** TODO: docs */
   export let blocks: number[];
 
-  let availability = new Array(blocks.length).fill(false);
+  export let availability = new Array(blocks.length).fill(false);
 
   let isDragging = false;
   let dragState: boolean | null = null;
