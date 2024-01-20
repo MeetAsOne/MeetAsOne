@@ -1,5 +1,5 @@
-<script >
-	
+<script lang="ts">
+
 	import Counter from "./Counter.svelte";
 	import welcome_fallback from "$lib/images/meetasone.png";
 	import { Label, Input } from 'flowbite-svelte';
@@ -9,17 +9,17 @@
 		GradientButton,
 		Card,
 	} from "flowbite-svelte";
+	// import { CreateEventStore } from "$houdini";
 
 	let name
 	let timezone
 
 
 	function createEvent(name, timezone) {
-		import { CreateEventStore } from "$houdini";
-		const update = new CreateEventStore();
+		const updater = new CreateEventStore();
 
 		async function update() {
-			await update.mutate({ name: "...", timezone: "..." });
+			await updater.mutate({ name: "...", timezone: "..." });
 		}
 	}
 </script>
@@ -77,7 +77,7 @@
 					size="xl"
 					class="my-button"
 					outline
-					color="pinkToOrange" 
+					color="pinkToOrange"
 					on:click={createEvent(name, timezone)}>Create NEW EVENT</GradientButton
 				>
 
