@@ -155,11 +155,11 @@
 
             <div class="flex gap-2">
                 <div class="flex-1">
-                    <Label for="start_time" class="mb-2">Start time</Label>
+                    <Label for="start_time" class="mb-2" color="undefined">Start time</Label>
                     <Input type="time" id="start_time" name="start_time" />
                 </div>
                 <div class="flex-1">
-                    <Label for="end_time" class="mb-2">End time</Label>
+                    <Label for="end_time" class="mb-2" color="undefined">End time</Label>
                     <Input type="time" id="end_time" name="end_time"/>
                 </div>
             </div>
