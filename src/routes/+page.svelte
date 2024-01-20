@@ -1,6 +1,9 @@
 <script lang="ts">
 	import welcome_fallback from "$lib/images/meetasone.png";
 	import { Label, Input, Button } from "flowbite-svelte";
+	import { Dropdown, DropdownItem, Search } from 'flowbite-svelte';
+  	import { ChevronDownSolid, UserRemoveSolid } from 'flowbite-svelte-icons';
+    
 	import {
 		Datepicker,
 		DarkMode,
@@ -39,12 +42,19 @@
 		"pastEvents",
 		JSON.stringify(pastEvents),
 	);
+	let selectedOption = null;
 
+    function handleOptionSelect(option) {
+        selectedOption = option;
+    }
 	function createEvent() {
 		const updater = new InsertEventStore();
 
-		updater.mutate({ name: name, timezone: timezone });
+		async function update() {
+            await updater.mutate({ name: name, timezone: timezone });
+        }
 
+        update();
 	}
 </script>
 
@@ -95,21 +105,88 @@
 			{/each}
 		</div>
 		<div class="right-section">
-			<div class="dark-mode-toggle">
-				<Input
-					id="disabled-input"
-					class="mb-6"
-					required
-					placeholder="name"
-					bind:value={name}
-				/>
-				<Input
-					id="disabled-input-2"
-					class="mb-6"
-					required
-					placeholder="timezone"
-					bind:value={timezone}
-				/>
+            <div class="dark-mode-toggle">
+                <Input id="disabled-input" class="mb-6" required placeholder="name" bind:value={name}/>
+                <!---<Button>{selectedOption ? selectedOption : 'Select an option'}<ChevronDownSolid class="w-3 h-3 ms-2 text-white dark:text-white" /></Button>
+                <Dropdown class="overflow-y-auto px-3 pb-3 text-sm h-44">
+                <div slot="header" class="p-3">
+                    <Search size="md" />
+                </div>
+                <li class="rounded p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
+                    <DropdownItem on:click={() => handleOptionSelect('Option 1')}>Option 1</DropdownItem>
+                </li>
+                <li class="rounded p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
+                    <DropdownItem on:click={() => handleOptionSelect('Option 2')}>Option 2</DropdownItem>
+                </li>
+                <li class="rounded p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
+                    <DropdownItem on:click={() => handleOptionSelect('Option 3')}>Option 3</DropdownItem>
+                </li>
+                
+                <a slot="footer" href="/" class="flex items-center p-3 -mb-1 text-sm font-medium text-red-600 bg-gray-50 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-red-500 hover:underline">
+                    <UserRemoveSolid class="w-4 h-4 me-2 text-primary-700 dark:text-primary-700" />Delete user
+                </a>
+                </Dropdown> 
+                <Input id="disabled-input-2" class="mb-6" required placeholder="timezone" bind:value={timezone} /> -->
+
+                <Button>{selectedOption ? selectedOption : 'Select Timezone'}<ChevronDownSolid class="w-3 h-3 ms-2 text-white dark:text-white" /></Button>
+                <Dropdown class="overflow-y-auto px-3 pb-3 text-sm h-44">
+                <div slot="header" class="p-3">
+                    <Search size="md" />
+                </div>
+                <li class="rounded p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
+                    <DropdownItem on:click={() => handleOptionSelect("(GMT-5:00) Eastern Standard Time")}>(GMT-5:00) Eastern Standard Time</DropdownItem>
+                </li>
+                <li class="rounded p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
+                    <DropdownItem on:click={() => handleOptionSelect("(GMT-5:00) Eastern Standard Time")}>
+                        (GMT-5:00) Eastern Standard Time
+                    </DropdownItem>
+                </li>
+                
+                <li class="rounded p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
+                    <DropdownItem on:click={() => handleOptionSelect("(GMT+5:30) Indian Standard Time")}>
+                        (GMT+5:30) Indian Standard Time
+                    </DropdownItem>
+                </li>
+            
+                <li class="rounded p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
+                    <DropdownItem on:click={() => handleOptionSelect("(GMT-6:00) Central Standard Time")}>
+                        (GMT-6:00) Central Standard Time
+                    </DropdownItem>
+                </li>
+            
+                <li class="rounded p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
+                    <DropdownItem on:click={() => handleOptionSelect("(GMT-7:00) Mountain Standard Time")}>
+                        (GMT-7:00) Mountain Standard Time
+                    </DropdownItem>
+                </li>
+            
+                <li class="rounded p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
+                    <DropdownItem on:click={() => handleOptionSelect("(GMT-8:00) Pacific Standard Time")}>
+                        (GMT-8:00) Pacific Standard Time
+                    </DropdownItem>
+                </li>
+            
+                <li class="rounded p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
+                    <DropdownItem on:click={() => handleOptionSelect("(GMT-9:00) Alaska Standard Time")}>
+                        (GMT-9:00) Alaska Standard Time
+                    </DropdownItem>
+                </li>
+            
+                <li class="rounded p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
+                    <DropdownItem on:click={() => handleOptionSelect("(GMT-10:00) Hawaii-Aleutian Standard Time")}>
+                        (GMT-10:00) Hawaii-Aleutian Standard Time
+                    </DropdownItem>
+                </li>
+                <li class="rounded p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
+                    <DropdownItem on:click={() => handleOptionSelect('Option 2')}>Option 2</DropdownItem>
+                </li>
+                <li class="rounded p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
+                    <DropdownItem on:click={() => handleOptionSelect('Option 3')}>Option 3</DropdownItem>
+                </li>
+                
+                
+                </Dropdown>
+				
 				<Datepicker />
 				<label for="darkModeToggle">Save My Calendar</label>
 				<input type="checkbox" id="darkModeToggle" />
