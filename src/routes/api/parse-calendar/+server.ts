@@ -1,6 +1,6 @@
 import OpenAI from "openai";
-import { json, error, fail } from '@sveltejs/kit';
-import { RateLimiter, RetryAfterRateLimiter } from 'sveltekit-rate-limiter/server';
+import { json, error } from '@sveltejs/kit';
+import { RetryAfterRateLimiter } from 'sveltekit-rate-limiter/server';
 
 
 const limiter = new RetryAfterRateLimiter({
@@ -32,18 +32,15 @@ export async function POST(event) {
       content: [
         {
           type: "text",
-          text: `output the date, start time, and end time of all of the events on this calendar in the example JSON format below. do not list the all-day events.
-
+          text: `output the date or day of week, start time, and end time in military time of all of the events on my calendar in the example JSON format below. do not list the all-day events.
                 [
                 {
-                "name": "Event",
-                "date": "05/33/2024",
+                "date": "05/10/2024",
                 "start": "12:00",
                 "end": "21:00"
                 },
                 {
-                "name": "Lunch",
-                "date": "01/31/2021",
+                "date/day": "05/33/2024",
                 "start": "05:00",
                 "end": "15:00"
                 }

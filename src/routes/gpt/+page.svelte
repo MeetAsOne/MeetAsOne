@@ -1,12 +1,59 @@
 <script lang="ts">
-    import { Button, Dropdown, DropdownItem, Spinner } from "flowbite-svelte";
+    import {
+        Button,
+        Dropdown,
+        DropdownItem,
+        Modal,
+        Spinner,
+    } from "flowbite-svelte";
     import { ChevronDownSolid } from "flowbite-svelte-icons";
+
+    function get15MinuteIndexes(event: GptEvent) {
+        const startHour = parseInt(event.start.split(":")[0]);
+        const startMinute =
+            Math.floor(parseInt(event.start.split(":")[1]) / 15) * 15;
+        const endHour = parseInt(event.end.split(":")[0]);
+        const endMinute =
+            Math.ceil(parseInt(event.end.split(":")[1]) / 15) * 15;
+
+        const startIndex = startHour * 4 + startMinute / 15;
+        const endIndex = endHour * 4 + endMinute / 15;
+
+        const indexes = [];
+        for (let i = startIndex; i < endIndex; i++) {
+            indexes.push(i);
+        }
+
+        return indexes;
+    }
+
+    function compileEvents(events: GptEvent[]) {
+        const compiledEvents: { [date: string]: number[] } = {};
+
+        for (const event of events) {
+            if (!compiledEvents[event.date]) {
+                compiledEvents[event.date] = [];
+            }
+
+            const indexes = get15MinuteIndexes(event);
+            compiledEvents[event.date].push(...indexes);
+        }
+
+        return compiledEvents;
+    }
+
+    interface GptEvent {
+        date: string;
+        start: string;
+        end: string;
+    }
 
     let fileInput: HTMLInputElement;
     let files: FileList;
     let scanning = false;
 
     $: if (files) {
+        showModal = false;
         scanning = true;
         const file = files[0];
         const reader = new FileReader();
@@ -32,10 +79,14 @@
                 return;
             }
 
-            const data = await response.json();
-            console.log(data);
+            const data: GptEvent[] = await response.json();
+
+            const compiledEvents = compileEvents(data);
+            console.log(compiledEvents);
         };
     }
+
+    let showModal = false;
 </script>
 
 <div>
@@ -44,10 +95,38 @@
             class="w-3 h-3 ms-2 text-white dark:text-white"
         /></Button
     >
-    <Dropdown class="w-60 p-3 space-y-1 text-sm">
-        <DropdownItem on:click={() => fileInput.click()}
+    <Dropdown class="w-40 p-3 space-y-1 text-sm">
+        <DropdownItem on:click={() => (showModal = true)}
             >Scan image</DropdownItem
         >
+    </Dropdown>
+</div>
+
+{#if showModal}
+    <Modal title="Instructions" bind:open={showModal} autoclose outsideclose>
+        <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+            Here are the instructions for scanning an image:
+        </p>
+        <ul class="list-disc ml-5">
+            <li>Take a screenshot or image of the week view of a calendar</li>
+            <li>
+                Include the dates as part of the image at the top of the
+                calendar
+            </li>
+            <li>
+                Include the times which the events are at on the side of the
+                calendar
+            </li>
+            <li>Make sure the image is clear and not blurry</li>
+            <!-- Add more steps as needed -->
+        </ul>
+        <svelte:fragment slot="footer">
+            <Button on:click={(e) => {
+                fileInput.click();
+            e.stopPropagation();}}
+                >Upload</Button
+            >
+        </svelte:fragment>
         <input
             type="file"
             bind:this={fileInput}
@@ -55,8 +134,8 @@
             style="display: none;"
             accept="image/png, image/jpeg, image/webp, image/gif"
         />
-    </Dropdown>
-</div>
+    </Modal>
+{/if}
 
 {#if scanning}
     <div
