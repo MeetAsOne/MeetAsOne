@@ -1,12 +1,34 @@
-<script>
-    import {
-        Button,
-        Dropdown,
-        DropdownItem,
-        Checkbox,
-        Helper,
-    } from "flowbite-svelte";
+<script lang="ts">
+    import { Button, Dropdown, DropdownItem, Spinner } from "flowbite-svelte";
     import { ChevronDownSolid } from "flowbite-svelte-icons";
+
+    let fileInput: HTMLInputElement;
+    let files: FileList;
+    let scanning = false;
+
+    $: if (files) {
+        scanning = true;
+        const file = files[0];
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = async function () {
+            const base64 = (reader!.result! as string).split(",")[1];
+            const response = await fetch("/api/parse-calendar", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ image: base64 }),
+            });
+            scanning = false;
+            if (!response.ok) {
+                window.alert('The calendar could not be scanned');
+                return;
+            }
+            const data = await response.json();
+            console.log(data);
+        };
+    }
 </script>
 
 <div>
@@ -16,8 +38,24 @@
         /></Button
     >
     <Dropdown class="w-60 p-3 space-y-1 text-sm">
-        <li class="rounded p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
-            <Helper class="ps-6">Scan calendar photo</Helper>
-        </li>
+        <DropdownItem on:click={() => fileInput.click()}
+            >Scan calendar photo</DropdownItem
+        >
+        <input
+            type="file"
+            bind:this={fileInput}
+            bind:files
+            style="display: none;"
+            accept="image/*"
+        />
     </Dropdown>
 </div>
+
+{#if scanning}
+    <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); display: flex; justify-content: center; align-items: center; pointer-events: auto;">
+        <div style="background: white; padding: 20px; border-radius: 10px; display: flex; align-items: center;">
+            <Spinner />
+            <span style="margin-left: 10px;">Scanning...</span>
+        </div>
+    </div>
+{/if}
