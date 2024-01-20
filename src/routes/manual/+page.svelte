@@ -10,8 +10,8 @@
   let timeRange: [string, string] = ["8:00 AM", "10:00 PM"];
 
   // TODO: find a way to convert "2:50 AM" or "15:43" to seconds since midnight
-  function timeToInt() {
-    return Math.round(Math.random() * (1320 - 480) + 480);
+  function timeToInt(value: string, index: number, array: string[]) {
+    return ([480, 1320])[index];
   }
 
   function onSubmit(ev: SubmitEvent) {
