@@ -9,6 +9,8 @@
   let availability: Availability;
   let dates = [] as number[];
   let timeRange: [string, string] = ["8:00 AM", "10:00 PM"];
+  let shouldSave = false;
+  $: console.log(shouldSave)
 
   function onSubmit(ev: SubmitEvent) {
     ev.preventDefault();
@@ -32,5 +34,7 @@
         <Datepicker range/>
         <Button type="submit">Submit</Button>
     </form>
-    <ManualInput bind:availability {dates} timeRange={timeRange.map(timeToInt)}/>
+    <label for="darkModeToggle">Save My Calendar</label>
+    <input type="checkbox" id="darkModeToggle" bind:checked={shouldSave} />
+    <ManualInput bind:availability {dates} timeRange={timeRange.map(timeToInt)} {shouldSave}/>
 </div>

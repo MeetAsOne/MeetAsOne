@@ -2,19 +2,24 @@
   import type Availability from "$lib/manual/Availability";
   import ManualInputColumn from "$lib/manual/ManualInputColumn.svelte";
   import range from "$lib/range";
-  import {intToTime} from "$lib/timeutils.js";
+  import {daysOfWeek, intToTime} from "$lib/timeutils.js";
 
+  export let shouldSave = false;
   // DO NOT PASS AS PROP! Instead, bind
   export let availability: any = {};
   let formattedAvailability = {};
+  let weeklyAvailability = {};
   $: {
     formattedAvailability = JSON.parse(JSON.stringify(availability));
+    weeklyAvailability = {};
     for (const key in formattedAvailability) {
       formattedAvailability[key] = formattedAvailability[key].map((isAvailble, idx) => isAvailble ? intToTime(blocks[idx]) : null).filter(a => !!a);
+      weeklyAvailability[daysOfWeek[new Date(key).getDay()]] = formattedAvailability[key];
     }
   }
   // $: console.log(availability);
   $: console.log(formattedAvailability);
+  $: console.log(weeklyAvailability);
 
   /** Epoch timestamps for which to display the UI */
   export let dates: number[];
@@ -29,9 +34,9 @@
     }
   }
   // $: console.log(availability);
-  $: globalThis?.localStorage?.setItem?.('general-availability', JSON.stringify({
+  $: shouldSave && globalThis?.localStorage?.setItem?.('general-availability', JSON.stringify({
     "time-zone": 1,
-    days: availability,
+    days: weeklyAvailability,
   }));
   /** Tuple, each ranges from 0 to 1439 (minutes in day) */
   export let timeRange: [number, number];
