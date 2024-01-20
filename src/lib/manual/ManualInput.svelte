@@ -1,41 +1,23 @@
 <script lang="ts">
   import ManualInputColumn from "$lib/manual/ManualInputColumn.svelte";
   import range from "$lib/range";
-  import {daysOfWeek, intToTime} from "$lib/timeutils.js";
+  import {intToTime} from "$lib/timeutils.js";
+  import {compactAvailability} from "$lib/manual/Availability";
 
   export let shouldSave = false;
   // DO NOT PASS AS PROP! Instead, bind
   export let availability: any = {};
   let formattedAvailability = {};
-  let weeklyAvailability = {};
-  $: {
-    formattedAvailability = JSON.parse(JSON.stringify(availability));
-    weeklyAvailability = {};
-    for (const key in formattedAvailability) {
-      formattedAvailability[key] = formattedAvailability[key].map((isAvailble, idx) => isAvailble ? blocks[idx] : null).filter(a => !!a);
-      weeklyAvailability[daysOfWeek[new Date(key).getDay()]] = formattedAvailability[key];
-    }
-  }
+  $: formattedAvailability = compactAvailability(availability);
   $: console.log(availability);
   $: console.log(formattedAvailability);
-  $: console.log(weeklyAvailability);
 
   /** Epoch timestamps for which to display the UI */
   export let dates: number[];
 
-  // TODO: find better way to untrack this
-  const a = () => availability = {};
-  const b = (date: number) => availability[new Date(date).toLocaleDateString()] = [];
-  $: {
-    a();
-    for (const date of dates) {
-      b(date);
-    }
-  }
-  // $: console.log(availability);
   $: shouldSave && globalThis?.localStorage?.setItem?.('general-availability', JSON.stringify({
     "time-zone": 1,
-    days: weeklyAvailability,
+    days: formattedAvailability,
   }));
   /** Tuple, each ranges from 0 to 1439 (minutes in day) */
   export let timeRange: [number, number];

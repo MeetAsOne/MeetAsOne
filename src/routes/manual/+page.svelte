@@ -1,6 +1,6 @@
 <script lang="ts">
   import ManualInput from "$lib/manual/ManualInput.svelte";
-  import type Availability from "$lib/manual/Availability";
+  import type {Availability} from "$lib/manual/Availability";
   import {Button, Datepicker, Input, Label} from 'flowbite-svelte';
   import range from "$lib/range";
   import {DAY} from "$lib/units";
@@ -10,7 +10,6 @@
   let dates = [] as number[];
   let timeRange: [string, string] = ["8:00 AM", "10:00 PM"];
   let shouldSave = false;
-  $: console.log(shouldSave)
 
   function onSubmit(ev: SubmitEvent) {
     ev.preventDefault();
