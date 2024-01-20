@@ -1,6 +1,7 @@
 <script>
     import Counter from './Counter.svelte';
     import welcome_fallback from '$lib/images/meetasone.png';
+    import { Datepicker, DarkMode, GradientButton, Card } from 'flowbite-svelte';
 </script>
 
 <svelte:head>
@@ -9,6 +10,7 @@
     <link rel="stylesheet" href="path/to/your/custom/styles.css" />
 </svelte:head>
 
+<DarkMode/>
 <section class="main-section">
     <div class="header">
         <h1>
@@ -18,17 +20,53 @@
         </h1>
     </div>
 
-    <div class="content">
+    
+
+        
+
+        
+
+        <!-- Past Events -->
+		<div class="container">
+			<div class = "left-section">
+				
+				<h2 style="margin-top: 40px; font-weight: bold; text-transform: uppercase;">Past Events</h2>
+				<Card title="Event 1" description="Description of Event 1" />
+				<Card title="Event 2" description="Description of Event 2" />
+            
+				<!-- RSVP'ed Events -->
+				<h2 style="margin-top: 40px; font-weight: bold; text-transform: uppercase;">RSVP'ed Events</h2>
+				<Card title="Event 3" description="Description of Event 3" />
+				<Card title="Event 4" description="Description of Event 4" />
+			</div>
+			<div class = "right-section">
+				
+				<div class="dark-mode-toggle">
+					<Datepicker/>
+					<label for="darkModeToggle">Save My Calendar</label>
+					<input type="checkbox" id="darkModeToggle" />
+				</div>
+			    
+
+				<GradientButton size = "xl" class= "w-72 my-button" outline color="pinkToOrange">Create NEW EVENT</GradientButton>
+				
+			</div>
+			
+
+    </div>
+	
+
+	<div class="content">
         <div class="description-and-features">
             <div class="description">
-                <h2>MeetAsOne - Schedule Meetings Effortlessly</h2>
+                <h2 style="font-weight: bold; text-transform: uppercase;">Schedule Meetings Effortlessly</h2>
                 <p>
                     MeetAsOne is an app to poll people’s availability so you can schedule a time to meet.
                 </p>
             </div>
 
             <div class="features-section">
-                <h2>Features:</h2>
+                <h2 style="font-weight: bold; text-transform: uppercase; color: #333; font-size: 1.5em;">Features:</h2>
                 <ul>
                     <li>Save your availability for next time or others to view.</li>
                     <li>Import your calendar by uploading a photo or signing in.</li>
@@ -36,16 +74,11 @@
             </div>
         </div>
 
-        <Counter />
-    </div>
-
-    <div class="dark-mode-toggle">
-        <label for="darkModeToggle">Dark Mode</label>
-        <input type="checkbox" id="darkModeToggle" />
-    </div>
+		
 </section>
 
 <style>
+	
     /* Existing styles remain unchanged */
 
     .main-section {
@@ -66,7 +99,28 @@
         border: 5px solid black; /* Adjust border size */
         margin-bottom: 20px; /* Add margin to separate from description */
     }
+	.container {
+        display: flex;
+        justify-content: space-between;
+    }
 
+    .left-section {
+        flex: 1;
+    }
+
+    .right-section {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: normal;
+		margin-top: 100px;
+		padding: 0.9%;
+
+    }
+
+    .my-events, .rsvpd-events {
+        margin-bottom: 20px;
+    }
     .content {
         max-width: 800px;
         margin: auto;
@@ -79,14 +133,18 @@
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
-        padding: 100px;
-        max-width: 800px;
-        margin: auto;
+        padding: 0px;
+        max-width: 1000px;
+        /* margin: auto; */
+		margin-top: 32px;
+		
     }
 
     .description,
     .features-section {
-        max-width: 400px;
+        max-width: 1000px;
+		margin-top: 20px;
+		
     }
 
     .description h2 {
@@ -102,11 +160,13 @@
     .features-section {
         text-align: left;
         margin-top: 20px; /* Add margin to separate from description */
+		
+
     }
 
     ul {
         list-style-type: square;
-        margin-left: 20px;
+        margin-left: 200px;
     }
 
     .dark-mode-toggle {
@@ -117,4 +177,9 @@
     input[type="checkbox"] {
         margin-left: 5px;
     }
+
+	.my-button {
+		padding: 1000px 20000px; /* Adjust the padding values as needed */
+	  }
+
 </style>
