@@ -87,7 +87,6 @@
             const data = new FormData(ev.currentTarget as HTMLFormElement);
             const start_day = new Date(data.get("start") as string).getTime();
             const end_day = new Date(data.get("end") as string).getTime();
-            debugger;
             let response = await updater.mutate({
                 name: name,
                 timezone: selectedOption,
