@@ -22,7 +22,7 @@ export function compactAvailability(availability: Availability) {
   const formattedAvailability: Availability = {};
   const weeklyAvailability: Availability = {};
   for (const key in availability) {
-    formattedAvailability[key] = availability[key].map((numAvailble, idx) => numAvailble ? idx : null).filter((a): a is number => a != null);
+    formattedAvailability[key] = availability[key].map((numbAvailable, idx) => numbAvailable ? idx : null).filter((a): a is number => a != null);
     weeklyAvailability[new Date(key).getDay()] = formattedAvailability[key];
   }
   return [formattedAvailability, weeklyAvailability] as const;
