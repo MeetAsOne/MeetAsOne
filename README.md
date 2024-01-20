@@ -23,6 +23,11 @@ It is built with [SvelteKit](https://kit.svelte.dev/), [Nhost](https://nhost.io/
 2. Copy `sample.env.local` to `.env.local` and fill out the environment variables.
 3. Start a development server with `npm run dev`
 
+If you are recreating the server, make sure to run this to ensure upsertion works correctly
+```sql
+ALTER TABLE availability ADD CONSTRAINT unique_event_username UNIQUE (event_id, username);
+```
+
 ## Building
 
 To create a production version of your app:
