@@ -7,6 +7,12 @@
         DarkMode,
         
     } from "flowbite-svelte";
+
+    import { isDarkMode } from './store.js';
+    
+    const toggleDarkMode = () => {
+    isDarkMode.update(value => !value);
+  };
 </script>
 
 <header>
