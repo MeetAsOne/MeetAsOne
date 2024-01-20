@@ -9,6 +9,7 @@
     import { goto } from "$app/navigation";
     import range from "$lib/range";
     import {DAY} from "$lib/units";
+    import {timeToInt} from "$lib/timeutils";
 
     let name: string = "";
     let timezones = [
@@ -79,9 +80,8 @@
     async function createEvent(ev: SubmitEvent) {
         ev.preventDefault();
         const data = new FormData(ev.currentTarget as HTMLFormElement);
-        const start_time = new Date(data.get("start") as string).getTime();
-        const end_time = new Date(data.get("end") as string).getTime();
-        console.log(start_time, end_time);
+        const start_day = new Date(data.get("start") as string).getTime();
+        const end_day = new Date(data.get("end") as string).getTime();
         if (name.length == 0 || selectedOption == "Select timezone") {
             alert("Please fill in details");
         } else {
@@ -90,8 +90,9 @@
             let response = await updater.mutate({
                 name: name,
                 timezone: selectedOption,
-                start_time, end_time,
-                dates: range(start_time, end_time + DAY, DAY).map(day => new Date(day).toLocaleDateString()),  // excludes endpoint, thus +DAY
+                start_time: timeToInt(data.get("start_time") as string),
+                end_time: timeToInt(data.get("end_time") as string),
+                dates: range(start_day, end_day + DAY, DAY).map(day => new Date(day).toLocaleDateString()),  // excludes endpoint, thus +DAY
             });
             goto("event/" + response.data?.insert_events?.returning[0].id);
         }
@@ -155,11 +156,11 @@
             <div class="flex gap-2">
                 <div class="flex-1">
                     <Label for="start_time" class="mb-2">Start time</Label>
-                    <Input type="time" id="start_time"/>
+                    <Input type="time" id="start_time" name="start_time" />
                 </div>
                 <div class="flex-1">
                     <Label for="end_time" class="mb-2">End time</Label>
-                    <Input type="time" id="end_time"/>
+                    <Input type="time" id="end_time" name="name_time"/>
                 </div>
             </div>
 
