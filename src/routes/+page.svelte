@@ -1,6 +1,6 @@
 <script lang="ts">
 	import welcome_fallback from "$lib/images/meetasone.png";
-	import { Label, Input } from 'flowbite-svelte';
+	import { Label, Input, Button } from "flowbite-svelte";
 	import {
 		Datepicker,
 		DarkMode,
@@ -9,14 +9,42 @@
 	} from "flowbite-svelte";
 	import { InsertEventStore } from "$houdini";
 
-	let name: any
-	let timezone
+	let name: any;
+	let timezone;
 
+	interface PastEvents {
+		created: Array<{ name: string; id: string }>;
+		responded: Array<{ name: string; id: string }>;
+	}
+
+	let pastEventsString = globalThis?.localStorage?.getItem?.("pastEvents");
+
+	let pastEvents: PastEvents;
+
+	if (!pastEventsString) {
+		pastEvents = {
+			created: [
+				{ name: "Hello", id: "1234" },
+				{ name: "there", id: "825" },
+			],
+			responded: [
+				{ name: "Hello", id: "1234" },
+				{ name: "there", id: "825" },
+			],
+		};
+	} else {
+		pastEvents = JSON.parse(pastEventsString);
+	}
+	globalThis?.localStorage?.setItem?.(
+		"pastEvents",
+		JSON.stringify(pastEvents),
+	);
 
 	function createEvent() {
 		const updater = new InsertEventStore();
 
 		updater.mutate({ name: name, timezone: timezone });
+
 	}
 </script>
 
@@ -44,24 +72,44 @@
 			<h2
 				style="margin-top: 40px; font-weight: bold; text-transform: uppercase;"
 			>
-				Past Events
+				Created Events
 			</h2>
-			<Card title="Event 1" description="Description of Event 1" />
-			<Card title="Event 2" description="Description of Event 2" />
-
-			<!-- RSVP'ed Events -->
+			{#each pastEvents.created as createdEvent}
+				<div class="event-button">
+					<Button href={"/events/" + createdEvent.id}
+						>{createdEvent.name}</Button
+					>
+				</div>
+			{/each}
 			<h2
 				style="margin-top: 40px; font-weight: bold; text-transform: uppercase;"
 			>
-				RSVP'ed Events
+				Events Responded to
 			</h2>
-			<Card title="Event 3" description="Description of Event 3" />
-			<Card title="Event 4" description="Description of Event 4" />
+			{#each pastEvents.responded as respondedEvent}
+				<div class="event-button">
+					<Button href={"/events/" + respondedEvent.id}
+						>{respondedEvent.name}</Button
+					>
+				</div>
+			{/each}
 		</div>
 		<div class="right-section">
 			<div class="dark-mode-toggle">
-				<Input id="disabled-input" class="mb-6" required placeholder="name" bind:value={name}/>
-				<Input id="disabled-input-2" class="mb-6" required placeholder="timezone" bind:value={timezone} />
+				<Input
+					id="disabled-input"
+					class="mb-6"
+					required
+					placeholder="name"
+					bind:value={name}
+				/>
+				<Input
+					id="disabled-input-2"
+					class="mb-6"
+					required
+					placeholder="timezone"
+					bind:value={timezone}
+				/>
 				<Datepicker />
 				<label for="darkModeToggle">Save My Calendar</label>
 				<input type="checkbox" id="darkModeToggle" />
@@ -73,9 +121,9 @@
 					class="my-button"
 					outline
 					color="pinkToOrange"
-					on:click={() => createEvent()}>Create NEW EVENT</GradientButton
+					on:click={() => createEvent()}
+					>Create NEW EVENT</GradientButton
 				>
-
 			</div>
 		</div>
 	</div>
@@ -209,5 +257,9 @@
 
 	.my-button {
 		padding: 30px 20px; /* Adjust the padding values as needed */
+	}
+
+	.event-button {
+		margin: 10px;
 	}
 </style>
