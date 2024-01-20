@@ -120,13 +120,13 @@
     <div class="container">
         <div class="section">
             <h2
-                style="margin-top: 40px; font-weight: bold; text-transform: uppercase;"
+                style="margin-top: 40px; font-weight: bold; text-transform: uppercase; "
             >
                 Created Events
             </h2>
             {#each pastEvents.created as createdEvent}
                 <div class="event-button">
-                    <Button href={"/events/" + createdEvent.id}
+                    <Button style="background-color:#D1AC00" href={"/events/" + createdEvent.id}
                         >{createdEvent.name}</Button
                     >
                 </div>
@@ -138,7 +138,7 @@
             </h2>
             {#each pastEvents.responded as respondedEvent}
                 <div class="event-button">
-                    <Button href={"/events/" + respondedEvent.id}
+                    <Button style="background-color:#D1AC00" href={"/events/" + respondedEvent.id}
                         >{respondedEvent.name}</Button
                     >
                 </div>
@@ -164,13 +164,13 @@
                 </div>
             </div>
 
-            <Button class="m-3"
+            <Button class="m-3" style="background-color:#D1AC00"
                 >{selectedOption}<ChevronDownSolid
                     class="w-3 h-3 ms-2 text-white dark:text-white"
                 /></Button
             >
             <Dropdown
-                class="overflow-y-auto px-3 pb-3 text-sm h-44 "
+                class="overflow-y-auto px-3 pb-3 text-sm h-44 " 
                 bind:open={showDropdown}
             >
                 <div slot="header" class="p-3">
@@ -194,8 +194,9 @@
                             size="xl"
                             class="my-button"
                             outline
-                            color="pinkToOrange"
+                            color="Yellow"
                             type="submit"
+							style="background-color:#D1AC00"
                     >Create NEW EVENT</GradientButton
                     >
                 </div>
