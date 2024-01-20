@@ -9,8 +9,8 @@
   let formattedAvailability = {};
   let weeklyAvailability = {};
   $: [formattedAvailability, weeklyAvailability] = compactAvailability(availability);
-  $: console.log(availability);
-  $: console.log(formattedAvailability);
+  $: console.log("availability", availability);
+  $: console.log("formattedAvailability", formattedAvailability);
 
   /** Epoch timestamps for which to display the UI */
   export let dates: number[];

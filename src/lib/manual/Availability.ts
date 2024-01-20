@@ -1,5 +1,3 @@
-import {daysOfWeek} from "$lib/timeutils";
-
 export interface Availability {
   id?: number,
   username: string,
@@ -9,12 +7,14 @@ export interface Availability {
 }
 
 /** Converts availability from format in database or localstorage into format component can read */
-export function loadAvailability(availability: any) {
+export function loadAvailability(...availabilities: any[]) {
   let unpackedAvailability = {};
-  for (const key in availability) {
-    unpackedAvailability[key] = [];//new Array(totalBlocks).fill(0);
-    for (const idx of availability[key]) {
-      unpackedAvailability[key][idx] = unpackedAvailability[key][idx] == undefined ? 1 : unpackedAvailability[key][idx] + 1;
+  for (const availability of availabilities) {
+    for (const key in availability) {
+      unpackedAvailability[key] = [];
+      for (const idx of availability[key]) {
+        unpackedAvailability[key][idx] = unpackedAvailability[key][idx] == undefined ? 1 : unpackedAvailability[key][idx] + 1;
+      }
     }
   }
   return unpackedAvailability as any;
