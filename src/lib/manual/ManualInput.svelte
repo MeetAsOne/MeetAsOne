@@ -20,10 +20,10 @@
 
 <div class="flex flex-row cursor-pointer select-none">
     {#if dates.length > 0}
-        <div class="labels text-right w-[7em]">
-            {#each blocks as block}
-                <div>
-                    {intToTime(block)}
+        <div class="labels text-right w-[5em]">
+            {#each blocks as block, idx}
+                <div class="h-[17.6px]">
+                    {idx % 2 === 0 ? intToTime(block) : " "}
                 </div>
             {/each}
         </div>
@@ -36,7 +36,7 @@
 <style>
     .labels {
         /* TODO: don't use magic constants */
-        line-height: 1.1;
+        /*line-height: 1.1;*/
         padding-top: 1.3em;
     }
 </style>
