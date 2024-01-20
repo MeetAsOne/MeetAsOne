@@ -1,6 +1,5 @@
 <script lang="ts">
-  import {UpsertAvailabilityStore} from "$houdini";
-  import {compactAvailability} from "$lib/manual/Availability.js";
+  import {TIME_STEP} from "$lib/units";
 
   /** The date for which to display this column */
   export let date: number;
@@ -8,8 +7,9 @@
   export let save: () => void;
 
 
-  /** TODO: docs */
+  /** Array of starting times in 15-minute intervals since midnight for all possible blocks */
   export let blocks: number[];
+  $: console.log(blocks);
 
   /** The number here corresponds to how many people RSVPd "yes" */
   export let availability: number[] = new Array(blocks.length).fill(0);
@@ -54,12 +54,12 @@
 <div class="w-[7em] text-center">
     <div>{new Date(date).toLocaleDateString()}</div>
     <div class="bg-white touch-none">
-        {#each blocks as block, idx}
-            <div class="availability-cell" data-idx={idx}
-                 style:opacity={totalParticipants ? availability[idx] / totalParticipants : "1"}
-                 class:available={availability[idx]}
-                 on:pointerdown={(ev) => handlePointerDown(idx, ev)}
-                 on:pointerenter={() => handlePointerEnter(idx)}>
+        {#each blocks as block}
+            <div class="availability-cell"
+                 style:opacity={totalParticipants ? availability[block] / totalParticipants : "1"}
+                 class:available={availability[block]}
+                 on:pointerdown={(ev) => handlePointerDown(block, ev)}
+                 on:pointerenter={() => handlePointerEnter(block)}>
             </div>
         {/each}
     </div>

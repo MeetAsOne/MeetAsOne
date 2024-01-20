@@ -4,6 +4,8 @@
   import {intToTime} from "$lib/timeutils.js";
   import {type Availability, compactAvailability} from "$lib/manual/Availability";
   import {UpsertAvailabilityStore} from "$houdini";
+  import {TIME_STEP} from "$lib/units";
+  import {page} from "$app/stores";
 
   export let shouldSave = false;
   export let availability: Availability = {};
@@ -19,10 +21,8 @@
   /** Tuple, each ranges from 0 to 1439 (minutes in day) */
   export let timeRange: [number, number];
 
-  /** Minutes of each time cell */
-  const timeStep = 15;
-
-  const blocks = range(...timeRange, timeStep);
+  /** Array of starting times in 15-minute intervals since midnight for all possible blocks */
+  const blocks = range(...timeRange.map(t => Math.floor(t / TIME_STEP)) as typeof timeRange, 1);
 
   export let totalParticipants = 0;
 
@@ -37,7 +37,7 @@
     updater.mutate({
       availability: compactAvailability(availability),
       username: "Ethan",
-      eventId: "b0a542e5-527c-4115-9cf7-a94016da72da",  // TODO
+      eventId: $page.params.id,
     });
   }
 </script>
@@ -47,7 +47,7 @@
         <div class="labels text-right w-[5em]">
             {#each blocks as block, idx}
                 <div class="h-[17.6px]">
-                    {idx % 2 === 0 ? intToTime(block) : " "}
+                    {idx % 2 === 0 ? intToTime(block * TIME_STEP) : " "}
                 </div>
             {/each}
         </div>
