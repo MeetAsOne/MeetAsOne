@@ -7,13 +7,11 @@
 	import {
 		Datepicker,
 		DarkMode,
-		GradientButton,
-		Card,
+		GradientButton
 	} from "flowbite-svelte";
 	import { InsertEventStore } from "$houdini";
 
-	let name: any;
-	let timezone;
+	let name: string = '';
 	let timezones = [
 		"(GMT-12:00) International Date Line West",
 		"(GMT-11:00) Midway Island, Samoa",
@@ -71,19 +69,24 @@
 		"pastEvents",
 		JSON.stringify(pastEvents),
 	);
-	let selectedOption = null;
+	let selectedOption: string = "Select timezone";
 
     function handleOptionSelect(option) {
         selectedOption = option;
     }
 	function createEvent() {
-		const updater = new InsertEventStore();
+		if(name.length == 0 || selectedOption == "Select timezone") {
+			alert("Please fill in details")
+	
+		}
+		else{
+			const updater = new InsertEventStore();
 
-		async function update() {
-            await updater.mutate({ name: name, timezone: selectedOption });
-        }
-
-        update();
+			updater.mutate({ name: name, timezone: selectedOption });
+			
+			
+		}
+		
 	}
 </script>
 
@@ -157,7 +160,7 @@
                 </Dropdown> 
                 <Input id="disabled-input-2" class="mb-6" required placeholder="timezone" bind:value={timezone} /> -->
 
-                <Button>{selectedOption ? selectedOption : 'Select Timezone'}<ChevronDownSolid class="w-3 h-3 ms-2 text-white dark:text-white" /></Button>
+                <Button>{selectedOption}<ChevronDownSolid class="w-3 h-3 ms-2 text-white dark:text-white" /></Button>
                 <Dropdown class="overflow-y-auto px-3 pb-3 text-sm h-44">
                 <div slot="header" class="p-3">
                     <Search size="md" />
