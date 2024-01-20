@@ -8,7 +8,11 @@
   /** TODO: docs */
   export let blocks: number[];
 
-  export let availability = new Array(blocks.length).fill(false);
+  /** The number here corresponds to how many people RSVPd "yes" */
+  export let availability: number[] = new Array(blocks.length).fill(0);
+
+  /** Setting this also disables input */
+  export let totalParticipants = 0;
 
   let isDragging = false;
   let dragState: boolean | null = null;
@@ -18,10 +22,11 @@
       dragState = !availability[timeIndex];
     }
 
-    availability[timeIndex] = dragState;
+    availability[timeIndex] = Math.min(dragState, true);
   };
 
   const handleMouseDown = (timeIndex: number) => {
+    if (totalParticipants) return;
     isDragging = true;
     toggleAvailability(timeIndex);
   };
@@ -38,23 +43,21 @@
       dragState = null;
     }
   };
-
-  // You would typically handle the actual saving of the availability state to some backend or storage here
-  const saveAvailability = () => {
-    console.log('Saving Availability:', availability);
-  };
 </script>
 
 <div class="w-[7em] text-center">
     <div>{new Date(date).toLocaleDateString()}</div>
-    {#each blocks as block, idx}
-        <div class="availability-cell" class:available={availability[idx]}
-             on:mousedown={() => handleMouseDown(idx)}
-             on:mouseenter={() => handleMouseEnter(idx)}
-             on:mouseup={handleMouseUp}>
-            <!--{block}-->
-        </div>
-    {/each}
+    <div class="bg-white">
+        {#each blocks as block, idx}
+            <div class="availability-cell"
+                 style:opacity={totalParticipants ? availability[idx] / totalParticipants : "1"}
+                 class:available={availability[idx]}
+                 on:mousedown={() => handleMouseDown(idx)}
+                 on:mouseenter={() => handleMouseEnter(idx)}
+                 on:mouseup={handleMouseUp}>
+            </div>
+        {/each}
+    </div>
 </div>
 <svelte:window on:mouseup={handleMouseUp} />
 
