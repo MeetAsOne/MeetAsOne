@@ -18,7 +18,10 @@ const config = {
         },
         uuid: {                  // <- The GraphQL Scalar
             type: "string"  // <-  The TypeScript type
-        }
+        },
+        smallint: {                  // <- The GraphQL Scalar
+            type: "number"  // <-  The TypeScript type
+        },
     }
 }
 

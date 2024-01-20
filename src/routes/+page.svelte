@@ -7,6 +7,8 @@
     import { Datepicker, DarkMode, GradientButton } from "flowbite-svelte";
     import { InsertEventStore } from "$houdini";
     import { goto } from "$app/navigation";
+    import range from "$lib/range";
+    import {DAY} from "$lib/units";
 
     let name: string = "";
     let timezones = [
@@ -70,13 +72,16 @@
 
     let showDropdown = false;
 
-    let timeRange: [string, string] = ["8:00 AM", "10:00 PM"];
-
     function handleOptionSelect(option) {
         selectedOption = option;
         showDropdown = false;
     }
     async function createEvent(ev: SubmitEvent) {
+        ev.preventDefault();
+        const data = new FormData(ev.currentTarget as HTMLFormElement);
+        const start_time = new Date(data.get("start") as string).getTime();
+        const end_time = new Date(data.get("end") as string).getTime();
+        console.log(start_time, end_time);
         if (name.length == 0 || selectedOption == "Select timezone") {
             alert("Please fill in details");
         } else {
@@ -85,6 +90,8 @@
             let response = await updater.mutate({
                 name: name,
                 timezone: selectedOption,
+                start_time, end_time,
+                dates: range(start_time, end_time + DAY, DAY).map(day => new Date(day).toLocaleDateString()),  // excludes endpoint, thus +DAY
             });
             goto("event/" + response.data?.insert_events?.returning[0].id);
         }
@@ -136,7 +143,7 @@
                 </div>
             {/each}
         </div>
-        <div class="section">
+        <form class="section" on:submit={createEvent}>
             <Input
                 id="disabled-input"
                 class="m-3"
@@ -147,11 +154,11 @@
 
             <div class="flex gap-2">
                 <div class="flex-1">
-                    <Label for="start_time" class="mb-2" bind:value={timeRange[0]}>Start time</Label>
+                    <Label for="start_time" class="mb-2">Start time</Label>
                     <Input type="time" id="start_time"/>
                 </div>
                 <div class="flex-1">
-                    <Label for="end_time" class="mb-2" bind:value={timeRange[1]}>End time</Label>
+                    <Label for="end_time" class="mb-2">End time</Label>
                     <Input type="time" id="end_time"/>
                 </div>
             </div>
@@ -179,22 +186,20 @@
                 {/each}
             </Dropdown>
 			<div class="m-3">
-                <form on:submit={createEvent}>
-                    <!-- Start input has name "start". End input has name "end" -->
-                    <Datepicker range/>
-                    <div class="my-button">
-                        <GradientButton
-                                size="xl"
-                                class="my-button"
-                                outline
-                                color="pinkToOrange"
-                                type="submit"
-                        >Create NEW EVENT</GradientButton
-                        >
-                    </div>
-                </form>
+                <!-- Start input has name "start". End input has name "end" -->
+                <Datepicker range/>
+                <div class="my-button">
+                    <GradientButton
+                            size="xl"
+                            class="my-button"
+                            outline
+                            color="pinkToOrange"
+                            type="submit"
+                    >Create NEW EVENT</GradientButton
+                    >
+                </div>
 			</div>
-        </div>
+        </form>
 
     </div>
 
