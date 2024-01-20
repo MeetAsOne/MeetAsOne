@@ -1,0 +1,19 @@
+schema {
+  query: query_root
+}
+
+"""whether this query should be cached (Hasura Cloud only)"""
+directive @cached(
+  """refresh the cache entry"""
+  refresh: Boolean! = false
+
+  """measured in seconds"""
+  ttl: Int! = 60
+) on QUERY
+
+type query_root {
+  """
+  There are no queries available to the current role. Either there are no sources or remote schemas configured, or the current role doesn't have the required permissions.
+  """
+  no_queries_available: String!
+}

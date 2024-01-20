@@ -1,0 +1,5 @@
+{
+    "compilerOptions": {
+        "rootDirs": [".", "./.svelte-kit/types", "./$houdini/types"]
+    }
+}
