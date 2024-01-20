@@ -137,7 +137,7 @@
         <div class="section">
             <Input
                 id="disabled-input"
-                class="mb-6"
+                class="m-3"
                 required
                 placeholder="name"
                 bind:value={name}
@@ -165,8 +165,10 @@
                     </li>
                 {/each}
             </Dropdown>
-
-            <Datepicker />
+			<div class="m-3">
+				<Datepicker />
+			</div>
+            
 
             <div class="my-button">
                 <GradientButton
