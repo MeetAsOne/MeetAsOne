@@ -1,12 +1,11 @@
 <script lang="ts">
   import ManualInput from "$lib/manual/ManualInput.svelte";
-  import type {Availability} from "$lib/manual/Availability";
   import {Button, Datepicker, Input, Label} from 'flowbite-svelte';
   import range from "$lib/range";
   import {DAY} from "$lib/units";
   import {timeToInt} from "$lib/timeutils";
+  import {loadAvailability} from "$lib/manual/Availability.js";
 
-  let availability: Availability;
   let dates = [] as number[];
   let timeRange: [string, string] = ["8:00 AM", "10:00 PM"];
   let shouldSave = false;
@@ -20,6 +19,8 @@
     dates = range(start, end + DAY, DAY);  // excludes endpoint, thus +DAY
     console.log(dates.map(d => new Date(d).toLocaleDateString()));
   }
+
+  const testDisplay = JSON.parse(globalThis?.localStorage?.["general-availability"] ?? '{"days": {}}');
 </script>
 
 <div>
@@ -35,5 +36,6 @@
     </form>
     <label for="darkModeToggle">Save My Calendar</label>
     <input type="checkbox" id="darkModeToggle" bind:checked={shouldSave} />
-    <ManualInput bind:availability {dates} timeRange={timeRange.map(timeToInt)} {shouldSave}/>
+    <ManualInput {dates} timeRange={timeRange.map(timeToInt)} {shouldSave}/>
+    <ManualInput dates={Array.from(Object.keys(testDisplay.days))} timeRange={timeRange.map(timeToInt)} availability={loadAvailability(testDisplay.days)} totalParticipants={1} />
 </div>

@@ -9,12 +9,12 @@ export interface Availability {
 }
 
 /** Converts availability from format in database or localstorage into format component can read */
-export function loadAvailability(availability: any, totalBlocks: number) {
+export function loadAvailability(availability: any) {
   let unpackedAvailability = {};
   for (const key in availability) {
-    unpackedAvailability[key] = new Array(totalBlocks).fill(0);
-    for (const [idx, numAvailable] of availability[key]) {
-      unpackedAvailability[idx] += numAvailable;
+    unpackedAvailability[key] = [];//new Array(totalBlocks).fill(0);
+    for (const idx of availability[key]) {
+      unpackedAvailability[key][idx] = unpackedAvailability[key][idx] == undefined ? 1 : unpackedAvailability[key][idx] + 1;
     }
   }
   return unpackedAvailability as any;
@@ -25,7 +25,7 @@ export function compactAvailability(availability: any) {
   let formattedAvailability = {};
   // weeklyAvailability = {};
   for (const key in availability) {
-    formattedAvailability[key] = formattedAvailability[key].map((numAvailble, idx) => numAvailble ? [idx, numAvailble] : null).filter(a => a != null);
+    formattedAvailability[key] = availability[key].map((numAvailble, idx) => numAvailble ? idx : null).filter(a => a != null);
     // weeklyAvailability[daysOfWeek[new Date(key).getDay()]] = formattedAvailability[key];
   }
   return formattedAvailability as any;

@@ -5,7 +5,6 @@
   import {compactAvailability} from "$lib/manual/Availability";
 
   export let shouldSave = false;
-  // DO NOT PASS AS PROP! Instead, bind
   export let availability: any = {};
   let formattedAvailability = {};
   $: formattedAvailability = compactAvailability(availability);
@@ -26,6 +25,8 @@
   const timeStep = 15;
 
   const blocks = range(...timeRange, timeStep);
+
+  export let totalParticipants = 0;
 </script>
 
 <div class="flex flex-row cursor-pointer select-none">
@@ -39,7 +40,7 @@
         </div>
     {/if}
     {#each dates as date}
-        <ManualInputColumn {date} {blocks} bind:availability={availability[new Date(date).toLocaleDateString()]} />
+        <ManualInputColumn {date} {blocks} {totalParticipants} bind:availability={availability[new Date(date).toLocaleDateString()]} />
     {/each}
 </div>
 
