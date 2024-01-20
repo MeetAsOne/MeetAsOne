@@ -7,18 +7,20 @@
 		GradientButton,
 		Card,
 	} from "flowbite-svelte";
-	// import { InsertEventStore } from "$houdini";
+	import { InsertEventStore } from "$houdini";
 
-	let name
+	let name: any
 	let timezone
 
 
-	function createEvent(name, timezone) {
+	function createEvent() {
 		const updater = new InsertEventStore();
 
 		async function update() {
-			await updater.mutate({ name: "...", timezone: "..." });
+			await updater.mutate({ name: name, timezone: timezone });
 		}
+
+		update();
 	}
 </script>
 
@@ -62,8 +64,8 @@
 		</div>
 		<div class="right-section">
 			<div class="dark-mode-toggle">
-				<Input id="disabled-input" class="mb-6" required placeholder="name" value={name}/>
-				<Input id="disabled-input-2" class="mb-6" required placeholder="timezone" value={timezone} />
+				<Input id="disabled-input" class="mb-6" required placeholder="name" bind:value={name}/>
+				<Input id="disabled-input-2" class="mb-6" required placeholder="timezone" bind:value={timezone} />
 				<Datepicker />
 				<label for="darkModeToggle">Save My Calendar</label>
 				<input type="checkbox" id="darkModeToggle" />
@@ -75,7 +77,7 @@
 					class="my-button"
 					outline
 					color="pinkToOrange"
-					on:click={createEvent(name, timezone)}>Create NEW EVENT</GradientButton
+					on:click={() => createEvent()}>Create NEW EVENT</GradientButton
 				>
 
 			</div>
