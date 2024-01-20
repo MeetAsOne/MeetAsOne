@@ -29,7 +29,7 @@
     }
   }
   // $: console.log(availability);
-  $: localStorage.setItem('general-availability', JSON.stringify({
+  $: globalThis?.localStorage?.setItem?.('general-availability', JSON.stringify({
     "time-zone": 1,
     days: availability,
   }));
@@ -37,7 +37,7 @@
   export let timeRange: [number, number];
 
   /** Minutes of each time cell */
-  const timeStep = 30;
+  const timeStep = 15;
 
   const blocks = range(...timeRange, timeStep);
 </script>
