@@ -3,9 +3,9 @@ mutation InsertEvent($timezone: String, $name: String) {
     affected_rows
     returning {
       timezone
-			name
-			created_at
-			id
+      name
+      created_at
+      id
     }
   }
 }
