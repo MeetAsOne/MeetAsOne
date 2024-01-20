@@ -28,13 +28,15 @@
     availability[timeIndex] = Math.min(dragState, true);
   };
 
-  const handleMouseDown = (timeIndex: number) => {
+  const handlePointerDown = (timeIndex: number, ev: PointerEvent) => {
+    // So stupid https://stackoverflow.com/a/70976017
+    (ev.target as HTMLElement).releasePointerCapture(ev.pointerId);
     if (totalParticipants) return;
     isDragging = true;
     toggleAvailability(timeIndex);
   };
 
-  const handleMouseEnter = (timeIndex: number) => {
+  const handlePointerEnter = (timeIndex: number) => {
     if (isDragging) {
       toggleAvailability(timeIndex);
     }
@@ -51,19 +53,18 @@
 
 <div class="w-[7em] text-center">
     <div>{new Date(date).toLocaleDateString()}</div>
-    <div class="bg-white">
+    <div class="bg-white touch-none">
         {#each blocks as block, idx}
-            <div class="availability-cell"
+            <div class="availability-cell" data-idx={idx}
                  style:opacity={totalParticipants ? availability[idx] / totalParticipants : "1"}
                  class:available={availability[idx]}
-                 on:mousedown={() => handleMouseDown(idx)}
-                 on:mouseenter={() => handleMouseEnter(idx)}
-                 on:mouseup={handleMouseUp}>
+                 on:pointerdown={(ev) => handlePointerDown(idx, ev)}
+                 on:pointerenter={() => handlePointerEnter(idx)}>
             </div>
         {/each}
     </div>
 </div>
-<svelte:window on:mouseup={handleMouseUp} />
+<svelte:window on:pointerup={handleMouseUp} />
 
 <style>
     .availability-cell {
