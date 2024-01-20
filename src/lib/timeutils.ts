@@ -1,6 +1,9 @@
-// TODO: find a way to convert "2:50 AM" or "15:43" to seconds since midnight
-export function timeToInt(value: string, index: number, array: string[]) {
-  return ([480, 1320])[index];
+/** convert "2:50 AM" or "15:43" to seconds since midnight */
+export function timeToInt(timeString: string) {
+  const [hours, minutes, ampm] = timeString.split(/[: ]/);
+
+  // Calculate the total minutes since midnight
+  return (Number(hours) + Number(ampm?.toLowerCase() === "pm") * 12) * 60 + Number(minutes);
 }
 
 export function intToTime(midnightOffset: number, millitary = false) {
