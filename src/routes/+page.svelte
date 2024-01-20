@@ -1,6 +1,7 @@
 <script>
     import Counter from './Counter.svelte';
     import welcome_fallback from '$lib/images/meetasone.png';
+	import { Datepicker } from 'flowbite-svelte';
 </script>
 
 <svelte:head>
@@ -21,14 +22,14 @@
     <div class="content">
         <div class="description-and-features">
             <div class="description">
-                <h2>MeetAsOne - Schedule Meetings Effortlessly</h2>
+                <h2 style= "font-weight: bold; text-transform: uppercase;">Schedule Meetings Effortlessly</h2>
                 <p>
                     MeetAsOne is an app to poll people’s availability so you can schedule a time to meet.
                 </p>
             </div>
 
             <div class="features-section">
-                <h2>Features:</h2>
+                <h2 style= "font-weight: bold; text-transform: uppercase; color: #333; font-size:1.5em ">Features:</h2>
                 <ul>
                     <li>Save your availability for next time or others to view.</li>
                     <li>Import your calendar by uploading a photo or signing in.</li>
@@ -36,11 +37,11 @@
             </div>
         </div>
 
-        <Counter />
+        <Datepicker/>
     </div>
 
     <div class="dark-mode-toggle">
-        <label for="darkModeToggle">Dark Mode</label>
+        <label for="darkModeToggle">Save My Calendar </label>
         <input type="checkbox" id="darkModeToggle" />
     </div>
 </section>
@@ -79,14 +80,15 @@
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
-        padding: 100px;
-        max-width: 800px;
-        margin: auto;
+        padding: 0px;
+        max-width: 1000px;
+        margin-top: 32px
     }
 
     .description,
     .features-section {
-        max-width: 400px;
+        max-width: 1000px;
+		margin-top: 20px
     }
 
     .description h2 {
