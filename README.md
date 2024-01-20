@@ -2,6 +2,8 @@
 
 MeetAsOne is a meeting availability polling app.
 
+It is built with [SvelteKit](https://kit.svelte.dev/), [Nhost](https://nhost.io/), [Flowbite Svelte](https://flowbite-svelte.com), and [GPT4 Vision](https://platform.openai.com/docs/guides/vision).
+
 ## How it works
 
 1. Create an event (no account required)
