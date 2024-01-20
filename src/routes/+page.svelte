@@ -14,6 +14,35 @@
 
 	let name: any;
 	let timezone;
+	let timezones = [
+		"(GMT-12:00) International Date Line West",
+		"(GMT-11:00) Midway Island, Samoa",
+		"(GMT-10:00) Hawaii",
+		"(GMT-09:00) Alaska",
+		"(GMT-08:00) Pacific Time (US & Canada)",
+		"(GMT-07:00) Mountain Time (US & Canada)",
+		"(GMT-06:00) Central Time (US & Canada)",
+		"(GMT-05:00) Eastern Time (US & Canada)",
+		"(GMT-04:00) Atlantic Time (Canada)",
+		"(GMT-03:00) Buenos Aires, Georgetown",
+		"(GMT-02:00) Mid-Atlantic",
+		"(GMT-01:00) Cape Verde Islands",
+		"(GMT) Greenwich Mean Time, London",
+		"(GMT+01:00) Brussels, Copenhagen, Madrid, Paris",
+		"(GMT+02:00) Athens, Istanbul, Cairo",
+		"(GMT+03:00) Moscow, St. Petersburg, Volgograd",
+		"(GMT+04:00) Dubai, Abu Dhabi, Muscat",
+		"(GMT+05:00) Karachi, Islamabad, Tashkent",
+		"(GMT+05:30) Indian Standard Time",
+		"(GMT+06:00) Almaty, Dhaka",
+		"(GMT+07:00) Bangkok, Hanoi, Jakarta",
+		"(GMT+08:00) Beijing, Hong Kong, Singapore",
+		"(GMT+09:00) Tokyo, Seoul, Osaka",
+		"(GMT+09:30) Adelaide, Darwin",
+		"(GMT+10:00) Brisbane, Sydney, Melbourne",
+		"(GMT+11:00) Solomon Islands, New Caledonia",
+		"(GMT+12:00) Fiji, Kamchatka, Marshall Is.",
+	];
 
 	interface PastEvents {
 		created: Array<{ name: string; id: string }>;
@@ -133,57 +162,12 @@
                 <div slot="header" class="p-3">
                     <Search size="md" />
                 </div>
-                <li class="rounded p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
-                    <DropdownItem on:click={() => handleOptionSelect("(GMT-5:00) Eastern Standard Time")}>(GMT-5:00) Eastern Standard Time</DropdownItem>
-                </li>
-                <li class="rounded p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
-                    <DropdownItem on:click={() => handleOptionSelect("(GMT-5:00) Eastern Standard Time")}>
-                        (GMT-5:00) Eastern Standard Time
-                    </DropdownItem>
-                </li>
-                
-                <li class="rounded p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
-                    <DropdownItem on:click={() => handleOptionSelect("(GMT+5:30) Indian Standard Time")}>
-                        (GMT+5:30) Indian Standard Time
-                    </DropdownItem>
-                </li>
-            
-                <li class="rounded p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
-                    <DropdownItem on:click={() => handleOptionSelect("(GMT-6:00) Central Standard Time")}>
-                        (GMT-6:00) Central Standard Time
-                    </DropdownItem>
-                </li>
-            
-                <li class="rounded p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
-                    <DropdownItem on:click={() => handleOptionSelect("(GMT-7:00) Mountain Standard Time")}>
-                        (GMT-7:00) Mountain Standard Time
-                    </DropdownItem>
-                </li>
-            
-                <li class="rounded p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
-                    <DropdownItem on:click={() => handleOptionSelect("(GMT-8:00) Pacific Standard Time")}>
-                        (GMT-8:00) Pacific Standard Time
-                    </DropdownItem>
-                </li>
-            
-                <li class="rounded p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
-                    <DropdownItem on:click={() => handleOptionSelect("(GMT-9:00) Alaska Standard Time")}>
-                        (GMT-9:00) Alaska Standard Time
-                    </DropdownItem>
-                </li>
-            
-                <li class="rounded p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
-                    <DropdownItem on:click={() => handleOptionSelect("(GMT-10:00) Hawaii-Aleutian Standard Time")}>
-                        (GMT-10:00) Hawaii-Aleutian Standard Time
-                    </DropdownItem>
-                </li>
-                <li class="rounded p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
-                    <DropdownItem on:click={() => handleOptionSelect('Option 2')}>Option 2</DropdownItem>
-                </li>
-                <li class="rounded p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
-                    <DropdownItem on:click={() => handleOptionSelect('Option 3')}>Option 3</DropdownItem>
-                </li>
-                
+				{#each timezones as time}
+					<li class="rounded p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
+						<DropdownItem on:click={() => handleOptionSelect(time)}>{time}</DropdownItem>
+					</li>
+				{/each}
+				
                 
                 </Dropdown>
 				
