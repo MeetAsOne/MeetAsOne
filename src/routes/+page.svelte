@@ -164,7 +164,7 @@
                 </div>
             </div>
 
-            <Button class="m-3" style="background-color:#D1AC00"
+            <Button class="m-3" style="background-color:#D1AC00" 
                 >{selectedOption}<ChevronDownSolid
                     class="w-3 h-3 ms-2 text-white dark:text-white"
                 /></Button
@@ -194,7 +194,7 @@
                             size="xl"
                             class="my-button"
                             outline
-                            color="Yellow"
+                            color="redToYellow"
                             type="submit"
 							style="background-color:#D1AC00"
                     >Create NEW EVENT</GradientButton
@@ -213,7 +213,11 @@
                 </h2>
                 <p>
                     MeetAsOne is an app to poll people’s availability so you can
-                    schedule a time to meet.
+                    schedule a time to meet. You can select a series of days and speicify 
+					the times that work for you, then we will find the best time for everyone else.
+					No need to manually enter your calendar, with MeetAsOne you can upload a screenshot
+					of your Google Calendar or Outlook Calendar. We'll parse it out
+					for you and find the meeting times for your group!
                 </p>
             </div>
 
@@ -224,15 +228,25 @@
                     Features:
                 </h2>
                 <ul>
+					<li>
+                        Quickly import your calendar by uploading a just photo of your calendar.
+                    </li>
                     <li>
                         Save your availability for next time or others to view.
                     </li>
                     <li>
-                        Import your calendar by uploading a photo or signing in.
+                        View your previously created events and RSVP'd events without signing in.
+                    </li>
+					<li>
+                        Easily share your events with family and friends.
                     </li>
                 </ul>
             </div>
+			
         </div>
+		<h2 style="font-weight: bold; text-transform: uppercase; text-align: center; font-size: 24px; margin-top: 30px">
+			HAPPY MEETINGS :)
+		</h2>
     </div>
 </section>
 
@@ -278,7 +292,9 @@
         margin-bottom: 20px;
     }
     .content {
-        max-width: 800px;
+        max-width: 1000px;
+		display: flex;
+        flex-wrap: wrap;
         margin: auto;
         display: flex;
         flex-direction: column;
@@ -287,10 +303,12 @@
 
     .description-and-features {
         display: flex;
+		flex-wrap: wrap;
         justify-content: space-between;
         align-items: flex-start;
         padding: 0px;
         max-width: 1000px;
+		align-items: center;
         /* margin: auto; */
         margin-top: 32px;
     }
