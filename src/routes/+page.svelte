@@ -80,7 +80,7 @@
 		const updater = new InsertEventStore();
 
 		async function update() {
-            await updater.mutate({ name: name, timezone: timezone });
+            await updater.mutate({ name: name, timezone: selectedOption });
         }
 
         update();
