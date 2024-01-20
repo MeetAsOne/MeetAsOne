@@ -1,6 +1,4 @@
 <script lang="ts">
-
-	import Counter from "./Counter.svelte";
 	import welcome_fallback from "$lib/images/meetasone.png";
 	import { Label, Input } from 'flowbite-svelte';
 	import {
@@ -9,14 +7,14 @@
 		GradientButton,
 		Card,
 	} from "flowbite-svelte";
-	// import { CreateEventStore } from "$houdini";
+	// import { InsertEventStore } from "$houdini";
 
 	let name
 	let timezone
 
 
 	function createEvent(name, timezone) {
-		const updater = new CreateEventStore();
+		const updater = new InsertEventStore();
 
 		async function update() {
 			await updater.mutate({ name: "...", timezone: "..." });
@@ -30,7 +28,6 @@
 		name="description"
 		content="MeetAsOne - An app to poll people’s availability for scheduling meetings."
 	/>
-	<link rel="stylesheet" href="path/to/your/custom/styles.css" />
 </svelte:head>
 
 <DarkMode />

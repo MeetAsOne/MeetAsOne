@@ -3,10 +3,22 @@
 /** @type {import('houdini').ConfigFile} */
 const config = {
     "watchSchema": {
-        "url": "https://swyjiuxnroxxokgcyepv.hasura.eu-central-1.nhost.run/v1/graphql"
+        "url": "https://swyjiuxnroxxokgcyepv.hasura.eu-central-1.nhost.run/v1/graphql",
+        headers: {
+            'x-hasura-admin-secret': 'env:VITE_GRAPHQL_KEY',
+        }
     },
     "plugins": {
         "houdini-svelte": {}
+    },
+    scalars: {
+        /* in your case, something like */
+        timestamptz: {                  // <- The GraphQL Scalar
+            type: "string"  // <-  The TypeScript type
+        },
+        uuid: {                  // <- The GraphQL Scalar
+            type: "string"  // <-  The TypeScript type
+        }
     }
 }
 

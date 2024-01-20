@@ -1,0 +1,11 @@
+mutation InsertEvent($timezone: Int, $name: String) {
+  insert_events(objects: {timezone: $timezone, name: $name}) {
+    affected_rows
+    returning {
+      timezone
+			name
+			created_at
+			id
+    }
+  }
+}
