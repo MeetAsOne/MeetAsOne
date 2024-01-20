@@ -1,8 +1,11 @@
 <script lang="ts">
-  import range from "$lib/range";
+  import {UpsertAvailabilityStore} from "$houdini";
+  import {compactAvailability} from "$lib/manual/Availability.js";
 
   /** The date for which to display this column */
   export let date: number;
+
+  export let save: () => void;
 
 
   /** TODO: docs */
@@ -41,6 +44,7 @@
     if (isDragging) {
       isDragging = false;
       dragState = null;
+      save();
     }
   };
 </script>

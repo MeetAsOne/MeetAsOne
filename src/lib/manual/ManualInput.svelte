@@ -2,12 +2,13 @@
   import ManualInputColumn from "$lib/manual/ManualInputColumn.svelte";
   import range from "$lib/range";
   import {intToTime} from "$lib/timeutils.js";
-  import {compactAvailability} from "$lib/manual/Availability";
+  import {type Availability, compactAvailability} from "$lib/manual/Availability";
+  import {UpsertAvailabilityStore} from "$houdini";
 
   export let shouldSave = false;
-  export let availability: any = {};
-  let formattedAvailability = {};
-  let weeklyAvailability = {};
+  export let availability: Availability = {};
+  let formattedAvailability: Availability = {};
+  let weeklyAvailability: Availability = {};
   $: [formattedAvailability, weeklyAvailability] = compactAvailability(availability);
   $: console.log("availability", availability);
   $: console.log("formattedAvailability", formattedAvailability);
@@ -15,10 +16,6 @@
   /** Epoch timestamps for which to display the UI */
   export let dates: number[];
 
-  $: shouldSave && globalThis?.localStorage?.setItem?.('general-availability', JSON.stringify({
-    "time-zone": 1,
-    days: weeklyAvailability,
-  }));
   /** Tuple, each ranges from 0 to 1439 (minutes in day) */
   export let timeRange: [number, number];
 
@@ -28,6 +25,21 @@
   const blocks = range(...timeRange, timeStep);
 
   export let totalParticipants = 0;
+
+  function save() {
+    if (shouldSave)
+      globalThis?.localStorage?.setItem?.('general-availability', JSON.stringify({
+        "time-zone": 1,  // TODO
+        days: weeklyAvailability,
+      }));
+
+    const updater = new UpsertAvailabilityStore();
+    updater.mutate({
+      availability: compactAvailability(availability),
+      username: "Ethan",
+      eventId: "b0a542e5-527c-4115-9cf7-a94016da72da",  // TODO
+    });
+  }
 </script>
 
 <div class="flex flex-row cursor-pointer select-none">
@@ -41,7 +53,7 @@
         </div>
     {/if}
     {#each dates as date}
-        <ManualInputColumn {date} {blocks} {totalParticipants} bind:availability={availability[new Date(date).toLocaleDateString()]} />
+        <ManualInputColumn {date} {blocks} {save} {totalParticipants} bind:availability={availability[new Date(date).toLocaleDateString()]} />
     {/each}
 </div>
 

@@ -1,0 +1,5 @@
+mutation UpsertAvailability($eventId: uuid, $username: String, $availability: jsonb) {
+    insert_availability(objects: {availability: $availability, username: $username, event_id: $eventId}, on_conflict: {constraint: unique_event_username}) {
+        affected_rows
+    }
+}
