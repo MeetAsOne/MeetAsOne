@@ -22,11 +22,19 @@ export function loadAvailability(availability: any) {
 
 /** Converts from component representation to database representation */
 export function compactAvailability(availability: any) {
-  let formattedAvailability = {};
-  // weeklyAvailability = {};
+  const formattedAvailability = {};
+  const weeklyAvailability = {};
   for (const key in availability) {
     formattedAvailability[key] = availability[key].map((numAvailble, idx) => numAvailble ? idx : null).filter(a => a != null);
-    // weeklyAvailability[daysOfWeek[new Date(key).getDay()]] = formattedAvailability[key];
+    weeklyAvailability[new Date(key).getDay()] = formattedAvailability[key];
   }
-  return formattedAvailability as any;
+  return [formattedAvailability as any, weeklyAvailability] as const;
+}
+
+export function applyAvailability(dates: number[], availability: any) {
+  const out = {};
+  for (const date of dates) {
+    out[new Date(date).toLocaleDateString()] = availability[new Date(date).getDay()] ?? [];
+  }
+  return loadAvailability(out);
 }

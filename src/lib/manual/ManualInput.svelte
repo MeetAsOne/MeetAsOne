@@ -7,7 +7,8 @@
   export let shouldSave = false;
   export let availability: any = {};
   let formattedAvailability = {};
-  $: formattedAvailability = compactAvailability(availability);
+  let weeklyAvailability = {};
+  $: [formattedAvailability, weeklyAvailability] = compactAvailability(availability);
   $: console.log(availability);
   $: console.log(formattedAvailability);
 
@@ -16,7 +17,7 @@
 
   $: shouldSave && globalThis?.localStorage?.setItem?.('general-availability', JSON.stringify({
     "time-zone": 1,
-    days: formattedAvailability,
+    days: weeklyAvailability,
   }));
   /** Tuple, each ranges from 0 to 1439 (minutes in day) */
   export let timeRange: [number, number];

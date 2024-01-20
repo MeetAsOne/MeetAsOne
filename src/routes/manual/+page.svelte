@@ -4,7 +4,7 @@
   import range from "$lib/range";
   import {DAY} from "$lib/units";
   import {timeToInt} from "$lib/timeutils";
-  import {loadAvailability} from "$lib/manual/Availability.js";
+  import {applyAvailability, loadAvailability} from "$lib/manual/Availability.js";
 
   let dates = [] as number[];
   let timeRange: [string, string] = ["8:00 AM", "10:00 PM"];
@@ -20,7 +20,7 @@
     console.log(dates.map(d => new Date(d).toLocaleDateString()));
   }
 
-  const testDisplay = JSON.parse(globalThis?.localStorage?.["general-availability"] ?? '{"days": {}}');
+  const localAvailability = JSON.parse(globalThis?.localStorage?.["general-availability"] ?? '{"days": {}}');
 </script>
 
 <div>
@@ -36,6 +36,6 @@
     </form>
     <label for="darkModeToggle">Save My Calendar</label>
     <input type="checkbox" id="darkModeToggle" bind:checked={shouldSave} />
-    <ManualInput {dates} timeRange={timeRange.map(timeToInt)} {shouldSave}/>
-    <ManualInput dates={Array.from(Object.keys(testDisplay.days))} timeRange={timeRange.map(timeToInt)} availability={loadAvailability(testDisplay.days)} totalParticipants={1} />
+    <ManualInput {dates} timeRange={timeRange.map(timeToInt)} {shouldSave} availability={applyAvailability(dates, localAvailability.days)} />
+    <ManualInput dates={Array.from(Object.keys(localAvailability.days))} timeRange={timeRange.map(timeToInt)} availability={loadAvailability(localAvailability.days)} totalParticipants={1} />
 </div>
