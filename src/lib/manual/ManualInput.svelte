@@ -2,6 +2,7 @@
   import type Availability from "$lib/manual/Availability";
   import ManualInputColumn from "$lib/manual/ManualInputColumn.svelte";
   import range from "$lib/range";
+  import {intToTime} from "$lib/timeutils.js";
 
   // DO NOT PASS AS PROP! Instead, bind
   export let availability: Availability;
@@ -19,10 +20,10 @@
 
 <div class="flex flex-row cursor-pointer select-none">
     {#if dates.length > 0}
-        <div class="labels">
+        <div class="labels text-right w-[7em]">
             {#each blocks as block}
                 <div>
-                    {block}
+                    {intToTime(block)}
                 </div>
             {/each}
         </div>

@@ -4,15 +4,11 @@
   import {Button, Datepicker, Input, Label} from 'flowbite-svelte';
   import range from "$lib/range";
   import {DAY} from "$lib/units";
+  import {timeToInt} from "$lib/timeutils";
 
   let availability: Availability;
   let dates = [] as number[];
   let timeRange: [string, string] = ["8:00 AM", "10:00 PM"];
-
-  // TODO: find a way to convert "2:50 AM" or "15:43" to seconds since midnight
-  function timeToInt(value: string, index: number, array: string[]) {
-    return ([480, 1320])[index];
-  }
 
   function onSubmit(ev: SubmitEvent) {
     ev.preventDefault();
