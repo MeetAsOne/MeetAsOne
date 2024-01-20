@@ -1,17 +1,39 @@
 <script lang="ts">
   import type Availability from "$lib/manual/Availability";
   import ManualInputColumn from "$lib/manual/ManualInputColumn.svelte";
+  import range from "$lib/range";
 
   // DO NOT PASS AS PROP! Instead, bind
   export let availability: Availability;
 
   /** Epoch timestamps for which to display the UI */
   export let dates: number[];
+  /** Tuple, each ranges from 0 to 1439 (minutes in day) */
   export let timeRange: [number, number];
+
+  /** Minutes of each time cell */
+  const timeStep = 30;
+
+  const blocks = range(...timeRange, timeStep);
 </script>
 
-<div class="flex flex-row">
+<div class="flex flex-row cursor-pointer select-none">
+    <div class="labels">
+        {#each blocks as block}
+            <div>
+                {block}
+            </div>
+        {/each}
+    </div>
     {#each dates as date}
-        <ManualInputColumn {date} {timeRange} />
+        <ManualInputColumn {date} {blocks} />
     {/each}
 </div>
+
+<style>
+    .labels {
+        /* TODO: don't use magic constants */
+        line-height: 1.1;
+        padding-top: 1.3em;
+    }
+</style>
