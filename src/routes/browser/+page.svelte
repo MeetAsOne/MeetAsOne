@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     let hi = {
         "time-zone": 1, // 0 = UTC, 1 = UTC+1, 2 = UTC+2, etc.
         "days": {
@@ -19,14 +19,25 @@
         localStorage.setItem('general-availability', JSON.stringify(data));
     };
 
-    /* @type { import('./$houdini').PageData } */
-    export let data
     
-    $: ({ GetEvents } = data)
+    
+    import { PageData } from './$houdini'
+
+    export let data: PageData
+
+    $({ GetEventsStore } = data)
+
+
+    import { GetEventsStore } from '$houdini'
+    const getEvents = new GetEventsStore()
 </script>
 
 <div>
-    {$GetEvents.data}
+    {#await getEvents.fetch()}
+    hi
+    {:then data}
+    {data?.data?.events.length}
+    {/await}
 </div>
 
 <button on:click={saveData}>Save Data</button>

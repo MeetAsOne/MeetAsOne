@@ -1,8 +1,0 @@
-query GetEvents {
-  events {
-    timezone
-		name
-		created_at
-		id
-  }
-}

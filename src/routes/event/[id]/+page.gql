@@ -1,0 +1,8 @@
+query GetEvent($id: uuid) {
+  events(where: {id: {_eq: $id}}) {
+    timezone
+    name
+    created_at
+    id
+  }
+}
