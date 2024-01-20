@@ -2,8 +2,10 @@ query GetEvent($id: uuid) {
   events(where: {id: {_eq: $id}}) {
     timezone
     name
-    created_at
     id
+    start_time
+    end_time
+    dates
     availabilities {
       availability
       username

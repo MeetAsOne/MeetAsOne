@@ -70,11 +70,13 @@
 
     let showDropdown = false;
 
+    let timeRange: [string, string] = ["8:00 AM", "10:00 PM"];
+
     function handleOptionSelect(option) {
         selectedOption = option;
         showDropdown = false;
     }
-    async function createEvent() {
+    async function createEvent(ev: SubmitEvent) {
         if (name.length == 0 || selectedOption == "Select timezone") {
             alert("Please fill in details");
         } else {
@@ -143,6 +145,17 @@
                 bind:value={name}
             />
 
+            <div class="flex gap-2">
+                <div class="flex-1">
+                    <Label for="start_time" class="mb-2" bind:value={timeRange[0]}>Start time</Label>
+                    <Input type="time" id="start_time"/>
+                </div>
+                <div class="flex-1">
+                    <Label for="end_time" class="mb-2" bind:value={timeRange[1]}>End time</Label>
+                    <Input type="time" id="end_time"/>
+                </div>
+            </div>
+
             <Button class="m-3"
                 >{selectedOption}<ChevronDownSolid
                     class="w-3 h-3 ms-2 text-white dark:text-white"
@@ -166,22 +179,23 @@
                 {/each}
             </Dropdown>
 			<div class="m-3">
-				<Datepicker />
+                <form on:submit={createEvent}>
+                    <!-- Start input has name "start". End input has name "end" -->
+                    <Datepicker range/>
+                    <div class="my-button">
+                        <GradientButton
+                                size="xl"
+                                class="my-button"
+                                outline
+                                color="pinkToOrange"
+                                type="submit"
+                        >Create NEW EVENT</GradientButton
+                        >
+                    </div>
+                </form>
 			</div>
-            
-
-            <div class="my-button">
-                <GradientButton
-                    size="xl"
-                    class="my-button"
-                    outline
-                    color="pinkToOrange"
-                    on:click={() => createEvent()}
-                    >Create NEW EVENT</GradientButton
-                >
-            </div>
         </div>
-        
+
     </div>
 
     <div class="content">
