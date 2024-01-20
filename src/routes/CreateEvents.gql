@@ -1,4 +1,4 @@
-mutation InsertEvent($timezone: Int, $name: String) {
+mutation InsertEvent($timezone: String, $name: String) {
   insert_events(objects: {timezone: $timezone, name: $name}) {
     affected_rows
     returning {
