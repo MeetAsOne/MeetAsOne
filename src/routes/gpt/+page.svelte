@@ -21,10 +21,17 @@
                 body: JSON.stringify({ image: base64 }),
             });
             scanning = false;
-            if (!response.ok) {
-                window.alert("The calendar could not be scanned");
+            if (response.status === 500) {
+                window.alert("The calendar could not be imported");
+                return;
+            } else if (response.status === 429) {
+                window.alert("Too many requests. Please try again later.");
+                return;
+            } else if (!response.ok) {
+                window.alert("An error occurred");
                 return;
             }
+
             const data = await response.json();
             console.log(data);
         };
@@ -39,7 +46,7 @@
     >
     <Dropdown class="w-60 p-3 space-y-1 text-sm">
         <DropdownItem on:click={() => fileInput.click()}
-            >Scan calendar photo</DropdownItem
+            >Scan image</DropdownItem
         >
         <input
             type="file"
