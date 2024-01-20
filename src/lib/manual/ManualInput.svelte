@@ -18,13 +18,15 @@
 </script>
 
 <div class="flex flex-row cursor-pointer select-none">
-    <div class="labels">
-        {#each blocks as block}
-            <div>
-                {block}
-            </div>
-        {/each}
-    </div>
+    {#if dates.length > 0}
+        <div class="labels">
+            {#each blocks as block}
+                <div>
+                    {block}
+                </div>
+            {/each}
+        </div>
+    {/if}
     {#each dates as date}
         <ManualInputColumn {date} {blocks} />
     {/each}
