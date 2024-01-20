@@ -79,14 +79,15 @@
     }
     async function createEvent(ev: SubmitEvent) {
         ev.preventDefault();
-        const data = new FormData(ev.currentTarget as HTMLFormElement);
-        const start_day = new Date(data.get("start") as string).getTime();
-        const end_day = new Date(data.get("end") as string).getTime();
         if (name.length == 0 || selectedOption == "Select timezone") {
             alert("Please fill in details");
         } else {
             const updater = new InsertEventStore();
 
+            const data = new FormData(ev.currentTarget as HTMLFormElement);
+            const start_day = new Date(data.get("start") as string).getTime();
+            const end_day = new Date(data.get("end") as string).getTime();
+            debugger;
             let response = await updater.mutate({
                 name: name,
                 timezone: selectedOption,
@@ -160,7 +161,7 @@
                 </div>
                 <div class="flex-1">
                     <Label for="end_time" class="mb-2">End time</Label>
-                    <Input type="time" id="end_time" name="name_time"/>
+                    <Input type="time" id="end_time" name="end_time"/>
                 </div>
             </div>
 
