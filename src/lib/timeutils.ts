@@ -12,4 +12,6 @@ export function intToTime(midnightOffset: number, military = false) {
   return `${military ? hours : (hours <= 12 ? hours : hours % 13 + 1)}:${String(minutes).padStart(2, "0")}` + (military ? "" : (hours > 12 ? " PM" : " AM"));
 }
 
+export const dateStrToEpoch = (dateStr: string) => new Date(dateStr).getTime();
+
 export const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"] as const;
