@@ -1,5 +1,6 @@
 <script lang="ts">
   import type {Writable} from "svelte/store";
+  import {daysOfWeek} from "$lib/timeutils.ts";
 
   /** The date for which to display this column */
   export let date: number;
@@ -57,7 +58,7 @@
 </script>
 
 <div class="w-[7em] text-center">
-    <div>{new Date(date).toLocaleDateString()}</div>
+    <div>{daysOfWeek[new Date(date).getDay()]}<br />{new Date(date).toLocaleDateString()}</div>
     <div class="bg-white touch-none">
         {#each blocks as block}
             <div class="availability-cell" class:cursor-pointer={!totalParticipants}
