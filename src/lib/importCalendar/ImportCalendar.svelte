@@ -7,6 +7,8 @@
         Spinner,
     } from "flowbite-svelte";
     import { ChevronDownSolid } from "flowbite-svelte-icons";
+    import {importedEvents} from '../store.ts'
+    import type { Availability } from "$lib/manual/Availability.ts";
 
     function get15MinuteIndexes(event: GptEvent) {
         const startHour = parseInt(event.start.split(":")[0]);
@@ -30,7 +32,7 @@
         return availableIndexes;
     }
 
-    function compileEvents(events: GptEvent[]) {
+    function compileEvents(events: GptEvent[]): Availability {
         const compiledEvents: { [date: string]: number[] } = {};
 
         for (const event of events) {
@@ -84,8 +86,7 @@
 
             const data: GptEvent[] = await response.json();
 
-            const compiledEvents = compileEvents(data);
-            console.log(compiledEvents);
+            importedEvents.update(contents => compileEvents(data))
         };
     }
 
