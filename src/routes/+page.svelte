@@ -48,7 +48,7 @@
 
 	let showDropdown = false;
 
-	function handleOptionSelect(option) {
+	function handleOptionSelect(option: string) {
 		selectedOption = option;
 		showDropdown = false;
 	}
