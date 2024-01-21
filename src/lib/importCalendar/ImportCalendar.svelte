@@ -103,9 +103,12 @@
 </div>
 
 {#if showModal}
-    <Modal title="Instructions" bind:open={showModal} autoclose outsideclose>
+    <Modal title="Scan image" bind:open={showModal} autoclose outsideclose>
         <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-            Here are the instructions for scanning an image:
+            Append events from your calendar onto the availability matrix by importing an image.
+        </p>
+        <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+            Here are some guidelines for scanning the image:
         </p>
         <ul class="list-disc ml-5">
             <li>Take a screenshot or image of the week view of a calendar</li>
@@ -120,6 +123,9 @@
             <li>Make sure the image is clear and not blurry</li>
             <!-- Add more steps as needed -->
         </ul>
+        <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+            It is not guarenteed your image will be scanned completely.
+        </p>
         <svelte:fragment slot="footer">
             <Button on:click={(e) => {
                 fileInput.click();
