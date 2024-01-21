@@ -87,13 +87,17 @@
             const data = new FormData(ev.currentTarget as HTMLFormElement);
             const start_day = new Date(data.get("start") as string).getTime();
             const end_day = new Date(data.get("end") as string).getTime();
-            let response = await updater.mutate({
+            const response = await updater.mutate({
                 name: name,
                 timezone: selectedOption,
                 start_time: timeToInt(data.get("start_time") as string),
                 end_time: timeToInt(data.get("end_time") as string),
                 dates: range(start_day, end_day + DAY, DAY).map(day => new Date(day).toLocaleDateString()),  // excludes endpoint, thus +DAY
             });
+            if (response.errors) {
+              alert("Your configuration is invalid. Make sure end time is after start & you selected no more than 7 days.\n" + response.errors.map(err => err.message).join("/n"));
+              return;
+            }
             goto("event/" + response.data?.insert_events?.returning[0].id);
         }
     }
