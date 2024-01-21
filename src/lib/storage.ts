@@ -19,3 +19,13 @@ export function getPastEvents() {
   }
   return pastEvents;
 }
+
+const MAX_HISTORY = 4;
+
+export function savePastEvents(events: PastEvents) {
+  if (events.responded.length > MAX_HISTORY)
+    events.responded.shift()
+  if (events.created.length > MAX_HISTORY)
+    events.created.shift()
+  globalThis?.localStorage?.setItem("pastEvents", JSON.stringify(events));
+}
