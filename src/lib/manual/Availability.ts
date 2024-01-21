@@ -8,7 +8,8 @@ export function loadAvailability(...availabilities: Availability[]) {
   const unpackedAvailability: Availability = {};
   for (const availability of availabilities) {
     for (const key in availability) {
-      unpackedAvailability[key] = [];
+      if (!(key in unpackedAvailability))
+        unpackedAvailability[key] = [];
       for (const idx of availability[key]) {
         unpackedAvailability[key][idx] = unpackedAvailability[key][idx] == undefined ? 1 : unpackedAvailability[key][idx] + 1;
       }
@@ -17,7 +18,10 @@ export function loadAvailability(...availabilities: Availability[]) {
   return unpackedAvailability;
 }
 
-/** Converts from component representation to database representation */
+/**
+ * Converts from component representation to database representation
+ * @returns tuple, 1st element is specific availability, 2nd element is availability for days of the week
+ */
 export function compactAvailability(availability: Availability) {
   const formattedAvailability: Availability = {};
   const weeklyAvailability: Availability = {};

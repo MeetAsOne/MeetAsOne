@@ -35,7 +35,7 @@
 
     const updater = new UpsertAvailabilityStore();
     const res = await updater.mutate({
-      availability: compactAvailability(availability),
+      availability: compactAvailability(availability)[0],
       username: localStorage?.name ?? (localStorage.name = prompt("What is your name + last initial?")),
       eventId: $page.params.id,
     });

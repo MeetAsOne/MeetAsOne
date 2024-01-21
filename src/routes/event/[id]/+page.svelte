@@ -18,14 +18,14 @@
 </script>
 
 <h1>{event?.name ?? ""}</h1>
+<em>{event?.timezone ?? ""}</em>
 
 <label for="darkModeToggle">Save My Calendar</label>
 <input type="checkbox" id="darkModeToggle" bind:checked={shouldSave} />
 {#if event}
-    {JSON.stringify(event)}
     <div class="flex flex-wrap">
         <ManualInput dates={event.dates.map(dateStrToEpoch)} timeRange={[event.start_time, event.end_time]} {shouldSave} availability={applyAvailability(event.dates.map(dateStrToEpoch), localAvailability.days)} />
-        <ManualInput totalParticipants={event.availabilities.length} dates={event.dates.map(dateStrToEpoch)} timeRange={[event.start_time, event.end_time]} availability={loadAvailability(...event.availabilities.map(person => person.availability)[0])} />
+        <ManualInput totalParticipants={event.availabilities.length} dates={event.dates.map(dateStrToEpoch)} timeRange={[event.start_time, event.end_time]} availability={loadAvailability(...event.availabilities.map(person => person.availability))} />
     </div>
 {/if}
 

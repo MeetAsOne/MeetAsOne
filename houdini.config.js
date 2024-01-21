@@ -22,6 +22,9 @@ const config = {
         smallint: {                  // <- The GraphQL Scalar
             type: "number"  // <-  The TypeScript type
         },
+        jsonb: {                  // <- The GraphQL Scalar
+            type: "Record<string, number[]>"  // <-  The TypeScript type
+        },
     }
 }
 
