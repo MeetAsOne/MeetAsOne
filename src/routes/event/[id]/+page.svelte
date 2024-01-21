@@ -7,10 +7,15 @@
     import {dateStrToEpoch} from "$lib/timeutils";
     import {page} from "$app/stores";
     import {getPastEvents, savePastEvents} from "$lib/storage";
+    import {writable} from "svelte/store";
+    import Availability from "$lib/Availability.svelte";
 
     export let data: PageData;
     let event: GetEvent$result["events"][number] | undefined;
     let shouldSave = true;
+    /** list of people available for focused block*/
+    const selectedAvailability = writable([] as string[]);
+    $: console.log($selectedAvailability);
 
     // pull the store reference from the route props
     $: ({ GetEvent } = data);
@@ -55,8 +60,10 @@
         <div>
             <h2>Group Availability</h2>
             <ManualInput totalParticipants={event.availabilities.length} dates={event.dates.map(dateStrToEpoch)}
+                         availablePeople={selectedAvailability}
                          timeRange={[event.start_time, event.end_time]}
                          availability={loadAvailability(...event.availabilities)}/>
         </div>
+        <Availability everyone={event.availabilities.map(person => person.username)} available={$selectedAvailability} />
     </div>
 {/if}

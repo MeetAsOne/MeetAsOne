@@ -6,6 +6,7 @@
   import {UpsertAvailabilityStore} from "$houdini";
   import {TIME_STEP} from "$lib/units";
   import {page} from "$app/stores";
+  import type {Writable} from "svelte/store";
 
   export let shouldSave = false;
   export let availability: InternalAvailability = {};
@@ -17,6 +18,8 @@
 
   /** Epoch timestamps for which to display the UI */
   export let dates: number[];
+
+  export let availablePeople: Writable<string[]> | undefined = undefined;
 
   /** Tuple, each ranges from 0 to 1439 (minutes in day) */
   export let timeRange: [number, number];
@@ -57,7 +60,9 @@
         </div>
     {/if}
     {#each dates as date}
-        <ManualInputColumn {date} {blocks} {save} {totalParticipants} bind:availability={availability[new Date(date).toLocaleDateString()]} />
+        <ManualInputColumn
+                {date} {blocks} {save} {totalParticipants} {availablePeople}
+                bind:availability={availability[new Date(date).toLocaleDateString()]} />
     {/each}
 </div>
 
