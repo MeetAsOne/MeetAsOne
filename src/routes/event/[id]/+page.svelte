@@ -28,6 +28,15 @@
     const localAvailability = JSON.parse(globalThis?.localStorage?.["general-availability"] ?? '{"days": {}}');
 </script>
 
+<svelte:head>
+	<title>{event ? event.name : 'Event not found'} - MeetAsOne</title>
+	<meta
+		name="description"
+		content={event ? `Share your availability for ${event.name}` : "Find a time for your event today on MeetAsOne"}
+	/>
+</svelte:head>
+
+
 {#if $GetEvent.data?.events?.length === 0}
     Event doesn't exist. <a href="/">Go home?</a>
 {:else if event}

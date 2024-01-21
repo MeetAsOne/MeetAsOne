@@ -85,7 +85,7 @@
 	<title>MeetAsOne</title>
 	<meta
 		name="description"
-		content="MeetAsOne - An app to poll people’s availability for scheduling meetings."
+		content="An app to poll people’s availability for scheduling meetings"
 	/>
 </svelte:head>
 
