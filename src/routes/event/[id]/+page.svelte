@@ -15,7 +15,6 @@
     let shouldSave = true;
     /** list of people available for focused block*/
     const selectedAvailability = writable([] as string[]);
-    $: console.log($selectedAvailability);
 
     // pull the store reference from the route props
     $: ({ GetEvent } = data);
