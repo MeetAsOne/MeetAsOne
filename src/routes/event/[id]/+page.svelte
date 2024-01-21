@@ -6,7 +6,7 @@
     import type {PageData} from "$houdini/types/src/routes/event/[id]/$houdini";
     import {dateStrToEpoch} from "$lib/timeutils";
     import {page} from "$app/stores";
-    import {getPastEvents} from "$lib/storage";
+    import {getPastEvents, savePastEvents} from "$lib/storage";
 
     export let data: PageData;
     let event: GetEvent$result["events"][number] | undefined;
@@ -21,7 +21,7 @@
     $: {
       if (pastEvents.created.every(event => event.id != $page.params.id) && pastEvents.responded.every(event => event.id != $page.params.id) && event) {
         pastEvents.responded.push({id: $page.params.id, name: event.name});
-        globalThis?.localStorage?.setItem("pastEvents", JSON.stringify(pastEvents));
+        savePastEvents(pastEvents);
       }
     }
 

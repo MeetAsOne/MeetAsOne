@@ -10,7 +10,7 @@
 	import range from "$lib/range";
 	import { DAY } from "$lib/units";
 	import { timeToInt } from "$lib/timeutils";
-	import {getPastEvents} from "$lib/storage";
+	import {savePastEvents, getPastEvents} from "$lib/storage";
 
 	let name: string = "";
 	let timezones = [
@@ -75,10 +75,7 @@
 			}
 			const id = response.data?.insert_events?.returning[0].id!;
 			pastEvents.created.push({id, name});
-			localStorage.setItem(
-				"pastEvents",
-				JSON.stringify(pastEvents),
-			)
+			savePastEvents(pastEvents);
 			goto("event/" + id);
 		}
 	}
