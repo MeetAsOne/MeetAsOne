@@ -10,6 +10,7 @@
 	import range from "$lib/range";
 	import { DAY } from "$lib/units";
 	import { timeToInt } from "$lib/timeutils";
+	import {getPastEvents} from "$lib/storage";
 
 	let name: string = "";
 	let timezones = [
@@ -42,24 +43,7 @@
 		"(GMT+12:00) Fiji, Kamchatka, Marshall Is.",
 	];
 
-	interface EventSummary { name: string; id: string }
-	interface PastEvents {
-		created: EventSummary[];
-		responded: EventSummary[];
-	}
-
-	let pastEventsString = globalThis?.localStorage?.getItem?.("pastEvents");
-
-	let pastEvents: PastEvents;
-
-	if (!pastEventsString) {
-		pastEvents = {
-			created: [],
-			responded: [],
-		};
-	} else {
-		pastEvents = JSON.parse(pastEventsString);
-	}
+	const pastEvents = getPastEvents();
 	let selectedOption: string = "Select Timezone";
 
 	let showDropdown = false;

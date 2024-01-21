@@ -5,6 +5,8 @@
     import type {GetEvent$result} from "$houdini";
     import type {PageData} from "$houdini/types/src/routes/event/[id]/$houdini";
     import {dateStrToEpoch} from "$lib/timeutils";
+    import {page} from "$app/stores";
+    import {getPastEvents} from "$lib/storage";
 
     export let data: PageData;
     let event: GetEvent$result["events"][number] | undefined;
@@ -13,6 +15,15 @@
     // pull the store reference from the route props
     $: ({ GetEvent } = data);
     $: event = $GetEvent.data?.events?.[0];
+
+    const pastEvents = getPastEvents();
+
+    $: {
+      if (pastEvents.created.every(event => event.id != $page.params.id) && pastEvents.responded.every(event => event.id != $page.params.id) && event) {
+        pastEvents.responded.push({id: $page.params.id, name: event.name});
+        globalThis?.localStorage?.setItem("pastEvents", JSON.stringify(pastEvents));
+      }
+    }
 
     const localAvailability = JSON.parse(globalThis?.localStorage?.["general-availability"] ?? '{"days": {}}');
 </script>
