@@ -19,12 +19,15 @@
         const startIndex = startHour * 4 + startMinute / 15;
         const endIndex = endHour * 4 + endMinute / 15;
 
-        const indexes = [];
+        const allIndexes = Array.from({length: 96}, (_, i) => i); // Generate all possible indexes
+        const busyIndexes: number[] = [];
         for (let i = startIndex; i < endIndex; i++) {
-            indexes.push(i);
+            busyIndexes.push(i);
         }
 
-        return indexes;
+        const availableIndexes = allIndexes.filter(index => !busyIndexes.includes(index)); // Filter out busy indexes
+
+        return availableIndexes;
     }
 
     function compileEvents(events: GptEvent[]) {
