@@ -19,6 +19,7 @@
 
   importedEvents.subscribe((currentValue) => {
     mergeAvailability(availability, currentValue)
+    availability = {...availability}; // Trigger Svelte's reactivity by reassigning the variable
   })
 
   /** Epoch timestamps for which to display the UI */

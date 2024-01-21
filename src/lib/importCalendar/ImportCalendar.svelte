@@ -21,15 +21,12 @@
         const startIndex = startHour * 4 + startMinute / 15;
         const endIndex = endHour * 4 + endMinute / 15;
 
-        const allIndexes = Array.from({length: 96}, (_, i) => i); // Generate all possible indexes
-        const busyIndexes: number[] = [];
+        const indexes = [];
         for (let i = startIndex; i < endIndex; i++) {
-            busyIndexes.push(i);
+            indexes.push(i);
         }
 
-        const availableIndexes = allIndexes.filter(index => !busyIndexes.includes(index)); // Filter out busy indexes
-
-        return availableIndexes;
+        return indexes;
     }
 
     function compileEvents(events: GptEvent[]): Availability {
@@ -42,6 +39,14 @@
 
             const indexes = get15MinuteIndexes(event);
             compiledEvents[event.date].push(...indexes);
+        }
+
+        // Generate all possible indexes
+        const allIndexes = Array.from({length: 96}, (_, i) => i);
+
+        // Replace each value in compiledEvents with the array of available indexes
+        for (const date in compiledEvents) {
+            compiledEvents[date] = allIndexes.filter(index => !compiledEvents[date].includes(index));
         }
 
         return compiledEvents;
