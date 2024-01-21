@@ -1,17 +1,24 @@
+import type {GetEvent$result} from "$houdini";
+
 /** Key: the date in any parsable format. Value: array of indices to time blocks.
  * For example, if you ask for times starting at 8am and use 15 min intervals, 9:30 will be index 5  */
 type DateStr = string;
-export type Availability = Record<DateStr, number[]>
+export type Availability = Record<DateStr, number[]>;
+export type InternalAvailability = Record<DateStr, string[][]>;
+
+type GetEvent$availability = GetEvent$result["events"][number]["availabilities"][number];
 
 /** Converts availability from format in database or localstorage into format component can read */
-export function loadAvailability(...availabilities: Availability[]) {
-  const unpackedAvailability: Availability = {};
+export function loadAvailability(...availabilities: GetEvent$availability[]) {
+  const unpackedAvailability: InternalAvailability = {};
   for (const availability of availabilities) {
-    for (const key in availability) {
+    for (const key in availability.availability) {
       if (!(key in unpackedAvailability))
         unpackedAvailability[key] = [];
-      for (const idx of availability[key]) {
-        unpackedAvailability[key][idx] = unpackedAvailability[key][idx] == undefined ? 1 : unpackedAvailability[key][idx] + 1;
+      for (const idx of availability.availability[key]) {
+        if (unpackedAvailability[key][idx] == undefined)
+          unpackedAvailability[key][idx] = [];
+        unpackedAvailability[key][idx].push(availability.username);
       }
     }
   }
@@ -22,11 +29,11 @@ export function loadAvailability(...availabilities: Availability[]) {
  * Converts from component representation to database representation
  * @returns tuple, 1st element is specific availability, 2nd element is availability for days of the week
  */
-export function compactAvailability(availability: Availability) {
+export function compactAvailability(availability: InternalAvailability) {
   const formattedAvailability: Availability = {};
   const weeklyAvailability: Availability = {};
   for (const key in availability) {
-    formattedAvailability[key] = availability[key].map((numbAvailable, idx) => numbAvailable ? idx : null).filter((a): a is number => a != null);
+    formattedAvailability[key] = availability[key].map((numbAvailable, idx) => numbAvailable.length ? idx : null).filter((a): a is number => a != null);
     weeklyAvailability[new Date(key).getDay()] = formattedAvailability[key];
   }
   return [formattedAvailability, weeklyAvailability] as const;
@@ -42,5 +49,5 @@ export function applyAvailability(dates: number[], availability: Availability) {
   for (const date of dates) {
     out[new Date(date).toLocaleDateString()] = availability[new Date(date).getDay()] ?? [];
   }
-  return loadAvailability(out);
+  return loadAvailability({availability: out, username: "me"});
 }

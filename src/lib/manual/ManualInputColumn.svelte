@@ -1,6 +1,4 @@
 <script lang="ts">
-  import {TIME_STEP} from "$lib/units";
-
   /** The date for which to display this column */
   export let date: number;
 
@@ -11,7 +9,7 @@
   export let blocks: number[];
 
   /** The number here corresponds to how many people RSVPd "yes" */
-  export let availability: number[] = new Array(blocks.length).fill(0);
+  export let availability: string[][] = new Array(blocks.length).map(() => []);
 
   /** Setting this also disables input */
   export let totalParticipants = 0;
@@ -21,10 +19,10 @@
 
   const toggleAvailability = (timeIndex: number) => {
     if (dragState === null) {
-      dragState = !availability[timeIndex];
+      dragState = !(availability[timeIndex]?.length ?? 0);
     }
 
-    availability[timeIndex] = Math.min(dragState, true);
+    availability[timeIndex] = dragState ? ["me"] : [];
   };
 
   const handlePointerDown = (timeIndex: number, ev: PointerEvent) => {
@@ -55,7 +53,7 @@
     <div class="bg-white touch-none">
         {#each blocks as block}
             <div class="availability-cell" class:cursor-pointer={!totalParticipants}
-                 style:opacity={totalParticipants ? availability[block] / totalParticipants : "1"}
+                 style:opacity={totalParticipants ? (availability[block]?.length ?? totalParticipants) / totalParticipants : "1"}
                  class:available={availability[block]}
                  on:pointerdown={(ev) => handlePointerDown(block, ev)}
                  on:pointerenter={() => handlePointerEnter(block)}>

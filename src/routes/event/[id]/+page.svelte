@@ -8,7 +8,7 @@
 
     export let data: PageData;
     let event: GetEvent$result["events"][number] | undefined;
-    let shouldSave = false;
+    let shouldSave = true;
 
     // pull the store reference from the route props
     $: ({ GetEvent } = data);
@@ -28,6 +28,6 @@
     <ImportCalendar/>
     <div class="flex flex-wrap">
         <ManualInput dates={event.dates.map(dateStrToEpoch)} timeRange={[event.start_time, event.end_time]} {shouldSave} availability={applyAvailability(event.dates.map(dateStrToEpoch), localAvailability.days)} />
-        <ManualInput totalParticipants={event.availabilities.length} dates={event.dates.map(dateStrToEpoch)} timeRange={[event.start_time, event.end_time]} availability={loadAvailability(...event.availabilities.map(person => person.availability))} />
+        <ManualInput totalParticipants={event.availabilities.length} dates={event.dates.map(dateStrToEpoch)} timeRange={[event.start_time, event.end_time]} availability={loadAvailability(...event.availabilities)} />
     </div>
 {/if}

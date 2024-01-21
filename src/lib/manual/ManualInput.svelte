@@ -2,13 +2,13 @@
   import ManualInputColumn from "$lib/manual/ManualInputColumn.svelte";
   import range from "$lib/range";
   import {intToTime} from "$lib/timeutils.js";
-  import {type Availability, compactAvailability} from "$lib/manual/Availability";
+  import {type Availability, compactAvailability, type InternalAvailability} from "$lib/manual/Availability";
   import {UpsertAvailabilityStore} from "$houdini";
   import {TIME_STEP} from "$lib/units";
   import {page} from "$app/stores";
 
   export let shouldSave = false;
-  export let availability: Availability = {};
+  export let availability: InternalAvailability = {};
   let formattedAvailability: Availability = {};
   let weeklyAvailability: Availability = {};
   $: [formattedAvailability, weeklyAvailability] = compactAvailability(availability);
