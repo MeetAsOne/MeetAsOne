@@ -126,7 +126,7 @@
             Append events from your calendar onto the availability matrix by importing an image.
         </p>
         <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-            Here are some guidelines for scanning the image:
+            Here are some guidelines for the image:
         </p>
         <ul class="list-disc ml-5">
             <li>Take a screenshot or image of the week view of a calendar</li>
