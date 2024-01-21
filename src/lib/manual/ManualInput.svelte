@@ -36,7 +36,7 @@
     const updater = new UpsertAvailabilityStore();
     const res = await updater.mutate({
       availability: compactAvailability(availability),
-      username: "Ethan",
+      username: localStorage?.name ?? (localStorage.name = prompt("What is your name + last initial?")),
       eventId: $page.params.id,
     });
     if (res.errors)
@@ -44,7 +44,7 @@
   }
 </script>
 
-<div class="flex flex-row cursor-pointer select-none">
+<div class="flex flex-row select-none">
     {#if dates.length > 0}
         <div class="labels text-right w-[5em]">
             {#each blocks as block, idx}

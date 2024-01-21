@@ -17,6 +17,8 @@
     const localAvailability = JSON.parse(globalThis?.localStorage?.["general-availability"] ?? '{"days": {}}');
 </script>
 
+<h1>{event?.name ?? ""}</h1>
+
 <label for="darkModeToggle">Save My Calendar</label>
 <input type="checkbox" id="darkModeToggle" bind:checked={shouldSave} />
 {#if event}

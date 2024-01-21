@@ -55,7 +55,7 @@
     <div>{new Date(date).toLocaleDateString()}</div>
     <div class="bg-white touch-none">
         {#each blocks as block}
-            <div class="availability-cell"
+            <div class="availability-cell" class:cursor-pointer={!totalParticipants}
                  style:opacity={totalParticipants ? availability[block] / totalParticipants : "1"}
                  class:available={availability[block]}
                  on:pointerdown={(ev) => handlePointerDown(block, ev)}
