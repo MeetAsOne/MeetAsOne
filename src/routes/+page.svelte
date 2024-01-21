@@ -145,6 +145,7 @@
 			<form
 				class="flex flex-grow gap-4 align-items-center content-center flex-col items-center"
 				on:submit={createEvent}
+				autocomplete="off"
 			>
 
 			<h2 style="font-weight: bold; ">

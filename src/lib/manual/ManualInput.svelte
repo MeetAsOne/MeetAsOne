@@ -7,13 +7,15 @@
   import {TIME_STEP} from "$lib/units";
   import {page} from "$app/stores";
   import type {Writable} from "svelte/store";
-  import { importedEvents } from "$lib/store";
+  import { importedEvents, workingAvailability } from "$lib/store";
+  import {getOrSetName} from "$lib/storage.ts";
 
   export let shouldSave = false;
   export let availability: InternalAvailability = {};
   let formattedAvailability: Availability = {};
   let weeklyAvailability: Availability = {};
   $: [formattedAvailability, weeklyAvailability] = compactAvailability(availability);
+  $: if (!availablePeople) workingAvailability.set(formattedAvailability);
   $: console.log("availability", availability);
   $: console.log("formattedAvailability", formattedAvailability);
 
@@ -43,9 +45,11 @@
       }));
 
     const updater = new UpsertAvailabilityStore();
+    const username = getOrSetName();
+    if (!username) return;
     const res = await updater.mutate({
       availability: compactAvailability(availability)[0],
-      username: localStorage?.name ?? (localStorage.name = prompt("What is your name + last initial?")),
+      username,
       eventId: $page.params.id,
     });
     if (res.errors)
@@ -55,11 +59,11 @@
   }
 </script>
 
-<div class="flex flex-row select-none">
+<div class="flex items-stretch select-none">
     {#if dates.length > 0}
         <div class="labels text-right w-[5em]">
             {#each blocks as block, idx}
-                <div class="h-[17.6px]">
+                <div class="h-[17.2px]">
                     {idx % 2 === 0 ? intToTime(block * TIME_STEP) : " "}
                 </div>
             {/each}
@@ -76,6 +80,6 @@
     .labels {
         /* TODO: don't use magic constants */
         /*line-height: 1.1;*/
-        padding-top: 1.3em;
+        padding-top: 48px;
     }
 </style>

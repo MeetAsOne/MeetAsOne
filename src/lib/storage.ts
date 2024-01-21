@@ -29,3 +29,14 @@ export function savePastEvents(events: PastEvents) {
     events.created.shift()
   globalThis?.localStorage?.setItem("pastEvents", JSON.stringify(events));
 }
+
+export function getOrSetName(): string | undefined {
+  if (localStorage?.name)
+    return localStorage.name;
+  const newName = prompt("What is your name + last initial?");
+  if (!newName) {
+    alert("You need a username to save your availability");
+    return;
+  }
+  return (localStorage.name = newName);
+}

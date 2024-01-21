@@ -57,7 +57,7 @@
   };
 </script>
 
-<div class="w-[7em] text-center">
+<div class="flex-grow text-center">
     <div>{daysOfWeek[new Date(date).getDay()]}<br />{new Date(date).toLocaleDateString()}</div>
     <div class="bg-white touch-none">
         {#each blocks as block}
