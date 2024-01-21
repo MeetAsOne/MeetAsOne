@@ -9,7 +9,6 @@
 
   /** Array of starting times in 15-minute intervals since midnight for all possible blocks */
   export let blocks: number[];
-  $: console.log(blocks);
 
   /** The number here corresponds to how many people RSVPd "yes" */
   export let availability: number[] = new Array(blocks.length).fill(0);

@@ -41,6 +41,8 @@
     });
     if (res.errors)
       res.errors.forEach(console.error);
+    if (res.data?.insert_availability?.affected_rows === 0)
+      console.error("No rows were changed")
   }
 </script>
 
