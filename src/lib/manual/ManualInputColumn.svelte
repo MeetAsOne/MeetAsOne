@@ -1,4 +1,7 @@
 <script lang="ts">
+  import type {Writable} from "svelte/store";
+  import {daysOfWeek} from "$lib/timeutils.ts";
+
   /** The date for which to display this column */
   export let date: number;
 
@@ -11,8 +14,11 @@
   /** The number here corresponds to how many people RSVPd "yes" */
   export let availability: string[][] = new Array(blocks.length).map(() => []);
 
-  /** Setting this also disables input */
+  /** Self-explanatory. Used for setting transparency of group calendar */
   export let totalParticipants = 0;
+
+  /** store to write to when hovering over group's time blocks. Setting this also disables input */
+  export let availablePeople: Writable<string[]> | undefined = undefined;
 
   let isDragging = false;
   let dragState: boolean | null = null;
@@ -28,7 +34,7 @@
   const handlePointerDown = (timeIndex: number, ev: PointerEvent) => {
     // So stupid https://stackoverflow.com/a/70976017
     (ev.target as HTMLElement).releasePointerCapture(ev.pointerId);
-    if (totalParticipants) return;
+    if (availablePeople) return;
     isDragging = true;
     toggleAvailability(timeIndex);
   };
@@ -37,26 +43,28 @@
     if (isDragging) {
       toggleAvailability(timeIndex);
     }
+    if (availablePeople)
+      availablePeople.set(availability[timeIndex] ?? []);
   };
 
   const handleMouseUp = () => {
     if (isDragging) {
       isDragging = false;
       dragState = null;
-      save();
+      if (!availablePeople)
+        save();
     }
   };
 </script>
 
 <div class="w-[7em] text-center">
-    <div>{new Date(date).toLocaleDateString()}</div>
+    <div>{daysOfWeek[new Date(date).getDay()]}<br />{new Date(date).toLocaleDateString()}</div>
     <div class="bg-white touch-none">
         {#each blocks as block}
             <div class="availability-cell" class:cursor-pointer={!totalParticipants}
                  style:opacity={totalParticipants ? (availability[block]?.length ?? totalParticipants) / totalParticipants : "1"}
-                 class:available={availability[block]}
+                 class:available={availability[block]?.length}
                  on:pointerdown={(ev) => handlePointerDown(block, ev)}
-                 on:click={() => console.log(availability[block])}
                  on:pointerenter={() => handlePointerEnter(block)}>
             </div>
         {/each}

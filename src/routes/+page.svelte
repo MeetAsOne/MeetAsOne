@@ -1,5 +1,5 @@
 <script lang="ts">
-	import welcome_fallback from "$lib/images/Untitled4.png";
+	import welcome_fallback from "$lib/images/HomepageTitle.png";
 	import { Label, Input, Button } from "flowbite-svelte";
 	import { Dropdown, DropdownItem, Search } from "flowbite-svelte";
 	import { ChevronDownSolid, UserRemoveSolid } from "flowbite-svelte-icons";
@@ -10,9 +10,10 @@
 	import range from "$lib/range";
 	import { DAY } from "$lib/units";
 	import { timeToInt } from "$lib/timeutils";
-	import {getPastEvents} from "$lib/storage";
+	import { savePastEvents, getPastEvents } from "$lib/storage";
 
 	let name: string = "";
+	let searchQuery = "";
 	let timezones = [
 		"(GMT-12:00) International Date Line West",
 		"(GMT-11:00) Midway Island, Samoa",
@@ -48,7 +49,7 @@
 
 	let showDropdown = false;
 
-	function handleOptionSelect(option) {
+	function handleOptionSelect(option: string) {
 		selectedOption = option;
 		showDropdown = false;
 	}
@@ -67,18 +68,20 @@
 				timezone: selectedOption,
 				start_time: timeToInt(data.get("start_time") as string),
 				end_time: timeToInt(data.get("end_time") as string),
-				dates: range(start_day, end_day + DAY, DAY).map(day => new Date(day).toLocaleDateString()),  // excludes endpoint, thus +DAY
+				dates: range(start_day, end_day + DAY, DAY).map((day) =>
+					new Date(day).toLocaleDateString(),
+				), // excludes endpoint, thus +DAY
 			});
 			if (response.errors) {
-				alert("Your configuration is invalid. Make sure end time is after start & you selected no more than 7 days.\n" + response.errors.map(err => err.message).join("/n"));
+				alert(
+					"Your configuration is invalid. Make sure end time is after start & you selected no more than 7 days.\n" +
+						response.errors.map((err) => err.message).join("/n"),
+				);
 				return;
 			}
 			const id = response.data?.insert_events?.returning[0].id!;
-			pastEvents.created.push({id, name});
-			localStorage.setItem(
-				"pastEvents",
-				JSON.stringify(pastEvents),
-			)
+			pastEvents.created.push({ id, name });
+			savePastEvents(pastEvents);
 			goto("event/" + id);
 		}
 	}
@@ -88,7 +91,7 @@
 	<title>MeetAsOne</title>
 	<meta
 		name="description"
-		content="MeetAsOne - An app to poll people’s availability for scheduling meetings."
+		content="An app to poll people’s availability for scheduling meetings"
 	/>
 </svelte:head>
 
@@ -131,42 +134,44 @@
 				<div class="event-button">
 					<Button
 						style="background-color:#D1AC00"
-						href={"/events/" + respondedEvent.id}
+						href={"/event/" + respondedEvent.id}
 						>{respondedEvent.name}</Button
 					>
 				</div>
 			{/each}
 		</div>
 		<div class="create-event-box">
-			<h2 style="font-weight: bold; margin-top: 0px; margin-bottom: 0px;">
-				Create New Event Here
-			</h2>
 
-			<form class="section" on:submit={createEvent}>
+			<form
+				class="flex flex-grow gap-4 align-items-center content-center flex-col items-center"
+				on:submit={createEvent}
+			>
+
+			<h2 style="font-weight: bold; ">
+				Create New Event
+			</h2>
 				<Input
 					id="disabled-input"
-					class="m-0"
+					class="w-auto"
 					required
 					placeholder="Event Name"
 					bind:value={name}
 				/>
 
 				<div class="flex gap-2">
-					<div class="flex-1" style="margin: 2%;">
-						<Label for="start_time" class="mb-2" color="undefined"
+					<div class="flex-1">
+						<Label for="start_time" color="undefined"
 							>Start time</Label
 						>
 						<Input type="time" id="start_time" name="start_time" />
 					</div>
-					<div class="flex-1" style="margin: 2%;">
-						<Label for="end_time" class="mb-2" color="undefined"
-							>End time</Label
-						>
+					<div class="flex-1">
+						<Label for="end_time" color="undefined">End time</Label>
 						<Input type="time" id="end_time" name="end_time" />
 					</div>
 				</div>
 
-				<Button class="m-3" style="background-color:#D1AC00"
+				<Button style="background-color:#D1AC00"
 					>{selectedOption}<ChevronDownSolid
 						class="w-3 h-3 ms-2 text-white dark:text-white"
 					/></Button
@@ -175,10 +180,10 @@
 					class="overflow-y-auto px-3 pb-3 text-sm h-44 "
 					bind:open={showDropdown}
 				>
-					<!-- <div slot="header" class="p-3">
-                    <Search size="md" />
-                </div> -->
-					{#each timezones as time}
+					<div slot="header" class="p-3">
+						<Search size="md" bind:value={searchQuery} />
+					</div>
+					{#each timezones.filter(timezone => timezone.toLowerCase().includes(searchQuery.toLowerCase())) as time}
 						<li
 							class="rounded p-2 hover:bg-gray-100 dark:hover:bg-gray-600"
 						>
@@ -189,20 +194,18 @@
 						</li>
 					{/each}
 				</Dropdown>
-				<div class="m-3">
-					<!-- Start input has name "start". End input has name "end" -->
-					<Datepicker range />
-					<div class="my-button">
-						<GradientButton
-							size="xl"
-							class="my-button"
-							outline
-							color="redToYellow"
-							type="submit"
-							style="background-color:#D1AC00"
-							>Create New Event</GradientButton
-						>
-					</div>
+				<!-- Start input has name "start". End input has name "end" -->
+				<Datepicker range />
+				<div class="my-button">
+					<GradientButton
+						size="xl"
+						class="my-button"
+						outline
+						color="redToYellow"
+						type="submit"
+						style="background-color:#D1AC00"
+						>Create New Event</GradientButton
+					>
 				</div>
 			</form>
 		</div>
@@ -212,7 +215,9 @@
 		<div class="create-event-box2">
 			<div class="description-and-features">
 				<div class="description">
-					<h2 style="font-weight: bold; text-transform: uppercase; padding: 0px">
+					<h2
+						style="font-weight: bold; text-transform: uppercase; padding: 0px"
+					>
 						Schedule Meetings Effortlessly
 					</h2>
 					<p>
@@ -231,7 +236,7 @@
 					<h2
 						style="font-weight: bold; text-transform: uppercase; color: #333; font-size: 1.5em;"
 					>
-						Features:
+						Features
 					</h2>
 					<ul>
 						<li>
@@ -253,7 +258,6 @@
 				</div>
 			</div>
 		</div>
-
 	</div>
 </section>
 
@@ -340,8 +344,8 @@
 	.description-and-features {
 		display: flex;
 		flex-wrap: wrap;
-		justify-content: space-between;
-		align-items: flex-start;
+		justify-content: center;
+		align-items: center;
 		padding: 0px;
 		max-width: 1000px;
 		align-items: center;
@@ -372,7 +376,6 @@
 
 	ul {
 		list-style-type: square;
-		margin-left: 200px;
 	}
 
 	.dark-mode-toggle {
@@ -382,10 +385,6 @@
 
 	input[type="checkbox"] {
 		margin-left: 5px;
-	}
-
-	.my-button {
-		padding: 30px 20px; /* Adjust the padding values as needed */
 	}
 
 	.event-button {

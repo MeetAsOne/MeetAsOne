@@ -7,6 +7,8 @@
         Spinner,
     } from "flowbite-svelte";
     import { ChevronDownSolid } from "flowbite-svelte-icons";
+    import {importedEvents} from '../store.ts'
+    import type { Availability } from "$lib/manual/Availability.ts";
 
     function get15MinuteIndexes(event: GptEvent) {
         const startHour = parseInt(event.start.split(":")[0]);
@@ -27,7 +29,7 @@
         return indexes;
     }
 
-    function compileEvents(events: GptEvent[]) {
+    function compileEvents(events: GptEvent[]): Availability {
         const compiledEvents: { [date: string]: number[] } = {};
 
         for (const event of events) {
@@ -37,6 +39,14 @@
 
             const indexes = get15MinuteIndexes(event);
             compiledEvents[event.date].push(...indexes);
+        }
+
+        // Generate all possible indexes
+        const allIndexes = Array.from({length: 96}, (_, i) => i);
+
+        // Replace each value in compiledEvents with the array of available indexes
+        for (const date in compiledEvents) {
+            compiledEvents[date] = allIndexes.filter(index => !compiledEvents[date].includes(index));
         }
 
         return compiledEvents;
@@ -52,38 +62,46 @@
     let files: FileList;
     let scanning = false;
 
+    function runGpt() {
+      showModal = false;
+      scanning = true;
+      const file = files[0];
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onloadend = async function () {
+        const base64 = (reader!.result! as string).split(",")[1];
+        const response = await fetch("/api/parse-calendar", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ image: base64 }),
+        });
+        scanning = false;
+        if (response.status === 500) {
+          window.alert("The calendar could not be imported.");
+          return;
+        } else if (response.status === 429) {
+          window.alert("Too many requests. Please try again in 15 seconds.");
+          return;
+        } else if (!response.ok) {
+          window.alert("An error occurred");
+          return;
+        }
+
+        const data: GptEvent[] = await response.json();
+
+        console.log('hi')
+
+        importedEvents.set(compileEvents(data))
+        console.log($importedEvents)
+        return;
+      };
+    }
+
     $: if (files) {
-        showModal = false;
-        scanning = true;
-        const file = files[0];
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onloadend = async function () {
-            const base64 = (reader!.result! as string).split(",")[1];
-            const response = await fetch("/api/parse-calendar", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ image: base64 }),
-            });
-            scanning = false;
-            if (response.status === 500) {
-                window.alert("The calendar could not be imported");
-                return;
-            } else if (response.status === 429) {
-                window.alert("Too many requests. Please try again later.");
-                return;
-            } else if (!response.ok) {
-                window.alert("An error occurred");
-                return;
-            }
-
-            const data: GptEvent[] = await response.json();
-
-            const compiledEvents = compileEvents(data);
-            console.log(compiledEvents);
-        };
+        console.log(files);
+        runGpt();
     }
 
     let showModal = false;

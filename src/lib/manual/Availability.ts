@@ -51,3 +51,21 @@ export function applyAvailability(dates: number[], availability: Availability) {
   }
   return loadAvailability({availability: out, username: "me"});
 }
+
+export function mergeAvailability(existing: InternalAvailability, newer: Availability, user = "me") {
+  for (const existingDateStr in existing) {
+    for (const newDateStr in newer) {
+      for (const timeBlock of newer[newDateStr]) {
+        const usersAvailable = existing[existingDateStr][timeBlock] as string[] | undefined;
+        if (!usersAvailable?.includes(user) && (new Date(newDateStr).getDay() === new Date(existingDateStr).getDay() || newDateStr === existingDateStr)) {
+          if (usersAvailable)
+            usersAvailable.push(user);
+          else
+            existing[existingDateStr][timeBlock] = [user];
+        }
+      }
+    }
+  }
+  console.log('end merge')
+  return existing;
+}
