@@ -27,7 +27,16 @@
     <input type="checkbox" id="darkModeToggle" bind:checked={shouldSave} />
     <ImportCalendar/>
     <div class="flex flex-wrap">
-        <ManualInput dates={event.dates.map(dateStrToEpoch)} timeRange={[event.start_time, event.end_time]} {shouldSave} availability={applyAvailability(event.dates.map(dateStrToEpoch), localAvailability.days)} />
-        <ManualInput totalParticipants={event.availabilities.length} dates={event.dates.map(dateStrToEpoch)} timeRange={[event.start_time, event.end_time]} availability={loadAvailability(...event.availabilities)} />
+        <div><h2>Your availability</h2>
+            <ManualInput dates={event.dates.map(dateStrToEpoch)} timeRange={[event.start_time, event.end_time]}
+                         {shouldSave}
+                         availability={applyAvailability(event.dates.map(dateStrToEpoch), localAvailability.days)}/>
+        </div>
+        <div>
+            <h2>Group Availability</h2>
+            <ManualInput totalParticipants={event.availabilities.length} dates={event.dates.map(dateStrToEpoch)}
+                         timeRange={[event.start_time, event.end_time]}
+                         availability={loadAvailability(...event.availabilities)}/>
+        </div>
     </div>
 {/if}
