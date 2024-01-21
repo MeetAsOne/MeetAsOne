@@ -57,41 +57,46 @@
     let files: FileList;
     let scanning = false;
 
+    function runGpt() {
+      showModal = false;
+      scanning = true;
+      const file = files[0];
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onloadend = async function () {
+        const base64 = (reader!.result! as string).split(",")[1];
+        const response = await fetch("/api/parse-calendar", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ image: base64 }),
+        });
+        scanning = false;
+        if (response.status === 500) {
+          window.alert("The calendar could not be imported.");
+          return;
+        } else if (response.status === 429) {
+          window.alert("Too many requests. Please try again in 15 seconds.");
+          return;
+        } else if (!response.ok) {
+          window.alert("An error occurred");
+          return;
+        }
+
+        const data: GptEvent[] = await response.json();
+
+        console.log('hi')
+
+        importedEvents.set(compileEvents(data))
+        console.log($importedEvents)
+        return;
+      };
+    }
+
     $: if (files) {
-        showModal = false;
-        scanning = true;
-        const file = files[0];
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onloadend = async function () {
-            const base64 = (reader!.result! as string).split(",")[1];
-            const response = await fetch("/api/parse-calendar", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ image: base64 }),
-            });
-            scanning = false;
-            if (response.status === 500) {
-                window.alert("The calendar could not be imported.");
-                return;
-            } else if (response.status === 429) {
-                window.alert("Too many requests. Please try again in 15 seconds.");
-                return;
-            } else if (!response.ok) {
-                window.alert("An error occurred");
-                return;
-            }
-
-            const data: GptEvent[] = await response.json();
-
-            console.log('hi')
-
-            importedEvents.set(compileEvents(data))
-            console.log($importedEvents)
-            return;
-        };
+        console.log(files);
+        runGpt();
     }
 
     let showModal = false;
