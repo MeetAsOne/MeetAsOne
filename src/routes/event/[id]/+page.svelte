@@ -51,8 +51,10 @@
     <h1>{event?.name ?? ""}</h1>
     <em>{event?.timezone ?? ""}</em>
 
-    <label for="darkModeToggle">Save My Calendar</label>
-    <input type="checkbox" id="darkModeToggle" bind:checked={shouldSave} />
+    <div>
+        <label for="darkModeToggle">Save My Calendar</label>
+        <input type="checkbox" id="darkModeToggle" bind:checked={shouldSave}/>
+    </div>
     <ImportCalendar/>
     <div class="flex flex-wrap">
         <div><h2>Your availability</h2>

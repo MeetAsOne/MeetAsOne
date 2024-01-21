@@ -59,7 +59,7 @@
     {#if dates.length > 0}
         <div class="labels text-right w-[5em]">
             {#each blocks as block, idx}
-                <div class="h-[17.6px]">
+                <div class="h-[17.5px]">
                     {idx % 2 === 0 ? intToTime(block * TIME_STEP) : " "}
                 </div>
             {/each}
@@ -76,6 +76,6 @@
     .labels {
         /* TODO: don't use magic constants */
         /*line-height: 1.1;*/
-        padding-top: 1.3em;
+        padding-top: 48px;
     }
 </style>
