@@ -39,7 +39,7 @@
 
   async function save() {
     if (shouldSave)
-      globalThis?.localStorage?.setItem?.('general-availability', JSON.stringify({
+      globalThis?.localStorage?.setItem?.('draftAvailability', JSON.stringify({
         "time-zone": 1,  // TODO
         days: weeklyAvailability,
       }));

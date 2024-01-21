@@ -14,7 +14,7 @@
 
     export let data: PageData;
   let event: GetEvent$result["events"][number] | undefined;
-  let shouldSave = true;
+  const shouldSave = true;
   /** list of people available for focused block*/
   const selectedAvailability = writable([] as string[]);
 
@@ -61,7 +61,7 @@
   <em class="m-5">Timezone of event: {event?.timezone ?? ""}</em>
 </div>
   <div class="flex justify-between">
-    <Button>Save availability to browser</Button>
+    <Button on:click={() => localStorage["general-availability"] = localStorage.draftAvailability}>Save availability to browser</Button>
     <ImportCalendar />
   </div>
 
@@ -93,7 +93,6 @@
             availablePeople={selectedAvailability}
             timeRange={[event.start_time, event.end_time]}
             availability={mergeAvailability(loadAvailability(...event.availabilities), $workingAvailability, globalThis?.localStorage?.name)}/>
-          />
         </div>
       </div>
     </div>
