@@ -4,6 +4,12 @@
 
 It is built with [SvelteKit](https://kit.svelte.dev/), [Nhost](https://nhost.io/), [Flowbite Svelte](https://flowbite-svelte.com), [Houdini](https://houdinigraphql.com), and [GPT4 Vision](https://platform.openai.com/docs/guides/vision).
 
+Created for the [BoilerMake XI Hackathon](https://devpost.com/software/meetasone)
+
+Demo video:
+
+[<img src="https://github.com/MeetAsOne/MeetAsOne/assets/53224922/13b24815-08c7-4208-8a69-8fa653af2ffa" width="50%" alt="Demo video" />](https://www.youtube.com/watch?v=24_jrbWBxLQ)
+
 ## How it works
 
 1. Create an event (no account required)
