@@ -149,7 +149,7 @@
                 id="disabled-input"
                 class="m-3"
                 required
-                placeholder="name"
+                placeholder="Event name"
                 bind:value={name}
             />
 
@@ -164,13 +164,13 @@
                 </div>
             </div>
 
-            <Button class="m-3" style="background-color:#D1AC00" 
+            <Button class="m-3" style="background-color:#D1AC00"
                 >{selectedOption}<ChevronDownSolid
                     class="w-3 h-3 ms-2 text-white dark:text-white"
                 /></Button
             >
             <Dropdown
-                class="overflow-y-auto px-3 pb-3 text-sm h-44 " 
+                class="overflow-y-auto px-3 pb-3 text-sm h-44 "
                 bind:open={showDropdown}
             >
                 <div slot="header" class="p-3">
@@ -213,7 +213,7 @@
                 </h2>
                 <p>
                     MeetAsOne is an app to poll people’s availability so you can
-                    schedule a time to meet. You can select a series of days and speicify 
+                    schedule a time to meet. You can select a series of days and speicify
 					the times that work for you, then we will find the best time for everyone else.
 					No need to manually enter your calendar, with MeetAsOne you can upload a screenshot
 					of your Google Calendar or Outlook Calendar. We'll parse it out
@@ -242,7 +242,7 @@
                     </li>
                 </ul>
             </div>
-			
+
         </div>
 		<h2 style="font-weight: bold; text-transform: uppercase; text-align: center; font-size: 24px; margin-top: 30px">
 			HAPPY MEETINGS :)
