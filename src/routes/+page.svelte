@@ -13,6 +13,8 @@
 	import {savePastEvents, getPastEvents} from "$lib/storage";
 
 	let name: string = "";
+	let searchQuery = "";
+	$: console.log("qry", searchQuery);
 	let timezones = [
 		"(GMT-12:00) International Date Line West",
 		"(GMT-11:00) Midway Island, Samoa",
@@ -172,10 +174,10 @@
 					class="overflow-y-auto px-3 pb-3 text-sm h-44 "
 					bind:open={showDropdown}
 				>
-					<!-- <div slot="header" class="p-3">
-                    <Search size="md" />
-                </div> -->
-					{#each timezones as time}
+					<div slot="header" class="p-3">
+						<Search size="md" bind:value={searchQuery} />
+					</div>
+					{#each timezones.filter(timezone => timezone.toLowerCase().includes(searchQuery.toLowerCase())) as time}
 						<li
 							class="rounded p-2 hover:bg-gray-100 dark:hover:bg-gray-600"
 						>
