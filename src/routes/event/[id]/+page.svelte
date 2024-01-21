@@ -17,13 +17,15 @@
     const localAvailability = JSON.parse(globalThis?.localStorage?.["general-availability"] ?? '{"days": {}}');
 </script>
 
-<h1>{event?.name ?? ""}</h1>
-<em>{event?.timezone ?? ""}</em>
+{#if $GetEvent.data?.events?.length === 0}
+    Event doesn't exist. <a href="/">Go home?</a>
+{:else if event}
+    <h1>{event?.name ?? ""}</h1>
+    <em>{event?.timezone ?? ""}</em>
 
-<label for="darkModeToggle">Save My Calendar</label>
-<input type="checkbox" id="darkModeToggle" bind:checked={shouldSave} />
-<ImportCalendar/>
-{#if event}
+    <label for="darkModeToggle">Save My Calendar</label>
+    <input type="checkbox" id="darkModeToggle" bind:checked={shouldSave} />
+    <ImportCalendar/>
     <div class="flex flex-wrap">
         <ManualInput dates={event.dates.map(dateStrToEpoch)} timeRange={[event.start_time, event.end_time]} {shouldSave} availability={applyAvailability(event.dates.map(dateStrToEpoch), localAvailability.days)} />
         <ManualInput totalParticipants={event.availabilities.length} dates={event.dates.map(dateStrToEpoch)} timeRange={[event.start_time, event.end_time]} availability={loadAvailability(...event.availabilities.map(person => person.availability))} />
