@@ -1,6 +1,6 @@
 <script lang="ts">
     import ImportCalendar from "$lib/importCalendar/ImportCalendar.svelte";
-    import {applyAvailability} from "$lib/manual/Availability.js";
+    import {applyAvailability, loadAvailability} from "$lib/manual/Availability.js";
     import ManualInput from "$lib/manual/ManualInput.svelte";
     import type {GetEvent$result} from "$houdini";
     import type {PageData} from "$houdini/types/src/routes/event/[id]/$houdini";
@@ -22,7 +22,8 @@
 {#if event}
     {JSON.stringify(event)}
     <div class="flex flex-wrap">
-<!--        <ManualInput dates={event.dates.map(dateStrToEpoch)} timeRange={[event.start_time, event.end_time]} {shouldSave} availability={applyAvailability(event.dates.map(dateStrToEpoch), localAvailability.days)} />-->
+        <ManualInput dates={event.dates.map(dateStrToEpoch)} timeRange={[event.start_time, event.end_time]} {shouldSave} availability={applyAvailability(event.dates.map(dateStrToEpoch), localAvailability.days)} />
+        <ManualInput totalParticipants={event.availabilities.length} dates={event.dates.map(dateStrToEpoch)} timeRange={[event.start_time, event.end_time]} availability={loadAvailability(...event.availabilities.map(person => person.availability)[0])} />
     </div>
 {/if}
 
