@@ -55,11 +55,11 @@
   }
 </script>
 
-<div class="flex flex-row select-none">
+<div class="flex items-stretch select-none">
     {#if dates.length > 0}
         <div class="labels text-right w-[5em]">
             {#each blocks as block, idx}
-                <div class="h-[17.5px]">
+                <div class="h-[17.2px]">
                     {idx % 2 === 0 ? intToTime(block * TIME_STEP) : " "}
                 </div>
             {/each}

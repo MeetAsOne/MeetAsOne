@@ -59,39 +59,44 @@
   Event doesn't exist. <a href="/">Go home?</a>
 {:else if event}
   <h1>{event?.name ?? ""}</h1>
+  <div class="flex justify-center items-center">
   <em class="m-5">Timezone of event: {event?.timezone ?? ""}</em>
+</div>
   <div class="flex justify-between">
     <Button>Save availability to browser</Button>
     <ImportCalendar />
   </div>
 
-  <div class="flex items-center flex-col w-full">
-    <div>
-      <h2>Your availability</h2>
-      <ManualInput
-        dates={event.dates.map(dateStrToEpoch)}
-        timeRange={[event.start_time, event.end_time]}
-        {shouldSave}
-        availability={applyAvailability(
-          event.dates.map(dateStrToEpoch),
-          localAvailability.days,
-        )}
-      />
-    </div>
-    <div>
-      <Availability
-        everyone={event.availabilities.map((person) => person.username)}
-        available={$selectedAvailability}
-      />
+  <div class="mt-10 flex items-center justify-center">
+    <div class="flex flex-row flex-wrap items-center justify-center">
       <div>
-        <h2>Group Availability</h2>
+        <h2>Your availability</h2>
         <ManualInput
-          totalParticipants={event.availabilities.length}
           dates={event.dates.map(dateStrToEpoch)}
-          availablePeople={selectedAvailability}
           timeRange={[event.start_time, event.end_time]}
-          availability={loadAvailability(...event.availabilities)}
+          {shouldSave}
+          availability={applyAvailability(
+            event.dates.map(dateStrToEpoch),
+            localAvailability.days,
+          )}
         />
+      </div>
+      <div class="w-10"></div>
+      <div class="flex flex-row">
+        <Availability
+          everyone={event.availabilities.map((person) => person.username)}
+          available={$selectedAvailability}
+        />
+        <div>
+          <h2>Group Availability</h2>
+          <ManualInput
+            totalParticipants={event.availabilities.length}
+            dates={event.dates.map(dateStrToEpoch)}
+            availablePeople={selectedAvailability}
+            timeRange={[event.start_time, event.end_time]}
+            availability={loadAvailability(...event.availabilities)}
+          />
+        </div>
       </div>
     </div>
   </div>
