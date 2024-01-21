@@ -37,5 +37,4 @@
     <label for="darkModeToggle">Save My Calendar</label>
     <input type="checkbox" id="darkModeToggle" bind:checked={shouldSave} />
     <ManualInput {dates} timeRange={timeRange.map(timeToInt)} {shouldSave} availability={applyAvailability(dates, localAvailability.days)} />
-    <ManualInput dates={Array.from(Object.keys(localAvailability.days))} timeRange={timeRange.map(timeToInt)} availability={loadAvailability(localAvailability.days)} totalParticipants={1} />
 </div>

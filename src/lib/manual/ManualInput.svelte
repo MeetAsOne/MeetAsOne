@@ -26,7 +26,7 @@
 
   export let totalParticipants = 0;
 
-  function save() {
+  async function save() {
     if (shouldSave)
       globalThis?.localStorage?.setItem?.('general-availability', JSON.stringify({
         "time-zone": 1,  // TODO
@@ -34,11 +34,13 @@
       }));
 
     const updater = new UpsertAvailabilityStore();
-    updater.mutate({
+    const res = await updater.mutate({
       availability: compactAvailability(availability),
       username: "Ethan",
       eventId: $page.params.id,
     });
+    if (res.errors)
+      res.errors.forEach(console.error);
   }
 </script>
 
