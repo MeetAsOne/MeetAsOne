@@ -62,7 +62,7 @@
         {#each blocks as block}
             <div class="availability-cell" class:cursor-pointer={!totalParticipants}
                  style:opacity={totalParticipants ? (availability[block]?.length ?? totalParticipants) / totalParticipants : "1"}
-                 class:available={availability[block]}
+                 class:available={availability[block]?.length}
                  on:pointerdown={(ev) => handlePointerDown(block, ev)}
                  on:pointerenter={() => handlePointerEnter(block)}>
             </div>
