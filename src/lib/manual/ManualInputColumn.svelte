@@ -56,6 +56,7 @@
                  style:opacity={totalParticipants ? (availability[block]?.length ?? totalParticipants) / totalParticipants : "1"}
                  class:available={availability[block]}
                  on:pointerdown={(ev) => handlePointerDown(block, ev)}
+                 on:click={() => console.log(availability[block])}
                  on:pointerenter={() => handlePointerEnter(block)}>
             </div>
         {/each}
