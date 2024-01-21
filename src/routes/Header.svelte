@@ -16,7 +16,7 @@
       </span>
     </NavBrand>
     <div style="flex: 1"></div>
-    <a href="https://github.com/MeetAsOne/MeetAsOne" class="p-2">GitHub</a>
+    <a href="https://github.com/MeetAsOne/MeetAsOne" target="_blank" class="p-2">GitHub</a>
     <DarkMode />
   </Navbar>
 </header>
