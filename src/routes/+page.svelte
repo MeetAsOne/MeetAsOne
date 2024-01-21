@@ -1,5 +1,5 @@
 <script lang="ts">
-    import welcome_fallback from "$lib/images/meetasone.png";
+    import welcome_fallback from "$lib/images/Untitled4.png";
     import { Label, Input, Button } from "flowbite-svelte";
     import { Dropdown, DropdownItem, Search } from "flowbite-svelte";
     import { ChevronDownSolid, UserRemoveSolid } from "flowbite-svelte-icons";
@@ -111,7 +111,7 @@
     <div class="header">
         <h1>
             <span class="welcome">
-                <img src={welcome_fallback} alt="MeetAsOne" />
+                <img src={welcome_fallback} alt="MeetAsOne" style="width: 2000px; height: auto;" />
             </span>
         </h1>
     </div>
@@ -261,15 +261,15 @@
     }
 
     .welcome {
-        display: block;
+        display: inline;
         position: relative;
-        width: 100%;
+        width: 110%;
         height: 0;
         padding: 0 0 calc(100% * 680 / 2048) 0;
-        background-size: cover;
+        background-size:  contain;
         background-position: center;
-        border: 5px solid black; /* Adjust border size */
-        margin-bottom: 20px; /* Add margin to separate from description */
+        /* border: 0.5px solid black; Adjust border size */
+        /* margin-bottom: 0px; Add margin to separate from description */
     }
     .container {
         display: flex;
