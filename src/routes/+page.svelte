@@ -1,5 +1,5 @@
 <script lang="ts">
-	import welcome_fallback from "$lib/images/Untitled4.png";
+	import welcome_fallback from "$lib/images/HomepageTitle.png";
 	import { Label, Input, Button } from "flowbite-svelte";
 	import { Dropdown, DropdownItem, Search } from "flowbite-svelte";
 	import { ChevronDownSolid, UserRemoveSolid } from "flowbite-svelte-icons";
