@@ -59,9 +59,9 @@ export function mergeAvailability(existing: InternalAvailability, newer: Availab
         const usersAvailable = existing[existingDateStr][timeBlock] as string[] | undefined;
         if (!usersAvailable?.includes(user) && (new Date(newDateStr).getDay() === new Date(existingDateStr).getDay() || newDateStr === existingDateStr)) {
           if (usersAvailable)
-            existing[existingDateStr][timeBlock] = [user];
+            usersAvailable.push(user);
           else
-            usersAvailable!.push(user);
+            existing[existingDateStr][timeBlock] = [user];
         }
       }
     }
