@@ -20,6 +20,10 @@
     // pull the store reference from the route props
     $: ({ GetEvent } = data);
     $: event = $GetEvent.data?.events?.[0];
+    $: {
+      if ($GetEvent.errors)
+        throw $GetEvent.errors;
+    }
 
     const pastEvents = getPastEvents();
 
