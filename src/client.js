@@ -1,12 +1,5 @@
 import { HoudiniClient } from '$houdini';
 
 export default new HoudiniClient({
-    url: 'https://swyjiuxnroxxokgcyepv.hasura.eu-central-1.nhost.run/v1/graphql',
-    fetchParams({ session }) {
-        return {
-            headers: {
-                "x-hasura-admin-secret": import.meta.env.VITE_GRAPHQL_KEY,
-            }
-        }
-    }
+    url: 'https://cosmic-elk-37.hasura.app/v1/graphql'
 })

@@ -3,10 +3,7 @@
 /** @type {import('houdini').ConfigFile} */
 const config = {
     "watchSchema": {
-        "url": "https://swyjiuxnroxxokgcyepv.hasura.eu-central-1.nhost.run/v1/graphql",
-        headers: {
-            'x-hasura-admin-secret': 'env:VITE_GRAPHQL_KEY',
-        }
+        "url": "https://cosmic-elk-37.hasura.app/v1/graphql"
     },
     "plugins": {
         "houdini-svelte": {}
