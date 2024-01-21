@@ -1,20 +1,18 @@
 <script lang="ts">
-  import ImportCalendar from "$lib/importCalendar/ImportCalendar.svelte";
-  import {
-    applyAvailability,
-    loadAvailability,
-  } from "$lib/manual/Availability.js";
-  import ManualInput from "$lib/manual/ManualInput.svelte";
-  import type { GetEvent$result } from "$houdini";
-  import type { PageData } from "$houdini/types/src/routes/event/[id]/$houdini";
-  import { dateStrToEpoch } from "$lib/timeutils";
-  import { page } from "$app/stores";
-  import { getPastEvents, savePastEvents } from "$lib/storage";
-  import { writable } from "svelte/store";
-  import Availability from "$lib/Availability.svelte";
-  import { Button } from "flowbite-svelte";
+    import ImportCalendar from "$lib/importCalendar/ImportCalendar.svelte";
+    import {applyAvailability, loadAvailability, mergeAvailability} from "$lib/manual/Availability.js";
+    import ManualInput from "$lib/manual/ManualInput.svelte";
+    import type {GetEvent$result} from "$houdini";
+    import type {PageData} from "$houdini/types/src/routes/event/[id]/$houdini";
+    import {dateStrToEpoch} from "$lib/timeutils";
+    import {page} from "$app/stores";
+    import {getPastEvents, savePastEvents} from "$lib/storage";
+    import {writable} from "svelte/store";
+    import Availability from "$lib/Availability.svelte";
+    import {workingAvailability} from "$lib/store.ts";
+    import { Button } from "flowbite-svelte";
 
-  export let data: PageData;
+    export let data: PageData;
   let event: GetEvent$result["events"][number] | undefined;
   let shouldSave = true;
   /** list of people available for focused block*/
@@ -94,7 +92,7 @@
             dates={event.dates.map(dateStrToEpoch)}
             availablePeople={selectedAvailability}
             timeRange={[event.start_time, event.end_time]}
-            availability={loadAvailability(...event.availabilities)}
+            availability={mergeAvailability(loadAvailability(...event.availabilities), $workingAvailability, globalThis?.localStorage?.name)}/>
           />
         </div>
       </div>

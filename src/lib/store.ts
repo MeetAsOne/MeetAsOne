@@ -4,3 +4,5 @@ import type { Availability } from './manual/Availability';
 
 
 export const importedEvents: Writable<Availability> = writable();
+
+export const workingAvailability = writable<Availability>({});

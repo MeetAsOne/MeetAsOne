@@ -7,13 +7,15 @@
   import {TIME_STEP} from "$lib/units";
   import {page} from "$app/stores";
   import type {Writable} from "svelte/store";
-  import { importedEvents } from "$lib/store";
+  import { importedEvents, workingAvailability } from "$lib/store";
+  import {getOrSetName} from "$lib/storage.ts";
 
   export let shouldSave = false;
   export let availability: InternalAvailability = {};
   let formattedAvailability: Availability = {};
   let weeklyAvailability: Availability = {};
   $: [formattedAvailability, weeklyAvailability] = compactAvailability(availability);
+  $: if (!availablePeople) workingAvailability.set(formattedAvailability);
   $: console.log("availability", availability);
   $: console.log("formattedAvailability", formattedAvailability);
 
@@ -43,9 +45,11 @@
       }));
 
     const updater = new UpsertAvailabilityStore();
+    const username = getOrSetName();
+    if (!username) return;
     const res = await updater.mutate({
       availability: compactAvailability(availability)[0],
-      username: localStorage?.name ?? (localStorage.name = prompt("What is your name + last initial?")),
+      username,
       eventId: $page.params.id,
     });
     if (res.errors)
