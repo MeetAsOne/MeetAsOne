@@ -42,9 +42,10 @@
 		"(GMT+12:00) Fiji, Kamchatka, Marshall Is.",
 	];
 
+	interface EventSummary { name: string; id: string }
 	interface PastEvents {
-		created: Array<{ name: string; id: string }>;
-		responded: Array<{ name: string; id: string }>;
+		created: EventSummary[];
+		responded: EventSummary[];
 	}
 
 	let pastEventsString = globalThis?.localStorage?.getItem?.("pastEvents");
@@ -53,22 +54,12 @@
 
 	if (!pastEventsString) {
 		pastEvents = {
-			created: [
-				{ name: "Hello", id: "1234" },
-				{ name: "there", id: "825" },
-			],
-			responded: [
-				{ name: "Hello", id: "1234" },
-				{ name: "there", id: "825" },
-			],
+			created: [],
+			responded: [],
 		};
 	} else {
 		pastEvents = JSON.parse(pastEventsString);
 	}
-	globalThis?.localStorage?.setItem?.(
-		"pastEvents",
-		JSON.stringify(pastEvents),
-	);
 	let selectedOption: string = "Select Timezone";
 
 	let showDropdown = false;
@@ -98,7 +89,13 @@
 				alert("Your configuration is invalid. Make sure end time is after start & you selected no more than 7 days.\n" + response.errors.map(err => err.message).join("/n"));
 				return;
 			}
-			goto("event/" + response.data?.insert_events?.returning[0].id);
+			const id = response.data?.insert_events?.returning[0].id!;
+			pastEvents.created.push({id, name});
+			localStorage.setItem(
+				"pastEvents",
+				JSON.stringify(pastEvents),
+			)
+			goto("event/" + id);
 		}
 	}
 </script>
@@ -136,7 +133,7 @@
 				<div class="event-button">
 					<Button
 						style="background-color:#D1AC00"
-						href={"/events/" + createdEvent.id}
+						href={"/event/" + createdEvent.id}
 						>{createdEvent.name}</Button
 					>
 				</div>
