@@ -69,10 +69,10 @@
             });
             scanning = false;
             if (response.status === 500) {
-                window.alert("The calendar could not be imported");
+                window.alert("The calendar could not be imported.");
                 return;
             } else if (response.status === 429) {
-                window.alert("Too many requests. Please try again later.");
+                window.alert("Too many requests. Please try again in 15 seconds.");
                 return;
             } else if (!response.ok) {
                 window.alert("An error occurred");
