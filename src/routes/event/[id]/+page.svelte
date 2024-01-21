@@ -93,7 +93,6 @@
             availablePeople={selectedAvailability}
             timeRange={[event.start_time, event.end_time]}
             availability={mergeAvailability(loadAvailability(...event.availabilities), $workingAvailability, globalThis?.localStorage?.name)}/>
-          />
         </div>
       </div>
     </div>
