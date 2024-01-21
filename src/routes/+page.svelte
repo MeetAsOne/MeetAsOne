@@ -182,7 +182,7 @@
 					bind:open={showDropdown}
 				>
 					<div slot="header" class="p-3">
-						<Search size="md" bind:value={searchQuery} />
+						<Search size="md" bind:value={searchQuery} autofocus />
 					</div>
 					{#each timezones.filter(timezone => timezone.toLowerCase().includes(searchQuery.toLowerCase())) as time}
 						<li
@@ -287,6 +287,7 @@
 		display: flex;
 		flex-wrap: wrap-reverse;
 		justify-content: space-between;
+		max-width: 1000px;
 	}
 
 	.section {
@@ -321,7 +322,6 @@
 		box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 		/* margin-top: 20px; */
 		/* Adjust size properties as needed */
-		width: 70%; /* Example: Set the width to 70% of the parent container */
 		max-width: 500px; /* Example: Set the maximum width */
 		max-height: 400px;
 		margin-left: auto; /* Example: Center the box horizontally */

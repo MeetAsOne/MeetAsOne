@@ -60,7 +60,7 @@
   <div class="flex justify-center items-center">
   <em class="m-5">Timezone of event: {event?.timezone ?? ""}</em>
 </div>
-  <div class="flex justify-between">
+  <div class="flex justify-between gap-2">
     <Button on:click={() => localStorage["general-availability"] = localStorage.draftAvailability}>Save availability to browser</Button>
     <ImportCalendar />
   </div>
