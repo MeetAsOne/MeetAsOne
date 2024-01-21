@@ -2,11 +2,12 @@
   import ManualInputColumn from "$lib/manual/ManualInputColumn.svelte";
   import range from "$lib/range";
   import {intToTime} from "$lib/timeutils.js";
-  import {type Availability, compactAvailability, type InternalAvailability} from "$lib/manual/Availability";
+  import {type Availability, compactAvailability, type InternalAvailability, mergeAvailability} from "$lib/manual/Availability";
   import {UpsertAvailabilityStore} from "$houdini";
   import {TIME_STEP} from "$lib/units";
   import {page} from "$app/stores";
   import type {Writable} from "svelte/store";
+  import { importedEvents } from "$lib/store";
 
   export let shouldSave = false;
   export let availability: InternalAvailability = {};
@@ -15,6 +16,10 @@
   $: [formattedAvailability, weeklyAvailability] = compactAvailability(availability);
   $: console.log("availability", availability);
   $: console.log("formattedAvailability", formattedAvailability);
+
+  importedEvents.subscribe((currentValue) => {
+    mergeAvailability(availability, currentValue)
+  })
 
   /** Epoch timestamps for which to display the UI */
   export let dates: number[];

@@ -86,7 +86,11 @@
 
             const data: GptEvent[] = await response.json();
 
-            importedEvents.update(contents => compileEvents(data))
+            console.log('hi')
+
+            importedEvents.set(compileEvents(data))
+            console.log($importedEvents)
+            return;
         };
     }
 

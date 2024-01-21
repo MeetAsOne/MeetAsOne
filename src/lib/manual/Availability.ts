@@ -66,5 +66,6 @@ export function mergeAvailability(existing: InternalAvailability, newer: Availab
       }
     }
   }
+  console.log('end merge')
   return existing;
 }
