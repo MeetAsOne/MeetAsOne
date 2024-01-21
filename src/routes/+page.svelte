@@ -337,7 +337,6 @@
 		/* Adjust size properties as needed */
 		width: 100%; /* Example: Set the width to 70% of the parent container */
 		max-width: 2000px;
-		max-height: 400px;
 		margin-left: 0; /* Example: Center the box horizontally */
 		margin-right: 0;
 		margin-top: 8%;
