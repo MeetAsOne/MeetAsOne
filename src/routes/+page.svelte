@@ -131,7 +131,7 @@
 				<div class="event-button">
 					<Button
 						style="background-color:#D1AC00"
-						href={"/events/" + respondedEvent.id}
+						href={"/event/" + respondedEvent.id}
 						>{respondedEvent.name}</Button
 					>
 				</div>
