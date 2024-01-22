@@ -5,6 +5,7 @@ import type {GetEvent$result} from "$houdini";
 type DateStr = string;
 export type Availability = Record<DateStr, number[]>;
 export type InternalAvailability = Record<DateStr, string[][]>;
+export type GenericAvailability = Availability | InternalAvailability;
 
 type GetEvent$availability = GetEvent$result["events"][number]["availabilities"][number];
 
@@ -69,10 +70,10 @@ export function mergeAvailability(existing: InternalAvailability, newer: Availab
   return existing;
 }
 
-export function newBlankAvailability(dates: string[]) {
-  const avail: Record<string, any[]> = {};
+export function enforceAvailabilityValidity<T extends GenericAvailability>(availability: T, dates: string[]) {
   for (const date of dates) {
-    avail[date] = [];
+    if (!(date in availability))
+      availability[date] = [];
   }
-  return avail;
+  return availability;
 }

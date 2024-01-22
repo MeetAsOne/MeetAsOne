@@ -1,10 +1,9 @@
 <script lang="ts">
     import ImportCalendar from "$lib/importCalendar/ImportCalendar.svelte";
     import {
-      applyAvailability,
+      applyAvailability, enforceAvailabilityValidity,
       loadAvailability,
-      mergeAvailability,
-      newBlankAvailability
+      mergeAvailability
     } from "$lib/manual/Availability.js";
     import ManualInput from "$lib/manual/ManualInput.svelte";
     import type {GetEvent$result} from "$houdini";
@@ -97,7 +96,7 @@
             dates={event.dates.map(dateStrToEpoch)}
             availablePeople={selectedAvailability}
             timeRange={[event.start_time, event.end_time]}
-            availability={mergeAvailability(loadAvailability(...(event.availabilities.length ? event.availabilities : [{ availability: newBlankAvailability(event.dates), username: "null"}])), $workingAvailability, globalThis?.localStorage?.name)}/>
+            availability={mergeAvailability(enforceAvailabilityValidity(loadAvailability(...event.availabilities), event.dates), $workingAvailability, globalThis?.localStorage?.name)}/>
         </div>
       </div>
     </div>
