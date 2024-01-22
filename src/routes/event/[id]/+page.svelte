@@ -97,7 +97,7 @@
             dates={event.dates.map(dateStrToEpoch)}
             availablePeople={selectedAvailability}
             timeRange={[event.start_time, event.end_time]}
-            availability={mergeAvailability(loadAvailability(...(event.availabilities.length ? event.availabilities : [{ availability: newBlankAvailability(event.dates), username: "null"}])), $workingAvailability, globalThis?.localStorage?.name)}/>
+            availability={mergeAvailability(mergeAvailability(loadAvailability(...event.availabilities), $workingAvailability, globalThis?.localStorage?.name), newBlankAvailability(event.dates), "null")}/>
         </div>
       </div>
     </div>
