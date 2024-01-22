@@ -5,7 +5,6 @@ import type {GetEvent$result} from "$houdini";
 type DateStr = string;
 export type Availability = Record<DateStr, number[]>;
 export type InternalAvailability = Record<DateStr, string[][]>;
-export type GenericAvailability = Availability | InternalAvailability;
 
 type GetEvent$availability = GetEvent$result["events"][number]["availabilities"][number];
 
@@ -66,11 +65,6 @@ export function mergeAvailability(existing: InternalAvailability, newer: Availab
         }
       }
     }
-  }
-  // Copy any availabilities that exist on `newer` but not `existing`
-  for (const [newDateStr, newAvailability] of Object.entries(loadAvailability({availability: newer, username: user}))) {
-    if (!(newDateStr in existing))
-      existing[newDateStr] = newAvailability;
   }
   return existing;
 }
