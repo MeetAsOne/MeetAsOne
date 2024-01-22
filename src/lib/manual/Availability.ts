@@ -68,3 +68,11 @@ export function mergeAvailability(existing: InternalAvailability, newer: Availab
   }
   return existing;
 }
+
+export function newBlankAvailability(dates: string[]) {
+  const avail: Record<string, any[]> = {};
+  for (const date of dates) {
+    avail[date] = [];
+  }
+  return avail;
+}

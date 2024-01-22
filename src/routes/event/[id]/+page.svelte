@@ -1,6 +1,11 @@
 <script lang="ts">
     import ImportCalendar from "$lib/importCalendar/ImportCalendar.svelte";
-    import {applyAvailability, loadAvailability, mergeAvailability} from "$lib/manual/Availability.js";
+    import {
+      applyAvailability,
+      loadAvailability,
+      mergeAvailability,
+      newBlankAvailability
+    } from "$lib/manual/Availability.js";
     import ManualInput from "$lib/manual/ManualInput.svelte";
     import type {GetEvent$result} from "$houdini";
     import type {PageData} from "$houdini/types/src/routes/event/[id]/$houdini";
@@ -20,9 +25,9 @@
 
   // pull the store reference from the route props
   $: ({ GetEvent } = data);
-  $: event = $GetEvent.data?.events?.[0];
+  $: event = $GetEvent?.data?.events?.[0];
   $: {
-    if ($GetEvent.errors) throw $GetEvent.errors;
+    if ($GetEvent.errors) console.error($GetEvent.errors);
   }
 
   const pastEvents = getPastEvents();
@@ -53,13 +58,13 @@
   />
 </svelte:head>
 
-{#if $GetEvent.data?.events?.length === 0}
+{#if $GetEvent.errors || $GetEvent.data?.events?.length === 0}
   Event doesn't exist. <a href="/">Go home?</a>
 {:else if event}
   <h1>{event?.name ?? ""}</h1>
   <div class="flex justify-center items-center">
-  <em class="m-5">Timezone of event: {event?.timezone ?? ""}</em>
-</div>
+    <em class="m-5">Timezone of event: {event?.timezone ?? ""}</em>
+  </div>
   <div class="flex justify-between gap-2">
     <Button on:click={() => localStorage["general-availability"] = localStorage.draftAvailability}>Save availability to browser</Button>
     <ImportCalendar />
@@ -92,7 +97,7 @@
             dates={event.dates.map(dateStrToEpoch)}
             availablePeople={selectedAvailability}
             timeRange={[event.start_time, event.end_time]}
-            availability={mergeAvailability(loadAvailability(...event.availabilities), $workingAvailability, globalThis?.localStorage?.name)}/>
+            availability={mergeAvailability(loadAvailability(...(event.availabilities.length ? event.availabilities : [{ availability: newBlankAvailability(event.dates), username: "null"}])), $workingAvailability, globalThis?.localStorage?.name)}/>
         </div>
       </div>
     </div>
