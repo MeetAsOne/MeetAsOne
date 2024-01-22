@@ -57,6 +57,12 @@
     if (res.data?.insert_availability?.affected_rows === 0)
       console.error("No rows were changed")
   }
+
+  let touchCount = 0;
+  function setTouchCount(ev: TouchEvent) {
+    touchCount = ev.touches.length;
+    console.log(touchCount);
+  }
 </script>
 
 <div class="flex items-stretch select-none">
