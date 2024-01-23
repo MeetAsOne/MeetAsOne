@@ -8,6 +8,8 @@ declare global {
 		// interface PageState {}
 		// interface Platform {}
 	}
+	var isDragging: boolean;
+	var dragState: boolean | null;
 
 	type Json = string | number | boolean | null | Json[] | { [key: string]: Json };
 }

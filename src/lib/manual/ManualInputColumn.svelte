@@ -20,15 +20,15 @@
   /** store to write to when hovering over group's time blocks. Setting this also disables input */
   export let availablePeople: Writable<string[]> | undefined = undefined;
 
-  let isDragging = false;
-  let dragState: boolean | null = null;
+  globalThis.isDragging = false;
+  globalThis.dragState = null;
 
   const toggleAvailability = (timeIndex: number) => {
-    if (dragState === null) {
-      dragState = !(availability[timeIndex]?.length ?? 0);
+    if (globalThis.dragState === null) {
+      globalThis.dragState = !(availability[timeIndex]?.length ?? 0);
     }
 
-    availability[timeIndex] = dragState ? ["me"] : [];
+    availability[timeIndex] = globalThis.dragState ? ["me"] : [];
   };
 
   // Had to implement 2 separate touch and mouse handlers (instead of using pointer handler) b/c `touch-none` prevents 2-finger panning but without it, page scrolls while selecting
@@ -37,20 +37,20 @@
       handlePointerUp()
     else if (!availablePeople) {
       ev.preventDefault();
-      isDragging = true;
+      globalThis.isDragging = true;
       return Number.parseInt((document.elementFromPoint(ev.touches[0].clientX, ev.touches[0].clientY) as HTMLElement).dataset.idx!)
     }
   }
 
   const handleMouseDown = (timeIndex: number) => {
     if (availablePeople) return;
-    isDragging = true;
+    globalThis.isDragging = true;
     toggleAvailability(timeIndex);
   };
 
   const handlePointerEnter = (timeIndex: number | undefined) => {
     if (timeIndex == undefined) return;
-    if (isDragging) {
+    if (globalThis.isDragging) {
       toggleAvailability(timeIndex);
     }
     if (availablePeople)
@@ -58,9 +58,9 @@
   };
 
   const handlePointerUp = () => {
-    if (isDragging) {
-      isDragging = false;
-      dragState = null;
+    if (globalThis.isDragging) {
+      globalThis.isDragging = false;
+      globalThis.dragState = null;
       if (!availablePeople)
         save();
     }
