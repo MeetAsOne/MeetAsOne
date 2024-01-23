@@ -9,6 +9,10 @@ export type GenericAvailability = Availability | InternalAvailability;
 
 type GetEvent$availability = GetEvent$result["events"][number]["availabilities"][number];
 
+export function loadAvailabilityOne(availability: Availability) {
+  return loadAvailability({availability, username: "me"});
+}
+
 /** Converts availability from format in database or localstorage into format component can read */
 export function loadAvailability(...availabilities: GetEvent$availability[]) {
   const unpackedAvailability: InternalAvailability = {};
@@ -50,7 +54,7 @@ export function applyAvailability(dates: number[], availability: Availability) {
   for (const date of dates) {
     out[new Date(date).toLocaleDateString()] = availability[new Date(date).getDay()] ?? [];
   }
-  return loadAvailability({availability: out, username: "me"});
+  return loadAvailabilityOne(out);
 }
 
 export function mergeAvailability(existing: InternalAvailability, newer: Availability, user = "me") {

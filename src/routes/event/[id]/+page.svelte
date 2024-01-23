@@ -1,8 +1,8 @@
 <script lang="ts">
     import ImportCalendar from "$lib/importCalendar/ImportCalendar.svelte";
     import {
-      applyAvailability, enforceAvailabilityValidity,
-      loadAvailability,
+      applyAvailability, type Availability, enforceAvailabilityValidity,
+      loadAvailability, loadAvailabilityOne,
       mergeAvailability
     } from "$lib/manual/Availability.js";
     import ManualInput from "$lib/manual/ManualInput.svelte";
@@ -12,7 +12,7 @@
     import {page} from "$app/stores";
     import {getPastEvents, savePastEvents} from "$lib/storage";
     import {writable} from "svelte/store";
-    import Availability from "$lib/Availability.svelte";
+    import AvailabilityComponent from "$lib/Availability.svelte";
     import {workingAvailability} from "$lib/store.ts";
     import { Button } from "flowbite-svelte";
 
@@ -45,6 +45,8 @@
   const localAvailability = JSON.parse(
     globalThis?.localStorage?.["general-availability"] ?? '{"days": {}}',
   );
+  let mySavedAvailability: Availability | undefined;
+  $: mySavedAvailability = event?.availabilities.find(avail => avail.username === globalThis?.localStorage?.name)?.availability;
 </script>
 
 <svelte:head>
@@ -77,7 +79,7 @@
           dates={event.dates.map(dateStrToEpoch)}
           timeRange={[event.start_time, event.end_time]}
           {shouldSave}
-          availability={applyAvailability(
+          availability={mySavedAvailability ? loadAvailabilityOne(mySavedAvailability) : applyAvailability(
             event.dates.map(dateStrToEpoch),
             localAvailability.days,
           )}
@@ -85,7 +87,7 @@
       </div>
       <div class="w-10"></div>
       <div class="flex flex-row">
-        <Availability
+        <AvailabilityComponent
           everyone={event.availabilities.map((person) => person.username)}
           available={$selectedAvailability}
         />
