@@ -224,7 +224,7 @@
 					<p>
 						MeetAsOne is an app to poll people’s availability so you
 						can schedule a time to meet. You can select a series of
-						days and speicify the times that work for you, then we
+						days and specify the times that work for you, then we
 						will find the best time for everyone else. No need to
 						manually enter your calendar, with MeetAsOne you can
 						upload a screenshot of your Google Calendar or Outlook
@@ -301,17 +301,11 @@
 		align-self: self-start;
 	}
 
-	.my-events,
-	.rsvpd-events {
-		margin-bottom: 20px;
-	}
-
 	.content {
 		max-width: 1000px;
 		display: flex;
 		flex-wrap: wrap;
 		margin: auto;
-		display: flex;
 		flex-direction: column;
 		align-items: center;
 	}
@@ -346,11 +340,10 @@
 		flex-wrap: wrap;
 		justify-content: center;
 		align-items: center;
-		padding: 0px;
+		padding: 0;
 		max-width: 1000px;
-		align-items: center;
 		/* margin: auto; */
-		margin-top: 0px;
+		margin-top: 0;
 	}
 
 	.description,
@@ -376,15 +369,6 @@
 
 	ul {
 		list-style-type: square;
-	}
-
-	.dark-mode-toggle {
-		text-align: center;
-		margin-top: 20px;
-	}
-
-	input[type="checkbox"] {
-		margin-left: 5px;
 	}
 
 	.event-button {
