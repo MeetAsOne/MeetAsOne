@@ -31,15 +31,25 @@
     availability[timeIndex] = dragState ? ["me"] : [];
   };
 
-  const handlePointerDown = (timeIndex: number, ev: PointerEvent) => {
-    // So stupid https://stackoverflow.com/a/70976017
-    (ev.target as HTMLElement).releasePointerCapture(ev.pointerId);
+  // Had to implement 2 separate touch and mouse handlers (instead of using pointer handler) b/c `touch-none` prevents 2-finger panning but without it, page scrolls while selecting
+  function convertTouchEvent(ev: TouchEvent) {
+    if (ev.touches.length > 1)
+      handlePointerUp()
+    else if (!availablePeople) {
+      ev.preventDefault();
+      isDragging = true;
+      return Number.parseInt((document.elementFromPoint(ev.touches[0].clientX, ev.touches[0].clientY) as HTMLElement).dataset.idx!)
+    }
+  }
+
+  const handleMouseDown = (timeIndex: number) => {
     if (availablePeople) return;
     isDragging = true;
     toggleAvailability(timeIndex);
   };
 
-  const handlePointerEnter = (timeIndex: number) => {
+  const handlePointerEnter = (timeIndex: number | undefined) => {
+    if (timeIndex == undefined) return;
     if (isDragging) {
       toggleAvailability(timeIndex);
     }
@@ -47,7 +57,7 @@
       availablePeople.set(availability[timeIndex] ?? []);
   };
 
-  const handleMouseUp = () => {
+  const handlePointerUp = () => {
     if (isDragging) {
       isDragging = false;
       dragState = null;
@@ -59,18 +69,20 @@
 
 <div class="flex-grow text-center">
     <div>{daysOfWeek[new Date(date).getDay()]}<br />{new Date(date).toLocaleDateString()}</div>
-    <div class="bg-white touch-none">
+    <div class="bg-white">
         {#each blocks as block}
-            <div class="availability-cell" class:cursor-pointer={!totalParticipants}
+            <div class="availability-cell" data-idx={block} class:cursor-pointer={!availablePeople}
                  style:opacity={totalParticipants ? (availability[block]?.length ?? totalParticipants) / totalParticipants : "1"}
                  class:available={availability[block]?.length}
-                 on:pointerdown={(ev) => handlePointerDown(block, ev)}
-                 on:pointerenter={() => handlePointerEnter(block)}>
+                 on:mousedown={() => handleMouseDown(block)}
+                 on:mouseenter={() => handlePointerEnter(block)}
+                 on:touchmove={ev => handlePointerEnter(convertTouchEvent(ev))}
+            >
             </div>
         {/each}
     </div>
 </div>
-<svelte:window on:pointerup={handleMouseUp} />
+<svelte:window on:pointerup={handlePointerUp} />
 
 <style>
     .availability-cell {

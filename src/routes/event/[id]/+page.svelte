@@ -1,6 +1,10 @@
 <script lang="ts">
     import ImportCalendar from "$lib/importCalendar/ImportCalendar.svelte";
-    import {applyAvailability, loadAvailability, mergeAvailability} from "$lib/manual/Availability.js";
+    import {
+      applyAvailability, type Availability, enforceAvailabilityValidity,
+      loadAvailability, loadAvailabilityOne,
+      mergeAvailability
+    } from "$lib/manual/Availability.js";
     import ManualInput from "$lib/manual/ManualInput.svelte";
     import type {GetEvent$result} from "$houdini";
     import type {PageData} from "$houdini/types/src/routes/event/[id]/$houdini";
@@ -8,7 +12,7 @@
     import {page} from "$app/stores";
     import {getPastEvents, savePastEvents} from "$lib/storage";
     import {writable} from "svelte/store";
-    import Availability from "$lib/Availability.svelte";
+    import AvailabilityComponent from "$lib/Availability.svelte";
     import {workingAvailability} from "$lib/store.ts";
     import { Button } from "flowbite-svelte";
 
@@ -20,9 +24,9 @@
 
   // pull the store reference from the route props
   $: ({ GetEvent } = data);
-  $: event = $GetEvent.data?.events?.[0];
+  $: event = $GetEvent?.data?.events?.[0];
   $: {
-    if ($GetEvent.errors) throw $GetEvent.errors;
+    if ($GetEvent.errors) console.error($GetEvent.errors);
   }
 
   const pastEvents = getPastEvents();
@@ -41,6 +45,8 @@
   const localAvailability = JSON.parse(
     globalThis?.localStorage?.["general-availability"] ?? '{"days": {}}',
   );
+  let mySavedAvailability: Availability | undefined;
+  $: mySavedAvailability = event?.availabilities.find(avail => avail.username === globalThis?.localStorage?.name)?.availability;
 </script>
 
 <svelte:head>
@@ -53,14 +59,14 @@
   />
 </svelte:head>
 
-{#if $GetEvent.data?.events?.length === 0}
+{#if $GetEvent.errors || $GetEvent.data?.events?.length === 0}
   Event doesn't exist. <a href="/">Go home?</a>
 {:else if event}
   <h1>{event?.name ?? ""}</h1>
   <div class="flex justify-center items-center">
-  <em class="m-5">Timezone of event: {event?.timezone ?? ""}</em>
-</div>
-  <div class="flex justify-between">
+    <em class="m-5">Timezone of event: {event?.timezone ?? ""}</em>
+  </div>
+  <div class="flex justify-between gap-2">
     <Button on:click={() => localStorage["general-availability"] = localStorage.draftAvailability}>Save availability to browser</Button>
     <ImportCalendar />
   </div>
@@ -73,7 +79,7 @@
           dates={event.dates.map(dateStrToEpoch)}
           timeRange={[event.start_time, event.end_time]}
           {shouldSave}
-          availability={applyAvailability(
+          availability={mySavedAvailability ? loadAvailabilityOne(mySavedAvailability) : applyAvailability(
             event.dates.map(dateStrToEpoch),
             localAvailability.days,
           )}
@@ -81,7 +87,7 @@
       </div>
       <div class="w-10"></div>
       <div class="flex flex-row">
-        <Availability
+        <AvailabilityComponent
           everyone={event.availabilities.map((person) => person.username)}
           available={$selectedAvailability}
         />
@@ -92,7 +98,7 @@
             dates={event.dates.map(dateStrToEpoch)}
             availablePeople={selectedAvailability}
             timeRange={[event.start_time, event.end_time]}
-            availability={mergeAvailability(loadAvailability(...event.availabilities), $workingAvailability, globalThis?.localStorage?.name)}/>
+            availability={mergeAvailability(enforceAvailabilityValidity(loadAvailability(...event.availabilities), event.dates), $workingAvailability, globalThis?.localStorage?.name)}/>
         </div>
       </div>
     </div>
