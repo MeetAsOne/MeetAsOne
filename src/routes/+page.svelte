@@ -45,7 +45,8 @@
 	];
 
 	const pastEvents = getPastEvents();
-	let selectedOption: string = "Select Timezone";
+	const tzOffset = new Date().getTimezoneOffset() / 60;
+	let selectedOption = timezones.find(tz => tz.includes((["-", "+"])[Number(tzOffset < 0)] + String(Math.abs(tzOffset)).padStart(2, "0"))) ?? "Select Timezone";
 
 	let showDropdown = false;
 
@@ -184,7 +185,7 @@
 					<div slot="header" class="p-3">
 						<Search size="md" bind:value={searchQuery} autofocus />
 					</div>
-					{#each timezones.filter(timezone => timezone.toLowerCase().includes(searchQuery.toLowerCase())) as time}
+					{#each timezones.filter(timezone => timezone.toLowerCase().includes(searchQuery.toLowerCase())) as time, idx}
 						<li
 							class="rounded p-2 hover:bg-gray-100 dark:hover:bg-gray-600"
 						>
