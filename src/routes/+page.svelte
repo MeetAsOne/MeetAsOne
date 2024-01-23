@@ -117,29 +117,33 @@
 			>
 				Created Events
 			</h2>
-			{#each pastEvents.created as createdEvent}
-				<div class="event-button">
-					<Button
-						style="background-color:#D1AC00"
-						href={"/event/" + createdEvent.id}
+			<div class="flex flex-wrap max-w-[350px] m-auto">
+				{#each pastEvents.created as createdEvent}
+					<div class="event-button">
+						<Button
+								style="background-color:#D1AC00"
+								href={"/event/" + createdEvent.id}
 						>{createdEvent.name}</Button
-					>
-				</div>
-			{/each}
+						>
+					</div>
+				{/each}
+			</div>
 			<h2
 				style="margin-top: 40px; font-weight: bold; text-transform: uppercase;"
 			>
 				Events Responded to
 			</h2>
-			{#each pastEvents.responded as respondedEvent}
-				<div class="event-button">
-					<Button
-						style="background-color:#D1AC00"
-						href={"/event/" + respondedEvent.id}
+			<div class="flex flex-wrap max-w-[350px] m-auto">
+				{#each pastEvents.responded as respondedEvent}
+					<div class="event-button">
+						<Button
+								style="background-color:#D1AC00"
+								href={"/event/" + respondedEvent.id}
 						>{respondedEvent.name}</Button
-					>
-				</div>
-			{/each}
+						>
+					</div>
+				{/each}
+			</div>
 		</div>
 		<div class="create-event-box">
 
