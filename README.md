@@ -46,6 +46,6 @@ You can preview the production build with `npm run preview`.
 
 ## Deploying
 
-[Vercel works](https://vercel.com) works great. 
+[Vercel](https://vercel.com) DOESN'T work great. 10 sec timeout for hobby projects so Import calendar which uses OpenAI GPT requests that take longer doesn't work. 
 
-Otherwise, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+Install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment instead.
