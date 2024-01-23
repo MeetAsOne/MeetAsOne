@@ -14,8 +14,8 @@
   /** The number here corresponds to how many people RSVPd "yes" */
   export let availability: string[][] = new Array(blocks.length).map(() => []);
 
-  /** Self-explanatory. Used for setting transparency of group calendar */
-  export let totalParticipants = 0;
+  /** List of all participants. Used for setting colors of group calendar */
+  export let allParticipants: string[] = [];
 
   /** store to write to when hovering over group's time blocks. Setting this also disables input */
   export let availablePeople: Writable<string[]> | undefined = undefined;
@@ -71,13 +71,20 @@
     <div>{daysOfWeek[new Date(date).getDay()]}<br />{new Date(date).toLocaleDateString()}</div>
     <div class="bg-white">
         {#each blocks as block}
-            <div class="availability-cell" data-idx={block} class:cursor-pointer={!availablePeople}
-                 style:opacity={totalParticipants ? (availability[block]?.length ?? totalParticipants) / totalParticipants : "1"}
+            <div class="availability-cell flex" data-idx={block} class:cursor-pointer={!availablePeople}
                  class:available={availability[block]?.length}
                  on:mousedown={() => handleMouseDown(block)}
                  on:mouseenter={() => handlePointerEnter(block)}
                  on:touchmove={ev => handlePointerEnter(convertTouchEvent(ev))}
+                 role="cell"
+                 tabindex="0"
             >
+                {#if allParticipants.length}
+                    {#each (availability[block] ?? []) as participant}
+                        {@const hue = (allParticipants.indexOf(participant) + 1) / allParticipants.length * 365}
+                        <div class="flex-1" style:background-color={`hsl(${hue}, 65%, 79%)`}></div>
+                    {/each}
+                {/if}
             </div>
         {/each}
     </div>
@@ -87,9 +94,10 @@
 <style>
     .availability-cell {
         border: 1px solid #ccc;
-        padding: 8px;
+        height: 16px;
         text-align: center;
         background-color: #f8f8f8;
+        display: flex;
     }
     .available {
         background-color: #90ee90;

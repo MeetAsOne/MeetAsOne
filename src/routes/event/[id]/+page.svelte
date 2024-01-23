@@ -94,7 +94,7 @@
         <div>
           <h2>Group Availability</h2>
           <ManualInput
-            totalParticipants={event.availabilities.length}
+            allParticipants={Array.from(new Set(event.availabilities.map(person => person.username)).add(globalThis?.localStorage?.name ?? "me"))}
             dates={event.dates.map(dateStrToEpoch)}
             availablePeople={selectedAvailability}
             timeRange={[event.start_time, event.end_time]}

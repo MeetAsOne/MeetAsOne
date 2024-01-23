@@ -35,7 +35,8 @@
   /** Array of starting times in 15-minute intervals since midnight for all possible blocks */
   const blocks = range(...timeRange.map(t => Math.floor(t / TIME_STEP)) as typeof timeRange, 1);
 
-  export let totalParticipants = 0;
+  /** Names of all participants */
+  export let allParticipants: string[] = [];
 
   async function save() {
     if (shouldSave)
@@ -57,19 +58,13 @@
     if (res.data?.insert_availability?.affected_rows === 0)
       console.error("No rows were changed")
   }
-
-  let touchCount = 0;
-  function setTouchCount(ev: TouchEvent) {
-    touchCount = ev.touches.length;
-    console.log(touchCount);
-  }
 </script>
 
 <div class="flex items-stretch select-none">
     {#if dates.length > 0}
         <div class="labels text-right w-[5em]">
             {#each blocks as block, idx}
-                <div class="h-[17.2px]">
+                <div class="label">
                     {idx % 2 === 0 ? intToTime(block * TIME_STEP) : " "}
                 </div>
             {/each}
@@ -77,7 +72,7 @@
     {/if}
     {#each dates as date}
         <ManualInputColumn
-                {date} {blocks} {save} {totalParticipants} {availablePeople}
+                {date} {blocks} {save} {allParticipants} {availablePeople}
                 bind:availability={availability[new Date(date).toLocaleDateString()]} />
     {/each}
 </div>
@@ -87,5 +82,10 @@
         /* TODO: don't use magic constants */
         /*line-height: 1.1;*/
         padding-top: 48px;
+    }
+
+    .label {
+        height: 16px;
+        line-height: 16px;
     }
 </style>
