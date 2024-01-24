@@ -38,6 +38,9 @@
   /** Names of all participants */
   export let allParticipants: string[] = [];
 
+  /** If true, display each person in cell as their own color. Otherwise, use shades of green */
+  export let useMulticolor = false;
+
   async function save() {
     if (shouldSave)
       globalThis?.localStorage?.setItem?.('draftAvailability', JSON.stringify({
@@ -72,7 +75,7 @@
     {/if}
     {#each dates as date}
         <ManualInputColumn
-                {date} {blocks} {save} {allParticipants} {availablePeople}
+                {date} {blocks} {save} {allParticipants} {availablePeople} {useMulticolor}
                 bind:availability={availability[new Date(date).toLocaleDateString()]} />
     {/each}
 </div>

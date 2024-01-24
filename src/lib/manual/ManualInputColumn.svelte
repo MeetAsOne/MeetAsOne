@@ -20,6 +20,9 @@
   /** store to write to when hovering over group's time blocks. Setting this also disables input */
   export let availablePeople: Writable<string[]> | undefined = undefined;
 
+  /** If true, display each person in cell as their own color. Otherwise, use shades of green */
+  export let useMulticolor = false;
+
   globalThis.isDragging = false;
   globalThis.dragState = null;
 
@@ -72,6 +75,7 @@
     <div class="bg-white">
         {#each blocks as block}
             <div class="availability-cell flex" data-idx={block} class:cursor-pointer={!availablePeople}
+                 style:opacity={allParticipants.length && !useMulticolor ? (availability[block]?.length ?? allParticipants.length) / allParticipants.length : "1"}
                  class:available={availability[block]?.length}
                  on:mousedown={() => handleMouseDown(block)}
                  on:mouseenter={() => handlePointerEnter(block)}
@@ -79,7 +83,7 @@
                  role="cell"
                  tabindex="0"
             >
-                {#if allParticipants.length}
+                {#if allParticipants.length && useMulticolor}
                     {#each (availability[block] ?? []) as participant}
                         {@const hue = (allParticipants.indexOf(participant) + 1) / allParticipants.length * 365}
                         <div class="flex-1" style:background-color={`hsl(${hue}, 65%, 79%)`}></div>
