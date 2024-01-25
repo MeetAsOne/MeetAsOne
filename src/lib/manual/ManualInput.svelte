@@ -110,7 +110,7 @@
 
 <div class="flex items-stretch select-none">
     {#if dates.length > 0}
-        <div class="labels text-right w-[5em]">
+        <div class="labels text-right pr-1">
             {#each blocks as block, idx}
                 <div class="label" role="rowheader">
                     {idx % 2 === 0 ? intToTime(block * TIME_STEP) : " "}
