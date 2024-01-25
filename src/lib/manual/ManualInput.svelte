@@ -61,7 +61,9 @@
       console.error("No rows were changed")
   }
 
-  let isDragging: boolean;
+  /** Represents [Date (as ms since epoch), block idx since midnight] */
+  type Coord = [number, number];
+  let dragStart: Coord | null;
   let dragState: boolean | null;
 
   const toggleAvailability = (date: DateStr, timeIndex: number) => {
@@ -78,20 +80,23 @@
       handlePointerUp()
     else if (!availablePeople) {
       ev.preventDefault();
-      isDragging = true;
-      return Number.parseInt((document.elementFromPoint(ev.touches[0].clientX, ev.touches[0].clientY) as HTMLElement).dataset.idx!)
+      const target = document.elementFromPoint(ev.touches[0].clientX, ev.touches[0].clientY) as HTMLElement;
+      const idx = Number.parseInt(target.dataset.idx!);
+      if (!dragStart)
+        dragStart = [Number.parseInt(target.dataset.date!), idx];
+      return idx;
     }
   }
 
   const handleMouseDown = (date: DateStr, timeIndex: number) => {
     if (availablePeople) return;
-    isDragging = true;
+    dragStart = [new Date(date).getTime(), timeIndex];
     toggleAvailability(date, timeIndex);
   };
 
   const handlePointerEnter = (date: DateStr, timeIndex: number | undefined) => {
     if (timeIndex == undefined) return;
-    if (isDragging) {
+    if (dragStart) {
       toggleAvailability(date, timeIndex);
     }
     if (availablePeople)
@@ -99,8 +104,8 @@
   };
 
   const handlePointerUp = () => {
-    if (isDragging) {
-      isDragging = false;
+    if (dragStart) {
+      dragStart = null;
       dragState = null;
       if (!availablePeople)
         save();
@@ -136,7 +141,7 @@
             <div class="bg-white">
                 {#each blocks as block}
                     <!-- <Cell> -->
-                    <div class="availability-cell flex" data-idx={block} data-date={date}
+                    <div class="availability-cell flex" data-idx={block} data-date={date.getTime()}
                          style:opacity={allParticipants.length && !useMulticolor ? (colAvailability[block]?.length ?? allParticipants.length) / allParticipants.length : "1"}
                          class:cursor-pointer={!availablePeople}
                          class:available={colAvailability[block]?.length}
