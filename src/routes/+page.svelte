@@ -45,7 +45,8 @@
 	];
 
 	const pastEvents = getPastEvents();
-	let selectedOption: string = "Select Timezone";
+	const tzOffset = new Date().getTimezoneOffset() / 60;
+	let selectedOption = timezones.find(tz => tz.includes((["-", "+"])[Number(tzOffset < 0)] + String(Math.abs(tzOffset)).padStart(2, "0"))) ?? "Select Timezone";
 
 	let showDropdown = false;
 
@@ -116,29 +117,33 @@
 			>
 				Created Events
 			</h2>
-			{#each pastEvents.created as createdEvent}
-				<div class="event-button">
-					<Button
-						style="background-color:#D1AC00"
-						href={"/event/" + createdEvent.id}
+			<div class="flex flex-wrap max-w-[350px] m-auto">
+				{#each pastEvents.created as createdEvent}
+					<div class="event-button">
+						<Button
+								style="background-color:#D1AC00"
+								href={"/event/" + createdEvent.id}
 						>{createdEvent.name}</Button
-					>
-				</div>
-			{/each}
+						>
+					</div>
+				{/each}
+			</div>
 			<h2
 				style="margin-top: 40px; font-weight: bold; text-transform: uppercase;"
 			>
 				Events Responded to
 			</h2>
-			{#each pastEvents.responded as respondedEvent}
-				<div class="event-button">
-					<Button
-						style="background-color:#D1AC00"
-						href={"/event/" + respondedEvent.id}
+			<div class="flex flex-wrap max-w-[350px] m-auto">
+				{#each pastEvents.responded as respondedEvent}
+					<div class="event-button">
+						<Button
+								style="background-color:#D1AC00"
+								href={"/event/" + respondedEvent.id}
 						>{respondedEvent.name}</Button
-					>
-				</div>
-			{/each}
+						>
+					</div>
+				{/each}
+			</div>
 		</div>
 		<div class="create-event-box">
 
@@ -184,7 +189,7 @@
 					<div slot="header" class="p-3">
 						<Search size="md" bind:value={searchQuery} autofocus />
 					</div>
-					{#each timezones.filter(timezone => timezone.toLowerCase().includes(searchQuery.toLowerCase())) as time}
+					{#each timezones.filter(timezone => timezone.toLowerCase().includes(searchQuery.toLowerCase())) as time, idx}
 						<li
 							class="rounded p-2 hover:bg-gray-100 dark:hover:bg-gray-600"
 						>
@@ -224,7 +229,7 @@
 					<p>
 						MeetAsOne is an app to poll people’s availability so you
 						can schedule a time to meet. You can select a series of
-						days and speicify the times that work for you, then we
+						days and specify the times that work for you, then we
 						will find the best time for everyone else. No need to
 						manually enter your calendar, with MeetAsOne you can
 						upload a screenshot of your Google Calendar or Outlook
@@ -301,17 +306,11 @@
 		align-self: self-start;
 	}
 
-	.my-events,
-	.rsvpd-events {
-		margin-bottom: 20px;
-	}
-
 	.content {
 		max-width: 1000px;
 		display: flex;
 		flex-wrap: wrap;
 		margin: auto;
-		display: flex;
 		flex-direction: column;
 		align-items: center;
 	}
@@ -346,11 +345,10 @@
 		flex-wrap: wrap;
 		justify-content: center;
 		align-items: center;
-		padding: 0px;
+		padding: 0;
 		max-width: 1000px;
-		align-items: center;
 		/* margin: auto; */
-		margin-top: 0px;
+		margin-top: 0;
 	}
 
 	.description,
@@ -376,15 +374,6 @@
 
 	ul {
 		list-style-type: square;
-	}
-
-	.dark-mode-toggle {
-		text-align: center;
-		margin-top: 20px;
-	}
-
-	input[type="checkbox"] {
-		margin-left: 5px;
 	}
 
 	.event-button {

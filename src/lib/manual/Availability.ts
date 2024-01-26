@@ -1,8 +1,8 @@
 import type {GetEvent$result} from "$houdini";
+import type {DateStr} from "$lib/timeutils.ts";
 
 /** Key: the date in any parsable format. Value: array of indices to time blocks.
  * For example, if you ask for times starting at 8am and use 15 min intervals, 9:30 will be index 5  */
-type DateStr = string;
 export type Availability = Record<DateStr, number[]>;
 export type InternalAvailability = Record<DateStr, string[][]>;
 export type GenericAvailability = Availability | InternalAvailability;

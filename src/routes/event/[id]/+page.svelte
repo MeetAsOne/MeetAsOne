@@ -14,13 +14,14 @@
     import {writable} from "svelte/store";
     import AvailabilityComponent from "$lib/Availability.svelte";
     import {workingAvailability} from "$lib/store.ts";
-    import { Button } from "flowbite-svelte";
+    import {Button, Checkbox} from "flowbite-svelte";
 
     export let data: PageData;
   let event: GetEvent$result["events"][number] | undefined;
-  const shouldSave = true;
   /** list of people available for focused block*/
   const selectedAvailability = writable([] as string[]);
+  let useMulticolor = globalThis?.localStorage?.useMulticolor === "true";
+  $: if (globalThis?.localStorage) globalThis.localStorage.useMulticolor = useMulticolor;
 
   // pull the store reference from the route props
   $: ({ GetEvent } = data);
@@ -78,7 +79,6 @@
         <ManualInput
           dates={event.dates.map(dateStrToEpoch)}
           timeRange={[event.start_time, event.end_time]}
-          {shouldSave}
           availability={mySavedAvailability ? loadAvailabilityOne(mySavedAvailability) : applyAvailability(
             event.dates.map(dateStrToEpoch),
             localAvailability.days,
@@ -87,17 +87,21 @@
       </div>
       <div class="w-10"></div>
       <div class="flex flex-row">
-        <AvailabilityComponent
-          everyone={event.availabilities.map((person) => person.username)}
-          available={$selectedAvailability}
-        />
+        <div>
+          <Checkbox class="dark:text-black" bind:checked={useMulticolor}>Multicolor</Checkbox>
+          <AvailabilityComponent
+                  everyone={event.availabilities.map((person) => person.username)}
+                  available={$selectedAvailability}
+          />
+        </div>
         <div>
           <h2>Group Availability</h2>
           <ManualInput
-            totalParticipants={event.availabilities.length}
+            allParticipants={Array.from(new Set(event.availabilities.map(person => person.username)).add(globalThis?.localStorage?.name ?? "me"))}
             dates={event.dates.map(dateStrToEpoch)}
             availablePeople={selectedAvailability}
             timeRange={[event.start_time, event.end_time]}
+            {useMulticolor}
             availability={mergeAvailability(enforceAvailabilityValidity(loadAvailability(...event.availabilities), event.dates), $workingAvailability, globalThis?.localStorage?.name)}/>
         </div>
       </div>
