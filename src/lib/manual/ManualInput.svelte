@@ -9,7 +9,6 @@
   import { importedEvents, workingAvailability } from "$lib/store";
   import {getOrSetName} from "$lib/storage.ts";
 
-  export let shouldSave = false;
   export let availability: InternalAvailability = {};
   let formattedAvailability: Availability = {};
   let weeklyAvailability: Availability = {};
@@ -26,6 +25,7 @@
   /** Epoch timestamps for which to display the UI */
   export let dates: number[];
 
+  /** store to write to when hovering over group's time blocks. Setting this also disables input */
   export let availablePeople: Writable<string[]> | undefined = undefined;
 
   /** Tuple, each ranges from 0 to 1439 (minutes in day) */
@@ -40,12 +40,12 @@
   /** If true, display each person in cell as their own color. Otherwise, use shades of green */
   export let useMulticolor = false;
 
+  /** Push availability change to server, save to localStorage */
   async function save() {
-    if (shouldSave)
-      globalThis?.localStorage?.setItem?.('draftAvailability', JSON.stringify({
-        "time-zone": 1,  // TODO
-        days: weeklyAvailability,
-      }));
+    globalThis?.localStorage?.setItem?.('draftAvailability', JSON.stringify({
+      "time-zone": 1,  // TODO
+      days: weeklyAvailability,
+    }));
 
     const updater = new UpsertAvailabilityStore();
     const username = getOrSetName();
@@ -64,6 +64,7 @@
   /** Represents [Date (as ms since epoch), block idx since midnight] */
   type Coord = [number, number];
   let dragStart: Coord | null;
+  let dragNow: Coord | null;
   let dragState: boolean | null;
 
   const toggleAvailability = (date: DateStr, timeIndex: number) => {
@@ -71,7 +72,8 @@
       dragState = !(availability[date][timeIndex]?.length ?? 0);
     }
 
-    availability[date][timeIndex] = dragState ? ["me"] : [];
+    dragNow = [new Date(date).getTime(), timeIndex];
+    // availability[date][timeIndex] = dragState ? ["me"] : [];  // TODO: properly save onpointerup
   };
 
   // Had to implement 2 separate touch and mouse handlers (instead of using pointer handler) b/c `touch-none` prevents 2-finger panning but without it, page scrolls while selecting
@@ -83,14 +85,14 @@
       const target = document.elementFromPoint(ev.touches[0].clientX, ev.touches[0].clientY) as HTMLElement;
       const idx = Number.parseInt(target.dataset.idx!);
       if (!dragStart)
-        dragStart = [Number.parseInt(target.dataset.date!), idx];
+        dragStart = dragNow = [Number.parseInt(target.dataset.date!), idx];
       return idx;
     }
   }
 
   const handleMouseDown = (date: DateStr, timeIndex: number) => {
     if (availablePeople) return;
-    dragStart = [new Date(date).getTime(), timeIndex];
+    dragStart = dragNow = [new Date(date).getTime(), timeIndex];
     toggleAvailability(date, timeIndex);
   };
 
@@ -105,12 +107,23 @@
 
   const handlePointerUp = () => {
     if (dragStart) {
-      dragStart = null;
-      dragState = null;
+      dragStart = dragNow = dragState = null;
       if (!availablePeople)
         save();
     }
   };
+
+  function selectRectIncludesBlock(coord: Coord, deps?: unknown[]) {
+    if (!dragStart || !dragNow) return false;
+    const [x, y] = coord;
+    const [x1, y1, x2, y2] = [
+      Math.min(dragStart[0], dragNow[0]),
+      Math.min(dragStart[1], dragNow[1]),
+      Math.max(dragStart[0], dragNow[0]),
+      Math.max(dragStart[1], dragNow[1]),
+    ];
+    return x >= x1 && x <= x2 && y >= y1 && y <= y2;
+  }
 </script>
 
 <div class="flex items-stretch select-none">
@@ -144,7 +157,7 @@
                     <div class="availability-cell flex" data-idx={block} data-date={date.getTime()}
                          style:opacity={allParticipants.length && !useMulticolor ? (colAvailability[block]?.length ?? allParticipants.length) / allParticipants.length : "1"}
                          class:cursor-pointer={!availablePeople}
-                         class:available={colAvailability[block]?.length}
+                         class:available={colAvailability[block]?.length || selectRectIncludesBlock([date.getTime(), block], [dragStart, dragNow])}
                          on:mousedown={() => handleMouseDown(dateStr, block)}
                          on:mouseenter={() => handlePointerEnter(dateStr, block)}
                          on:touchmove={ev => handlePointerEnter(dateStr, convertTouchEvent(ev))}

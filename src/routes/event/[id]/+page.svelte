@@ -18,7 +18,6 @@
 
     export let data: PageData;
   let event: GetEvent$result["events"][number] | undefined;
-  const shouldSave = true;
   /** list of people available for focused block*/
   const selectedAvailability = writable([] as string[]);
   let useMulticolor = globalThis?.localStorage?.useMulticolor === "true";
@@ -80,7 +79,6 @@
         <ManualInput
           dates={event.dates.map(dateStrToEpoch)}
           timeRange={[event.start_time, event.end_time]}
-          {shouldSave}
           availability={mySavedAvailability ? loadAvailabilityOne(mySavedAvailability) : applyAvailability(
             event.dates.map(dateStrToEpoch),
             localAvailability.days,
