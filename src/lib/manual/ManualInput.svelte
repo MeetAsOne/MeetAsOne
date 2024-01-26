@@ -42,6 +42,14 @@
 
   /** Push availability change to server, save to localStorage */
   async function save() {
+    for (const date in availability) {
+      for (const block of blocks) {
+        availability[date][block] = (selectRectIncludesBlock([new Date(date).getTime(), block], [dragStart, dragNow]) ? dragState : availability[date][block]?.length) ? ["me"] : [];
+      }
+    }
+    // Ensure svelte reactive vars have run
+    await new Promise(res => setTimeout(res, 200));
+
     globalThis?.localStorage?.setItem?.('draftAvailability', JSON.stringify({
       "time-zone": 1,  // TODO
       days: weeklyAvailability,
@@ -51,7 +59,7 @@
     const username = getOrSetName();
     if (!username) return;
     const res = await updater.mutate({
-      availability: compactAvailability(availability)[0],
+      availability: formattedAvailability,
       username,
       eventId: $page.params.id,
     });
@@ -68,12 +76,11 @@
   let dragState: boolean | null;
 
   const toggleAvailability = (date: DateStr, timeIndex: number) => {
-    if (dragState === null) {
+    if (dragState == null) {
       dragState = !(availability[date][timeIndex]?.length ?? 0);
     }
 
     dragNow = [new Date(date).getTime(), timeIndex];
-    // availability[date][timeIndex] = dragState ? ["me"] : [];  // TODO: properly save onpointerup
   };
 
   // Had to implement 2 separate touch and mouse handlers (instead of using pointer handler) b/c `touch-none` prevents 2-finger panning but without it, page scrolls while selecting
@@ -107,9 +114,9 @@
 
   const handlePointerUp = () => {
     if (dragStart) {
-      dragStart = dragNow = dragState = null;
       if (!availablePeople)
         save();
+      dragStart = dragNow = dragState = null;
     }
   };
 
@@ -157,7 +164,7 @@
                     <div class="availability-cell flex" data-idx={block} data-date={date.getTime()}
                          style:opacity={allParticipants.length && !useMulticolor ? (colAvailability[block]?.length ?? allParticipants.length) / allParticipants.length : "1"}
                          class:cursor-pointer={!availablePeople}
-                         class:available={colAvailability[block]?.length || selectRectIncludesBlock([date.getTime(), block], [dragStart, dragNow])}
+                         class:available={selectRectIncludesBlock([date.getTime(), block], [dragStart, dragNow]) ? dragState : colAvailability[block]?.length}
                          on:mousedown={() => handleMouseDown(dateStr, block)}
                          on:mouseenter={() => handlePointerEnter(dateStr, block)}
                          on:touchmove={ev => handlePointerEnter(dateStr, convertTouchEvent(ev))}
