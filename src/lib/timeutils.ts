@@ -26,5 +26,5 @@ export function canonicalDateStr(date: Date) {
     month: 'numeric',
     day: '2-digit',
     year: 'numeric'
-  }).format(date);
+  }).format(date) as DateStr;
 }

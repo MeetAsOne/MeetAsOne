@@ -84,17 +84,19 @@
   };
 
   // Had to implement 2 separate touch and mouse handlers (instead of using pointer handler) b/c `touch-none` prevents 2-finger panning but without it, page scrolls while selecting
-  function convertTouchEvent(ev: TouchEvent) {
+  function convertTouchEvent(ev: TouchEvent): [DateStr | undefined, number | undefined] {
     if (ev.touches.length > 1)
       handlePointerUp()
     else if (!availablePeople) {
       ev.preventDefault();
       const target = document.elementFromPoint(ev.touches[0].clientX, ev.touches[0].clientY) as HTMLElement;
       const idx = Number.parseInt(target.dataset.idx!);
+      const date = Number.parseInt(target.dataset.date!)
       if (!dragStart)
-        dragStart = dragNow = [Number.parseInt(target.dataset.date!), idx];
-      return idx;
+        dragStart = dragNow = [date, idx];
+      return [canonicalDateStr(new Date(date)), idx];
     }
+    return [undefined, undefined];
   }
 
   const handleMouseDown = (date: DateStr, timeIndex: number) => {
@@ -103,8 +105,8 @@
     toggleAvailability(date, timeIndex);
   };
 
-  const handlePointerEnter = (date: DateStr, timeIndex: number | undefined) => {
-    if (timeIndex == undefined) return;
+  const handlePointerEnter = (date?: DateStr, timeIndex?: number) => {
+    if (timeIndex == undefined || date == undefined) return;
     if (dragStart) {
       toggleAvailability(date, timeIndex);
     }
@@ -167,7 +169,7 @@
                          class:available={selectRectIncludesBlock([date.getTime(), block], [dragStart, dragNow]) ? dragState : colAvailability[block]?.length}
                          on:mousedown={() => handleMouseDown(dateStr, block)}
                          on:mouseenter={() => handlePointerEnter(dateStr, block)}
-                         on:touchmove={ev => handlePointerEnter(dateStr, convertTouchEvent(ev))}
+                         on:touchmove={ev => handlePointerEnter(...convertTouchEvent(ev))}
                          role="cell"
                          tabindex="0"
                     >
