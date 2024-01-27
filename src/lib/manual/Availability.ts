@@ -74,7 +74,12 @@ export function mergeAvailability(existing: InternalAvailability, newer: Availab
   return existing;
 }
 
-export function enforceAvailabilityValidity<T extends GenericAvailability>(availability: T, dates: string[]) {
+export function blankAvailability(dates: DateStr[]) {
+  console.log(enforceAvailabilityValidity({}, dates));
+  return enforceAvailabilityValidity({}, dates);
+}
+
+export function enforceAvailabilityValidity<T extends GenericAvailability>(availability: T, dates: DateStr[]) {
   for (const date of dates) {
     if (!(date in availability))
       availability[date] = [];

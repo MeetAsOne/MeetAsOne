@@ -1,7 +1,7 @@
 <script lang="ts">
     import ImportCalendar from "$lib/importCalendar/ImportCalendar.svelte";
     import {
-      applyAvailability, type Availability, enforceAvailabilityValidity,
+      type Availability, enforceAvailabilityValidity,
       loadAvailability, loadAvailabilityOne,
       mergeAvailability
     } from "$lib/manual/Availability.js";
@@ -43,9 +43,6 @@
     }
   }
 
-  const localAvailability = JSON.parse(
-    globalThis?.localStorage?.["general-availability"] ?? '{"days": {}}',
-  );
   let mySavedAvailability: Availability | undefined;
   $: mySavedAvailability = event?.availabilities.find(avail => avail.username === globalThis?.localStorage?.name)?.availability;
 </script>
@@ -79,10 +76,7 @@
         <ManualInput
           dates={event.dates.map(dateStrToEpoch)}
           timeRange={[event.start_time, event.end_time]}
-          availability={mySavedAvailability ? loadAvailabilityOne(mySavedAvailability) : applyAvailability(
-            event.dates.map(dateStrToEpoch),
-            localAvailability.days,
-          )}
+          availability={mySavedAvailability ? loadAvailabilityOne(mySavedAvailability) : undefined}
         />
       </div>
       <div class="w-10"></div>

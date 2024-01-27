@@ -1,15 +1,24 @@
 <script lang="ts">
   import range from "$lib/range";
-  import {canonicalDateStr, type DateStr, intToTime} from "$lib/timeutils.js";
-  import {type Availability, compactAvailability, type InternalAvailability, mergeAvailability} from "$lib/manual/Availability";
+  import {canonicalDateStr, type DateStr, dateStrToEpoch, intToTime} from "$lib/timeutils.js";
+  import {
+    applyAvailability,
+    type Availability, blankAvailability,
+    compactAvailability,
+    type InternalAvailability,
+    mergeAvailability
+  } from "$lib/manual/Availability";
   import {UpsertAvailabilityStore} from "$houdini";
   import {TIME_STEP} from "$lib/units";
   import {page} from "$app/stores";
   import type {Writable} from "svelte/store";
-  import { importedEvents, workingAvailability } from "$lib/store";
+  import {importedEvents, importedWeeklyEvents, workingAvailability} from "$lib/store";
   import {getOrSetName} from "$lib/storage.ts";
 
-  export let availability: InternalAvailability = {};
+  /** Epoch timestamps for which to display the UI */
+  export let dates: number[];
+
+  export let availability: InternalAvailability = blankAvailability(dates.map(d => canonicalDateStr(new Date(d))));
   let formattedAvailability: Availability = {};
   let weeklyAvailability: Availability = {};
   $: [formattedAvailability, weeklyAvailability] = compactAvailability(availability);
@@ -20,10 +29,19 @@
   importedEvents.subscribe((currentValue) => {
     mergeAvailability(availability, currentValue)
     availability = {...availability}; // Trigger Svelte's reactivity by reassigning the variable
-  })
+  });
 
-  /** Epoch timestamps for which to display the UI */
-  export let dates: number[];
+  importedWeeklyEvents.subscribe((currentValue) => {
+    if (!Object.keys(currentValue).length) return;
+    availability = mergeAvailability(availability,
+      compactAvailability(applyAvailability(
+        Object.keys(availability).map(dateStrToEpoch),
+        currentValue,
+      ))[0]
+    );
+    importedWeeklyEvents.set({});
+    save();
+  });
 
   /** store to write to when hovering over group's time blocks. Setting this also disables input */
   export let availablePeople: Writable<string[]> | undefined = undefined;
