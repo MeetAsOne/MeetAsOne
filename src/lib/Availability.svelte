@@ -4,6 +4,7 @@
 </script>
 
 <div>
+    {available.length}/{everyone.length} Available
     <div>
         <h3>Available</h3>
         <ul>
