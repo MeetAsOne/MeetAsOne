@@ -68,8 +68,8 @@
         availability[date][block] = (selectRectIncludesBlock([new Date(date).getTime(), block], [dragStart, dragNow]) ? dragState : availability[date][block]?.length) ? ["me"] : [];
       }
     }
-    // Ensure svelte reactive vars have run
-    await new Promise(res => setTimeout(res, 200));
+    // Reactive statement should update this, but timing is inconsistent (Svelte runes should fix this)
+    [formattedAvailability, weeklyAvailability] = compactAvailability(availability);
 
     globalThis?.localStorage?.setItem?.('draftAvailability', JSON.stringify({
       "time-zone": 1,  // TODO
@@ -170,7 +170,8 @@
     {/if}
     {#each dates.map(d => new Date(d)) as date}
         <!-- <Column> -->
-        {@const colAvailability = availability[date.toLocaleDateString()]}
+        <!-- If you get a server error for old events, make sure date is in new format (no leading zeros). Fix: exiting server data -->
+        {@const colAvailability = availability[canonicalDateStr(date)]}
         {@const dateStr = canonicalDateStr(date)}
         <div class="flex-grow text-center" role="row">
             <div role="columnheader" class="px-1">
