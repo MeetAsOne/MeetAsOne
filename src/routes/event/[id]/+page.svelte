@@ -14,7 +14,7 @@
     import {writable} from "svelte/store";
     import AvailabilityComponent from "$lib/Availability.svelte";
     import {workingAvailability} from "$lib/store.ts";
-    import {Button, Checkbox, Spinner, Tooltip} from "flowbite-svelte";
+    import {Button, Checkbox, Spinner} from "flowbite-svelte";
 
     export let data: PageData;
   let event: GetEvent$result["events"][number] | undefined;
@@ -95,12 +95,6 @@
                   everyone={event.availabilities.map((person) => person.username)}
                   available={$selectedAvailability}
           />
-          <Tooltip triggeredBy=".availability-cell" class="z-[1000]">
-            <AvailabilityComponent
-                    everyone={event.availabilities.map((person) => person.username)}
-                    available={$selectedAvailability}
-            />
-          </Tooltip>
         </div>
         <div>
           <h2>Group Availability</h2>
