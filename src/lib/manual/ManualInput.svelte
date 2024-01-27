@@ -105,12 +105,12 @@
   function convertTouchEvent(ev: TouchEvent): [DateStr | undefined, number | undefined] {
     if (ev.touches.length > 1)
       handlePointerUp()
-    else if (!availablePeople) {
+    else {
       ev.preventDefault();
       const target = document.elementFromPoint(ev.touches[0].clientX, ev.touches[0].clientY) as HTMLElement;
       const idx = Number.parseInt(target.dataset.idx!);
       const date = Number.parseInt(target.dataset.date!)
-      if (!dragStart)
+      if (!dragStart && !availablePeople)
         dragStart = dragNow = [date, idx];
       return [canonicalDateStr(new Date(date)), idx];
     }
