@@ -90,6 +90,7 @@
       <div class="w-10"></div>
       <div class="flex flex-row">
         <div>
+          {$selectedAvailability.length}/{event.availabilities.length} Available
           <Checkbox class="dark:text-black" bind:checked={useMulticolor}>Multicolor</Checkbox>
           <AvailabilityComponent
                   everyone={event.availabilities.map((person) => person.username)}
