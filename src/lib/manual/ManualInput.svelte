@@ -1,15 +1,24 @@
 <script lang="ts">
   import range from "$lib/range";
-  import {canonicalDateStr, type DateStr, intToTime} from "$lib/timeutils.js";
-  import {type Availability, compactAvailability, type InternalAvailability, mergeAvailability} from "$lib/manual/Availability";
+  import {canonicalDateStr, type DateStr, dateStrToEpoch, intToTime} from "$lib/timeutils.js";
+  import {
+    applyAvailability,
+    type Availability, blankAvailability,
+    compactAvailability,
+    type InternalAvailability,
+    mergeAvailability
+  } from "$lib/manual/Availability";
   import {UpsertAvailabilityStore} from "$houdini";
   import {TIME_STEP} from "$lib/units";
   import {page} from "$app/stores";
   import type {Writable} from "svelte/store";
-  import { importedEvents, workingAvailability } from "$lib/store";
+  import {importedEvents, importedWeeklyEvents, workingAvailability} from "$lib/store";
   import {getOrSetName} from "$lib/storage.ts";
 
-  export let availability: InternalAvailability = {};
+  /** Epoch timestamps for which to display the UI */
+  export let dates: number[];
+
+  export let availability: InternalAvailability = blankAvailability(dates.map(d => canonicalDateStr(new Date(d))));
   let formattedAvailability: Availability = {};
   let weeklyAvailability: Availability = {};
   $: [formattedAvailability, weeklyAvailability] = compactAvailability(availability);
@@ -20,10 +29,19 @@
   importedEvents.subscribe((currentValue) => {
     mergeAvailability(availability, currentValue)
     availability = {...availability}; // Trigger Svelte's reactivity by reassigning the variable
-  })
+  });
 
-  /** Epoch timestamps for which to display the UI */
-  export let dates: number[];
+  importedWeeklyEvents.subscribe((currentValue) => {
+    if (!Object.keys(currentValue).length) return;
+    availability = mergeAvailability(availability,
+      compactAvailability(applyAvailability(
+        Object.keys(availability).map(dateStrToEpoch),
+        currentValue,
+      ))[0]
+    );
+    importedWeeklyEvents.set({});
+    save();
+  });
 
   /** store to write to when hovering over group's time blocks. Setting this also disables input */
   export let availablePeople: Writable<string[]> | undefined = undefined;
@@ -40,15 +58,18 @@
   /** If true, display each person in cell as their own color. Otherwise, use shades of green */
   export let useMulticolor = false;
 
+  export let isSaved = true;
+
   /** Push availability change to server, save to localStorage */
   async function save() {
+    isSaved = false;
     for (const date in availability) {
       for (const block of blocks) {
         availability[date][block] = (selectRectIncludesBlock([new Date(date).getTime(), block], [dragStart, dragNow]) ? dragState : availability[date][block]?.length) ? ["me"] : [];
       }
     }
-    // Ensure svelte reactive vars have run
-    await new Promise(res => setTimeout(res, 200));
+    // Reactive statement should update this, but timing is inconsistent (Svelte runes should fix this)
+    const [formattedAvailability, weeklyAvailability] = compactAvailability(availability);
 
     globalThis?.localStorage?.setItem?.('draftAvailability', JSON.stringify({
       "time-zone": 1,  // TODO
@@ -65,8 +86,10 @@
     });
     if (res.errors)
       res.errors.forEach(console.error);
-    if (res.data?.insert_availability?.affected_rows === 0)
+    else if (res.data?.insert_availability?.affected_rows === 0)
       console.error("No rows were changed")
+    else
+      isSaved = true;
   }
 
   /** Represents [Date (as ms since epoch), block idx since midnight] */
@@ -87,12 +110,12 @@
   function convertTouchEvent(ev: TouchEvent): [DateStr | undefined, number | undefined] {
     if (ev.touches.length > 1)
       handlePointerUp()
-    else if (!availablePeople) {
+    else {
       ev.preventDefault();
       const target = document.elementFromPoint(ev.touches[0].clientX, ev.touches[0].clientY) as HTMLElement;
       const idx = Number.parseInt(target.dataset.idx!);
       const date = Number.parseInt(target.dataset.date!)
-      if (!dragStart)
+      if (!dragStart && !availablePeople)
         dragStart = dragNow = [date, idx];
       return [canonicalDateStr(new Date(date)), idx];
     }
@@ -140,15 +163,15 @@
         <div class="labels text-right pr-1">
             {#each blocks as block, idx}
                 <div class="label" role="rowheader">
-                    {idx % 2 === 0 ? intToTime(block * TIME_STEP) : " "}
+                    {idx % 2 === 0 ? intToTime(block * TIME_STEP).replace(" ", "\xa0") : " "}
                 </div>
             {/each}
         </div>
     {/if}
     {#each dates.map(d => new Date(d)) as date}
         <!-- <Column> -->
-        {@const colAvailability = availability[date.toLocaleDateString()]}
         {@const dateStr = canonicalDateStr(date)}
+        {@const colAvailability = availability[dateStr]}
         <div class="flex-grow text-center" role="row">
             <div role="columnheader" class="px-1">
                 {new Intl.DateTimeFormat(undefined, {weekday: "short"}).format(date)}
@@ -198,6 +221,12 @@
     .label {
         height: 16px;
         line-height: 16px;
+    }
+    [role="columnheader"] {
+        position: sticky;
+        top: 0;
+        background-color: var(--color-bg-1);
+        z-index: 100;
     }
 
     .availability-cell {

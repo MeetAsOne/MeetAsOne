@@ -1,7 +1,7 @@
 <script lang="ts">
     import ImportCalendar from "$lib/importCalendar/ImportCalendar.svelte";
     import {
-      applyAvailability, type Availability, enforceAvailabilityValidity,
+      type Availability, enforceAvailabilityValidity,
       loadAvailability, loadAvailabilityOne,
       mergeAvailability
     } from "$lib/manual/Availability.js";
@@ -14,7 +14,7 @@
     import {writable} from "svelte/store";
     import AvailabilityComponent from "$lib/Availability.svelte";
     import {workingAvailability} from "$lib/store.ts";
-    import {Button, Checkbox} from "flowbite-svelte";
+    import {Button, Checkbox, Spinner} from "flowbite-svelte";
 
     export let data: PageData;
   let event: GetEvent$result["events"][number] | undefined;
@@ -43,11 +43,10 @@
     }
   }
 
-  const localAvailability = JSON.parse(
-    globalThis?.localStorage?.["general-availability"] ?? '{"days": {}}',
-  );
   let mySavedAvailability: Availability | undefined;
   $: mySavedAvailability = event?.availabilities.find(avail => avail.username === globalThis?.localStorage?.name)?.availability;
+
+  let isSaved: boolean;
 </script>
 
 <svelte:head>
@@ -75,14 +74,17 @@
   <div class="mt-10 flex items-center justify-center">
     <div class="flex flex-row flex-wrap items-center justify-center">
       <div>
-        <h2>Your availability</h2>
+        <h2>
+          Your availability
+          {#if !isSaved}
+            <Spinner size={6} title="Saving..." />
+          {/if}
+        </h2>
         <ManualInput
           dates={event.dates.map(dateStrToEpoch)}
           timeRange={[event.start_time, event.end_time]}
-          availability={mySavedAvailability ? loadAvailabilityOne(mySavedAvailability) : applyAvailability(
-            event.dates.map(dateStrToEpoch),
-            localAvailability.days,
-          )}
+          availability={mySavedAvailability ? loadAvailabilityOne(mySavedAvailability) : undefined}
+          bind:isSaved
         />
       </div>
       <div class="w-10"></div>

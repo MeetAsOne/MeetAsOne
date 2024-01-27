@@ -24,7 +24,7 @@ export const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday
 export function canonicalDateStr(date: Date) {
   return new Intl.DateTimeFormat('en-US', {
     month: 'numeric',
-    day: '2-digit',
+    day: 'numeric',
     year: 'numeric'
   }).format(date) as DateStr;
 }

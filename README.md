@@ -21,7 +21,8 @@ Demo video:
 ## Features
 
 * Import an image of your calendar to automatically fill in your availability
-* Saves your availability in your browser for future events
+* Saves your availability in your browser for responding to later events
+* Mobile-friendly
 
 ## Developing
 
