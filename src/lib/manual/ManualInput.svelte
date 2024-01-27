@@ -63,13 +63,14 @@
   /** Push availability change to server, save to localStorage */
   async function save() {
     isSaved = false;
+    console.log("saving...");
     for (const date in availability) {
       for (const block of blocks) {
         availability[date][block] = (selectRectIncludesBlock([new Date(date).getTime(), block], [dragStart, dragNow]) ? dragState : availability[date][block]?.length) ? ["me"] : [];
       }
     }
     // Reactive statement should update this, but timing is inconsistent (Svelte runes should fix this)
-    [formattedAvailability, weeklyAvailability] = compactAvailability(availability);
+    const [formattedAvailability, weeklyAvailability] = compactAvailability(availability);
 
     globalThis?.localStorage?.setItem?.('draftAvailability', JSON.stringify({
       "time-zone": 1,  // TODO
@@ -170,9 +171,9 @@
     {/if}
     {#each dates.map(d => new Date(d)) as date}
         <!-- <Column> -->
-        <!-- If you get a server error for old events, make sure date is in new format (no leading zeros). Fix: exiting server data -->
-        {@const colAvailability = availability[canonicalDateStr(date)]}
+        <!-- If you get an error for old events, make sure date is in new format (no leading zeros). Fix: exiting server data -->
         {@const dateStr = canonicalDateStr(date)}
+        {@const colAvailability = availability[dateStr]}
         <div class="flex-grow text-center" role="row">
             <div role="columnheader" class="px-1">
                 {new Intl.DateTimeFormat(undefined, {weekday: "short"}).format(date)}
@@ -190,7 +191,7 @@
                     <div class="availability-cell flex" data-idx={block} data-date={date.getTime()}
                          style:opacity={allParticipants.length && !useMulticolor ? (colAvailability[block]?.length ?? allParticipants.length) / allParticipants.length : "1"}
                          class:cursor-pointer={!availablePeople}
-                         class:available={selectRectIncludesBlock([date.getTime(), block], [dragStart, dragNow]) ? dragState : colAvailability[block]?.length}
+                         class:available={selectRectIncludesBlock([date.getTime(), block], [dragStart, dragNow]) ? dragState : colAvailability?.[block]?.length}
                          on:mousedown={() => handleMouseDown(dateStr, block)}
                          on:mouseenter={() => handlePointerEnter(dateStr, block)}
                          on:touchmove={ev => handlePointerEnter(...convertTouchEvent(ev))}
