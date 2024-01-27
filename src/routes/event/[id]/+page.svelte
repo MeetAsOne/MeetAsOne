@@ -14,7 +14,7 @@
     import {writable} from "svelte/store";
     import AvailabilityComponent from "$lib/Availability.svelte";
     import {workingAvailability} from "$lib/store.ts";
-    import {Button, Checkbox} from "flowbite-svelte";
+    import {Button, Checkbox, Spinner} from "flowbite-svelte";
 
     export let data: PageData;
   let event: GetEvent$result["events"][number] | undefined;
@@ -74,7 +74,12 @@
   <div class="mt-10 flex items-center justify-center">
     <div class="flex flex-row flex-wrap items-center justify-center">
       <div>
-        <h2>Your availability ({isSaved ? "✅ Saved" : "⏳ Saving..."})</h2>
+        <h2>
+          Your availability
+          {#if !isSaved}
+            <Spinner size={6} title="Saving..." />
+          {/if}
+        </h2>
         <ManualInput
           dates={event.dates.map(dateStrToEpoch)}
           timeRange={[event.start_time, event.end_time]}
