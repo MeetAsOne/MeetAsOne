@@ -58,8 +58,11 @@
   /** If true, display each person in cell as their own color. Otherwise, use shades of green */
   export let useMulticolor = false;
 
+  export let isSaved = true;
+
   /** Push availability change to server, save to localStorage */
   async function save() {
+    isSaved = false;
     for (const date in availability) {
       for (const block of blocks) {
         availability[date][block] = (selectRectIncludesBlock([new Date(date).getTime(), block], [dragStart, dragNow]) ? dragState : availability[date][block]?.length) ? ["me"] : [];
@@ -83,8 +86,10 @@
     });
     if (res.errors)
       res.errors.forEach(console.error);
-    if (res.data?.insert_availability?.affected_rows === 0)
+    else if (res.data?.insert_availability?.affected_rows === 0)
       console.error("No rows were changed")
+    else
+      isSaved = true;
   }
 
   /** Represents [Date (as ms since epoch), block idx since midnight] */

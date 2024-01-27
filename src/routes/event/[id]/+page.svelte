@@ -45,6 +45,8 @@
 
   let mySavedAvailability: Availability | undefined;
   $: mySavedAvailability = event?.availabilities.find(avail => avail.username === globalThis?.localStorage?.name)?.availability;
+
+  let isSaved: boolean;
 </script>
 
 <svelte:head>
@@ -72,11 +74,12 @@
   <div class="mt-10 flex items-center justify-center">
     <div class="flex flex-row flex-wrap items-center justify-center">
       <div>
-        <h2>Your availability</h2>
+        <h2>Your availability ({isSaved ? "✅ Saved" : "⏳ Saving..."})</h2>
         <ManualInput
           dates={event.dates.map(dateStrToEpoch)}
           timeRange={[event.start_time, event.end_time]}
           availability={mySavedAvailability ? loadAvailabilityOne(mySavedAvailability) : undefined}
+          bind:isSaved
         />
       </div>
       <div class="w-10"></div>
