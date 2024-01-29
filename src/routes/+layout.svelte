@@ -2,6 +2,7 @@
 	import "../app.pcss";
     import Header from './Header.svelte';
     import './styles.css';
+	import Toaster from "$lib/Toaster.svelte";
 </script>
 
 <div class="app">
@@ -10,6 +11,7 @@
 	<main>
 		<slot></slot>
 	</main>
+	<Toaster />
 </div>
 
 <style>

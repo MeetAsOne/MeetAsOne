@@ -15,6 +15,7 @@
     import AvailabilityComponent from "$lib/Availability.svelte";
     import {workingAvailability} from "$lib/store.ts";
     import {Button, Checkbox, Spinner} from "flowbite-svelte";
+    import {timeoutToast, clearAllToasts, editToast, errorToast} from "$lib/Toaster.svelte";
 
     export let data: PageData;
   let event: GetEvent$result["events"][number] | undefined;
@@ -49,13 +50,16 @@
   let isSaved: boolean;
 
   let isOnline = true;
+  let toastRef: number;
 
   globalThis?.window?.addEventListener('online', function() {
     isOnline = true;
+    timeoutToast(editToast(toastRef, "Connection restored!"), 1000);
   });
 
   globalThis?.window?.addEventListener('offline', function() {
     isOnline = false;
+    toastRef = errorToast("Editing disabled while offline");
   });
 </script>
 
