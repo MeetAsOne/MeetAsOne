@@ -8,12 +8,11 @@
     type InternalAvailability,
     mergeAvailability
   } from "$lib/manual/Availability";
-  import {UpsertAvailabilityStore} from "$houdini";
   import {TIME_STEP} from "$lib/units";
   import {page} from "$app/stores";
   import type {Writable} from "svelte/store";
   import {importedEvents, importedWeeklyEvents, workingAvailability} from "$lib/store";
-  import {getOrSetName} from "$lib/storage.ts";
+  import saveServer from "$lib/manual/saveServer.ts";
 
   /** Epoch timestamps for which to display the UI */
   export let dates: number[];
@@ -43,7 +42,7 @@
       ))[0]
     );
     importedWeeklyEvents.set({});
-    save();
+    saveServer($page.params.id, availability);
   });
 
   /** store to write to when hovering over group's time blocks. Setting this also disables input */
@@ -61,38 +60,12 @@
   /** If true, display each person in cell as their own color. Otherwise, use shades of green */
   export let useMulticolor = false;
 
-  export let isSaved = true;
-
-  /** Push availability change to server, save to localStorage */
-  async function save() {
-    isSaved = false;
+  function applyDragPreview() {
     for (const date in availability) {
       for (const block of blocks) {
         availability[date][block] = (selectRectIncludesBlock([new Date(date).getTime(), block], [dragStart, dragNow]) ? dragState : availability[date][block]?.length) ? ["me"] : [];
       }
     }
-    // Reactive statement should update this, but timing is inconsistent (Svelte runes should fix this)
-    const [formattedAvailability, weeklyAvailability] = compactAvailability(availability);
-
-    globalThis?.localStorage?.setItem?.('draftAvailability', JSON.stringify({
-      "time-zone": 1,  // TODO
-      days: weeklyAvailability,
-    }));
-
-    const updater = new UpsertAvailabilityStore();
-    const username = getOrSetName();
-    if (!username) return;
-    const res = await updater.mutate({
-      availability: formattedAvailability,
-      username,
-      eventId: $page.params.id,
-    });
-    if (res.errors)
-      res.errors.forEach(console.error);
-    else if (res.data?.insert_availability?.affected_rows === 0)
-      console.error("No rows were changed")
-    else
-      isSaved = true;
   }
 
   /** Represents [Date (as ms since epoch), block idx since midnight] */
@@ -142,8 +115,10 @@
 
   const handlePointerUp = () => {
     if (dragStart) {
-      if (!availablePeople)
-        save();
+      if (!availablePeople) {
+        applyDragPreview();
+        saveServer($page.params.id, availability);
+      }
       dragStart = dragNow = dragState = null;
     }
   };

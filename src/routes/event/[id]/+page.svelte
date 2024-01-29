@@ -13,9 +13,9 @@
     import {getPastEvents, savePastEvents} from "$lib/storage";
     import {writable} from "svelte/store";
     import AvailabilityComponent from "$lib/Availability.svelte";
-    import {workingAvailability} from "$lib/store.ts";
+    import {isSaved, workingAvailability} from "$lib/store.ts";
     import {Button, Checkbox, Spinner} from "flowbite-svelte";
-    import {timeoutToast, clearAllToasts, editToast, newToast} from "$lib/Toaster.svelte";
+    import {timeoutToast, editToast, newToast} from "$lib/Toaster.svelte";
 
     export let data: PageData;
   let event: GetEvent$result["events"][number] | undefined;
@@ -47,8 +47,6 @@
   let mySavedAvailability: Availability | undefined;
   $: mySavedAvailability = event?.availabilities.find(avail => avail.username === globalThis?.localStorage?.name)?.availability;
 
-  let isSaved: boolean;
-
   let isOnline = true;
   let toastRef: number;
 
@@ -59,7 +57,7 @@
 
   globalThis?.window?.addEventListener('offline', function() {
     isOnline = false;
-    toastRef = newToast("Editing disabled while offline", "error");
+    toastRef = newToast("Editing disabled while offline");
   });
 </script>
 
@@ -90,7 +88,7 @@
       <div>
         <h2>
           Your availability
-          {#if !isSaved}
+          {#if !$isSaved}
             <Spinner size={6} title="Saving..." />
           {/if}
         </h2>
@@ -99,7 +97,6 @@
           timeRange={[event.start_time, event.end_time]}
           availability={mySavedAvailability ? loadAvailabilityOne(mySavedAvailability) : undefined}
           isDisabled={!isOnline}
-          bind:isSaved
         />
       </div>
       <div class="w-10"></div>

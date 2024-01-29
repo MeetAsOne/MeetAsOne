@@ -7,3 +7,5 @@ export const importedEvents: Writable<Availability> = writable();
 export const importedWeeklyEvents = writable<Availability>({})
 
 export const workingAvailability = writable<Availability>({});
+
+export const isSaved = writable(true);
