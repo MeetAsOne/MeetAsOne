@@ -18,6 +18,9 @@
   /** Epoch timestamps for which to display the UI */
   export let dates: number[];
 
+  // Whether to allow input. Controls manual mode, not viewing mode
+  export let isDisabled = false;
+
   export let availability: InternalAvailability = blankAvailability(dates.map(d => canonicalDateStr(new Date(d))));
   let formattedAvailability: Availability = {};
   let weeklyAvailability: Availability = {};
@@ -115,7 +118,7 @@
       const target = document.elementFromPoint(ev.touches[0].clientX, ev.touches[0].clientY) as HTMLElement;
       const idx = Number.parseInt(target.dataset.idx!);
       const date = Number.parseInt(target.dataset.date!)
-      if (!dragStart && !availablePeople)
+      if (!dragStart && !availablePeople && !isDisabled)
         dragStart = dragNow = [date, idx];
       return [canonicalDateStr(new Date(date)), idx];
     }
@@ -123,7 +126,7 @@
   }
 
   const handleMouseDown = (date: DateStr, timeIndex: number) => {
-    if (availablePeople) return;
+    if (availablePeople || isDisabled) return;
     dragStart = dragNow = [new Date(date).getTime(), timeIndex];
     toggleAvailability(date, timeIndex);
   };
@@ -159,6 +162,7 @@
 </script>
 
 <div class="flex items-stretch select-none">
+    <!-- Row headers -->
     {#if dates.length > 0}
         <div class="labels text-right pr-1">
             {#each blocks as block, idx}
@@ -173,6 +177,7 @@
         {@const dateStr = canonicalDateStr(date)}
         {@const colAvailability = availability[dateStr]}
         <div class="flex-grow text-center" role="row">
+            <!-- Column header -->
             <div role="columnheader" class="px-1">
                 {new Intl.DateTimeFormat(undefined, {weekday: "short"}).format(date)}
                 <br />
@@ -183,12 +188,14 @@
                     }).format(date)}
                 </span>
             </div>
-            <div class="bg-white">
+            <!-- Cell container -->
+            <div class="bg-white" class:grayscale={isDisabled}>
                 {#each blocks as block}
                     <!-- <Cell> -->
                     <div class="availability-cell flex" data-idx={block} data-date={date.getTime()}
                          style:opacity={allParticipants.length && !useMulticolor ? (colAvailability[block]?.length ?? allParticipants.length) / allParticipants.length : "1"}
-                         class:cursor-pointer={!availablePeople}
+                         class:cursor-pointer={!availablePeople && !isDisabled}
+                         class:cursor-not-allowed={isDisabled}
                          class:available={selectRectIncludesBlock([date.getTime(), block], [dragStart, dragNow]) ? dragState : colAvailability[block]?.length}
                          on:mousedown={() => handleMouseDown(dateStr, block)}
                          on:mouseenter={() => handlePointerEnter(dateStr, block)}

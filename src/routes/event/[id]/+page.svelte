@@ -47,6 +47,16 @@
   $: mySavedAvailability = event?.availabilities.find(avail => avail.username === globalThis?.localStorage?.name)?.availability;
 
   let isSaved: boolean;
+
+  let isOnline = true;
+
+  globalThis?.window?.addEventListener('online', function() {
+    isOnline = true;
+  });
+
+  globalThis?.window?.addEventListener('offline', function() {
+    isOnline = false;
+  });
 </script>
 
 <svelte:head>
@@ -84,6 +94,7 @@
           dates={event.dates.map(dateStrToEpoch)}
           timeRange={[event.start_time, event.end_time]}
           availability={mySavedAvailability ? loadAvailabilityOne(mySavedAvailability) : undefined}
+          isDisabled={!isOnline}
           bind:isSaved
         />
       </div>

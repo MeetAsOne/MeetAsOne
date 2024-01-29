@@ -1,6 +1,7 @@
 <script lang="ts">
   import type {EventSummary} from "$lib/storage.ts";
   import {Button, ButtonGroup} from "flowbite-svelte";
+  import { CloseSolid } from 'flowbite-svelte-icons';
 
   export let events: EventSummary[];
 
@@ -22,11 +23,7 @@
                     {respondedEvent.name}
                 </Button>
                 <Button on:click={del.bind(globalThis, respondedEvent.id)} style="background-color:#D1AC00" class="pl-0 !border-l-0" title="Forget">
-                    <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
-                         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M6 18 18 6m0 12L6 6"/>
-                    </svg>
+                    <CloseSolid />
                 </Button>
             </ButtonGroup>
         </div>
