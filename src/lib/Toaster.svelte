@@ -4,8 +4,12 @@
     let id = 0;
     const queue = writable([] as (string | undefined)[]);
 
+    export const icons = {
+      error: ExclamationCircleSolid
+    };
+
     /** Shows an error toast with the given message and returns an id for that toast to cancel it later */
-    export function errorToast(message: string) {
+    export function newToast(message: string, iconType: keyof typeof icons) {
         queue.update(prev => [...prev, message]);
         return id++;
     }
