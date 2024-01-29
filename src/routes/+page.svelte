@@ -9,55 +9,26 @@
 	import { goto } from "$app/navigation";
 	import range from "$lib/range";
 	import { DAY } from "$lib/units";
-	import { timeToInt } from "$lib/timeutils";
+	import {timeToInt, timezones} from "$lib/timeutils";
 	import { savePastEvents, getPastEvents } from "$lib/storage";
 	import OldEvents from "./OldEvents.svelte";
 
 	let name: string = "";
 	let searchQuery = "";
-	let timezones = [
-		"(GMT-12:00) International Date Line West",
-		"(GMT-11:00) Midway Island, Samoa",
-		"(GMT-10:00) Hawaii",
-		"(GMT-09:00) Alaska",
-		"(GMT-08:00) Pacific Time (US & Canada)",
-		"(GMT-07:00) Mountain Time (US & Canada)",
-		"(GMT-06:00) Central Time (US & Canada)",
-		"(GMT-05:00) Eastern Time (US & Canada)",
-		"(GMT-04:00) Atlantic Time (Canada)",
-		"(GMT-03:00) Buenos Aires, Georgetown",
-		"(GMT-02:00) Mid-Atlantic",
-		"(GMT-01:00) Cape Verde Islands",
-		"(GMT) Greenwich Mean Time, London",
-		"(GMT+01:00) Brussels, Copenhagen, Madrid, Paris",
-		"(GMT+02:00) Athens, Istanbul, Cairo",
-		"(GMT+03:00) Moscow, St. Petersburg, Volgograd",
-		"(GMT+04:00) Dubai, Abu Dhabi, Muscat",
-		"(GMT+05:00) Karachi, Islamabad, Tashkent",
-		"(GMT+05:30) Indian Standard Time",
-		"(GMT+06:00) Almaty, Dhaka",
-		"(GMT+07:00) Bangkok, Hanoi, Jakarta",
-		"(GMT+08:00) Beijing, Hong Kong, Singapore",
-		"(GMT+09:00) Tokyo, Seoul, Osaka",
-		"(GMT+09:30) Adelaide, Darwin",
-		"(GMT+10:00) Brisbane, Sydney, Melbourne",
-		"(GMT+11:00) Solomon Islands, New Caledonia",
-		"(GMT+12:00) Fiji, Kamchatka, Marshall Is.",
-	];
 
 	const pastEvents = getPastEvents();
 	const tzOffset = new Date().getTimezoneOffset() / 60;
-	let selectedOption = timezones.find(tz => tz.includes((["-", "+"])[Number(tzOffset < 0)] + String(Math.abs(tzOffset)).padStart(2, "0"))) ?? "Select Timezone";
+	let selectedOption = tzOffset;
 
 	let showDropdown = false;
 
-	function handleOptionSelect(option: string) {
+	function handleOptionSelect(option: number) {
 		selectedOption = option;
 		showDropdown = false;
 	}
 	async function createEvent(ev: SubmitEvent) {
 		ev.preventDefault();
-		if (name.length == 0 || selectedOption == "Select Timezone") {
+		if (name.length == 0) {
 			alert("Please fill in details");
 		} else {
 			const updater = new InsertEventStore();
@@ -159,27 +130,29 @@
 					</div>
 				</div>
 
-				<Button style="background-color:#D1AC00"
-					>{selectedOption}<ChevronDownSolid
-						class="w-3 h-3 ms-2 text-white dark:text-white"
-					/></Button
+				<Button style="background-color:#D1AC00">
+					{timezones.get(selectedOption)}
+					<ChevronDownSolid class="w-3 h-3 ms-2 text-white dark:text-white" />
+				</Button
 				>
 				<Dropdown
-					class="overflow-y-auto px-3 pb-3 text-sm h-44 "
+					class="overflow-y-auto px-3 pb-3 text-sm h-44"
 					bind:open={showDropdown}
 				>
 					<div slot="header" class="p-3">
 						<Search size="md" bind:value={searchQuery} autofocus />
 					</div>
-					{#each timezones.filter(timezone => timezone.toLowerCase().includes(searchQuery.toLowerCase())) as time, idx}
-						<li
-							class="rounded p-2 hover:bg-gray-100 dark:hover:bg-gray-600"
-						>
-							<DropdownItem
-								on:click={() => handleOptionSelect(time)}
-								>{time}</DropdownItem
+					{#each timezones.entries() as [tzOffset, tzName]}
+						{#if tzName.toLowerCase().includes(searchQuery.toLowerCase())}
+							<li
+								class="rounded p-2 hover:bg-gray-100 dark:hover:bg-gray-600"
 							>
-						</li>
+								<DropdownItem
+									on:click={() => handleOptionSelect(tzOffset)}
+									>{tzName}</DropdownItem
+								>
+							</li>
+						{/if}
 					{/each}
 				</Dropdown>
 				<!-- Start input has name "start". End input has name "end" -->
