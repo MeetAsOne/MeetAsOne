@@ -20,7 +20,7 @@ export function getPastEvents() {
   return pastEvents;
 }
 
-const MAX_HISTORY = 4;
+const MAX_HISTORY = 6;
 
 export function savePastEvents(events: PastEvents) {
   if (events.responded.length > MAX_HISTORY)

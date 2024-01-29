@@ -11,6 +11,7 @@
 	import { DAY } from "$lib/units";
 	import { timeToInt } from "$lib/timeutils";
 	import { savePastEvents, getPastEvents } from "$lib/storage";
+	import OldEvents from "./OldEvents.svelte";
 
 	let name: string = "";
 	let searchQuery = "";
@@ -86,6 +87,7 @@
 			goto("event/" + id);
 		}
 	}
+	$: savePastEvents(pastEvents);
 </script>
 
 <svelte:head>
@@ -117,33 +119,13 @@
 			>
 				Created Events
 			</h2>
-			<div class="flex flex-wrap max-w-[350px] m-auto">
-				{#each pastEvents.created as createdEvent}
-					<div class="event-button">
-						<Button
-								style="background-color:#D1AC00"
-								href={"/event/" + createdEvent.id}
-						>{createdEvent.name}</Button
-						>
-					</div>
-				{/each}
-			</div>
+			<OldEvents bind:events={pastEvents.created} />
 			<h2
 				style="margin-top: 40px; font-weight: bold; text-transform: uppercase;"
 			>
 				Events Responded to
 			</h2>
-			<div class="flex flex-wrap max-w-[350px] m-auto">
-				{#each pastEvents.responded as respondedEvent}
-					<div class="event-button">
-						<Button
-								style="background-color:#D1AC00"
-								href={"/event/" + respondedEvent.id}
-						>{respondedEvent.name}</Button
-						>
-					</div>
-				{/each}
-			</div>
+			<OldEvents bind:events={pastEvents.responded} />
 		</div>
 		<div class="create-event-box">
 
@@ -374,9 +356,5 @@
 
 	ul {
 		list-style-type: square;
-	}
-
-	.event-button {
-		margin: 10px;
 	}
 </style>
