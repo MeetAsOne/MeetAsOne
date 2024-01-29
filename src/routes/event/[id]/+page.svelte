@@ -16,6 +16,7 @@
     import {isSaved, workingAvailability} from "$lib/store.ts";
     import {Button, Checkbox, Spinner} from "flowbite-svelte";
     import {timeoutToast, editToast, newToast} from "$lib/Toaster.svelte";
+    import saveServer from "$lib/manual/saveServer.ts";
 
     export let data: PageData;
   let event: GetEvent$result["events"][number] | undefined;
@@ -53,6 +54,7 @@
   globalThis?.window?.addEventListener('online', function() {
     isOnline = true;
     timeoutToast(editToast(toastRef, "Connection restored!"), 1000);
+    // TODO: saveServer($page.params.id, availability);
   });
 
   globalThis?.window?.addEventListener('offline', function() {

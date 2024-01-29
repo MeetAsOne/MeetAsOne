@@ -60,6 +60,7 @@
   /** If true, display each person in cell as their own color. Otherwise, use shades of green */
   export let useMulticolor = false;
 
+  /** Using dragStart, dragNow, and dragState, mark all cells within the dragged rectangle with their new respective value */
   function applyDragPreview() {
     for (const date in availability) {
       for (const block of blocks) {
