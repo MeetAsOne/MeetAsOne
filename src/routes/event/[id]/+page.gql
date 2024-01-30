@@ -1,6 +1,5 @@
 query GetEvent($id: uuid) {
   events(where: {id: {_eq: $id}}) {
-    timezone
     name
     start_time
     end_time

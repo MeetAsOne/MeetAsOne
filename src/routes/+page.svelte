@@ -9,23 +9,15 @@
 	import { goto } from "$app/navigation";
 	import range from "$lib/range";
 	import { DAY } from "$lib/units";
-	import {timeToInt, timezones} from "$lib/timeutils";
+	import {timeToInt} from "$lib/timeutils";
 	import { savePastEvents, getPastEvents } from "$lib/storage";
 	import OldEvents from "./OldEvents.svelte";
+	import TzPicker from "$lib/TzPicker.svelte";
 
 	let name: string = "";
-	let searchQuery = "";
 
 	const pastEvents = getPastEvents();
-	const tzOffset = new Date().getTimezoneOffset() / 60;
-	let selectedOption = tzOffset;
 
-	let showDropdown = false;
-
-	function handleOptionSelect(option: number) {
-		selectedOption = option;
-		showDropdown = false;
-	}
 	async function createEvent(ev: SubmitEvent) {
 		ev.preventDefault();
 		if (name.length == 0) {
@@ -38,7 +30,6 @@
 			const end_day = new Date(data.get("end") as string).getTime();
 			const response = await updater.mutate({
 				name: name,
-				timezone: selectedOption,
 				start_time: timeToInt(data.get("start_time") as string),
 				end_time: timeToInt(data.get("end_time") as string),
 				dates: range(start_day, end_day + DAY, DAY).map((day) =>
@@ -130,31 +121,6 @@
 					</div>
 				</div>
 
-				<Button style="background-color:#D1AC00">
-					{timezones.get(selectedOption)}
-					<ChevronDownSolid class="w-3 h-3 ms-2 text-white dark:text-white" />
-				</Button
-				>
-				<Dropdown
-					class="overflow-y-auto px-3 pb-3 text-sm h-44"
-					bind:open={showDropdown}
-				>
-					<div slot="header" class="p-3">
-						<Search size="md" bind:value={searchQuery} autofocus />
-					</div>
-					{#each timezones.entries() as [tzOffset, tzName]}
-						{#if tzName.toLowerCase().includes(searchQuery.toLowerCase())}
-							<li
-								class="rounded p-2 hover:bg-gray-100 dark:hover:bg-gray-600"
-							>
-								<DropdownItem
-									on:click={() => handleOptionSelect(tzOffset)}
-									>{tzName}</DropdownItem
-								>
-							</li>
-						{/if}
-					{/each}
-				</Dropdown>
 				<!-- Start input has name "start". End input has name "end" -->
 				<Datepicker range />
 				<div class="my-button">

@@ -8,7 +8,7 @@
     import ManualInput from "$lib/manual/ManualInput.svelte";
     import type {GetEvent$result} from "$houdini";
     import type {PageData} from "$houdini/types/src/routes/event/[id]/$houdini";
-    import {dateStrToEpoch} from "$lib/timeutils";
+    import {dateStrToEpoch, timezones} from "$lib/timeutils";
     import {page} from "$app/stores";
     import {getPastEvents, savePastEvents} from "$lib/storage";
     import {writable} from "svelte/store";
@@ -17,6 +17,7 @@
     import {Button, Checkbox, Spinner} from "flowbite-svelte";
     import {timeoutToast, editToast, newToast} from "$lib/Toaster.svelte";
     import saveServer from "$lib/manual/saveServer.ts";
+    import TzPicker from "$lib/TzPicker.svelte";
 
     export let data: PageData;
   let event: GetEvent$result["events"][number] | undefined;
@@ -33,6 +34,7 @@
   }
 
   const pastEvents = getPastEvents();
+  let selectedTimezone: number;
 
   $: {
     if (
@@ -78,7 +80,10 @@
 {:else if event}
   <h1>{event?.name ?? ""}</h1>
   <div class="flex justify-center items-center">
-    <em class="m-5">Timezone of event: {event?.timezone ?? ""}</em>
+    <em class="m-5">
+      Times are in
+      <TzPicker bind:selectedTimezone />
+    </em>
   </div>
   <div class="flex justify-between gap-2">
     <Button on:click={() => localStorage["general-availability"] = localStorage.draftAvailability}>Save availability to browser</Button>

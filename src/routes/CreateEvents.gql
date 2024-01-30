@@ -1,10 +1,8 @@
-mutation InsertEvent($timezone: smallint, $name: String, $dates: [String!], $start_time: smallint, $end_time: smallint) {
-  insert_events(objects: {timezone: $timezone, name: $name, dates: $dates, start_time: $start_time, end_time: $end_time}) {
+mutation InsertEvent($name: String, $dates: [String!], $start_time: smallint, $end_time: smallint) {
+  insert_events(objects: {name: $name, dates: $dates, start_time: $start_time, end_time: $end_time}) {
     affected_rows
     returning {
-      timezone
       name
-      created_at
       id
     }
   }
