@@ -8,7 +8,7 @@
     import ManualInput from "$lib/manual/ManualInput.svelte";
     import type {GetEvent$result} from "$houdini";
     import type {PageData} from "$houdini/types/src/routes/event/[id]/$houdini";
-    import {dateStrToEpoch, timezones} from "$lib/timeutils";
+    import {dateStrToEpoch} from "$lib/timeutils";
     import {page} from "$app/stores";
     import {getPastEvents, savePastEvents} from "$lib/storage";
     import {writable} from "svelte/store";

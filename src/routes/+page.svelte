@@ -1,9 +1,6 @@
 <script lang="ts">
 	import welcome_fallback from "$lib/images/HomepageTitle.png";
-	import { Label, Input, Button } from "flowbite-svelte";
-	import { Dropdown, DropdownItem, Search } from "flowbite-svelte";
-	import { ChevronDownSolid, UserRemoveSolid } from "flowbite-svelte-icons";
-
+	import { Label, Input } from "flowbite-svelte";
 	import { Datepicker, DarkMode, GradientButton } from "flowbite-svelte";
 	import { InsertEventStore } from "$houdini";
 	import { goto } from "$app/navigation";
@@ -12,7 +9,6 @@
 	import {timeToInt} from "$lib/timeutils";
 	import { savePastEvents, getPastEvents } from "$lib/storage";
 	import OldEvents from "./OldEvents.svelte";
-	import TzPicker from "$lib/TzPicker.svelte";
 
 	let name: string = "";
 
