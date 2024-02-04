@@ -3,6 +3,7 @@
   import {ChevronDownSolid} from "flowbite-svelte-icons";
   import {Button, Dropdown, DropdownItem, Search} from "flowbite-svelte";
 
+  /** Minutes difference from UTC */
   export let selectedTimezone = new Date().getTimezoneOffset();
 
   let showDropdown = false;

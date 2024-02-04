@@ -9,8 +9,10 @@
 	import {timeToInt} from "$lib/timeutils";
 	import { savePastEvents, getPastEvents } from "$lib/storage";
 	import OldEvents from "./OldEvents.svelte";
+	import TzPicker from "$lib/TzPicker.svelte";
 
 	let name: string = "";
+	let selectedTimezone: number;
 
 	const pastEvents = getPastEvents();
 
@@ -26,8 +28,8 @@
 			const end_day = new Date(data.get("end") as string).getTime();
 			const response = await updater.mutate({
 				name: name,
-				start_time: timeToInt(data.get("start_time") as string),
-				end_time: timeToInt(data.get("end_time") as string),
+				start_time: timeToInt(data.get("start_time") as string) + selectedTimezone,
+				end_time: timeToInt(data.get("end_time") as string) + selectedTimezone,
 				dates: range(start_day, end_day + DAY, DAY).map((day) =>
 					new Date(day).toLocaleDateString(),
 				), // excludes endpoint, thus +DAY
@@ -116,6 +118,8 @@
 						<Input type="time" id="end_time" name="end_time" />
 					</div>
 				</div>
+
+				<TzPicker bind:selectedTimezone={selectedTimezone} />
 
 				<!-- Start input has name "start". End input has name "end" -->
 				<Datepicker range />

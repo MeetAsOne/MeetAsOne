@@ -1,7 +1,7 @@
 /** Date formatted in en-US locale, m/dd/yy. TODO: tighten this type */
 export type DateStr = `${number}/${number}/${number}` | string;
 
-/** convert "2:50 AM" or "15:43" to seconds since midnight */
+/** convert "2:50 AM" or "15:43" to minutes since midnight */
 export function timeToInt(timeString: string) {
   const [hours, minutes, ampm] = timeString.split(/[: ]/);
 
