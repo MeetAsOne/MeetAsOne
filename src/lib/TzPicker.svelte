@@ -16,7 +16,7 @@
 </script>
 
 <Button style="background-color:#D1AC00">
-    {timezones.get(selectedTimezone)}
+    {globalThis.window ? timezones.get(selectedTimezone) : "Select timezone"}
     <ChevronDownSolid class="w-3 h-3 ms-2 text-white dark:text-white" />
 </Button
 >
@@ -32,10 +32,9 @@
             <li
                     class="rounded p-2 hover:bg-gray-100 dark:hover:bg-gray-600"
             >
-                <DropdownItem
-                        on:click={() => handleOptionSelect(tzOffset)}
-                >{tzName}</DropdownItem
-                >
+                <DropdownItem on:click={() => handleOptionSelect(tzOffset)}>
+                    {tzName}
+                </DropdownItem>
             </li>
         {/if}
     {/each}
