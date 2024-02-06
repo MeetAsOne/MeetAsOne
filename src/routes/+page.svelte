@@ -5,7 +5,7 @@
 	import { InsertEventStore } from "$houdini";
 	import { goto } from "$app/navigation";
 	import range from "$lib/range";
-	import { DAY } from "$lib/units";
+	import {DAY, MILLISECOND} from "$lib/units";
 	import {timeToInt} from "$lib/timeutils";
 	import { savePastEvents, getPastEvents } from "$lib/storage";
 	import OldEvents from "./OldEvents.svelte";
@@ -24,14 +24,14 @@
 			const updater = new InsertEventStore();
 
 			const data = new FormData(ev.currentTarget as HTMLFormElement);
-			const start_day = new Date(data.get("start") as string).getTime();
-			const end_day = new Date(data.get("end") as string).getTime();
+			const start_day = new Date(data.get("start") as string).getTime() * MILLISECOND;
+			const end_day = new Date(data.get("end") as string).getTime() * MILLISECOND;
+			const startTime = timeToInt(data.get("start_time") as string) + selectedTimezone;
+			const endTime = timeToInt(data.get("end_time") as string) + selectedTimezone;
 			const response = await updater.mutate({
 				name: name,
-				start_time: timeToInt(data.get("start_time") as string) + selectedTimezone,
-				end_time: timeToInt(data.get("end_time") as string) + selectedTimezone,
-				dates: range(start_day, end_day + DAY, DAY).map((day) =>
-					new Date(day).toLocaleDateString(),
+				dates: range(start_day, end_day + DAY, DAY).map(day =>
+					[day + startTime, day + endTime]
 				), // excludes endpoint, thus +DAY
 			});
 			if (response.errors) {

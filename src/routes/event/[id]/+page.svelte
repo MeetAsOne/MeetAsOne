@@ -8,7 +8,7 @@
     import ManualInput from "$lib/manual/ManualInput.svelte";
     import type {GetEvent$result} from "$houdini";
     import type {PageData} from "$houdini/types/src/routes/event/[id]/$houdini";
-    import {dateStrToEpoch} from "$lib/timeutils";
+    import {canonicalDateStr, dateStrToEpoch, rangesToDate} from "$lib/timeutils";
     import {page} from "$app/stores";
     import {getPastEvents, savePastEvents} from "$lib/storage";
     import {writable} from "svelte/store";
@@ -34,7 +34,8 @@
   }
 
   const pastEvents = getPastEvents();
-  let selectedTimezone: number;
+  /** Minutes difference in UTC of selected timezone */
+  let tzOffset: number;
 
   $: {
     if (
@@ -82,7 +83,7 @@
   <div class="flex justify-center items-center">
     <em class="m-5">
       Times are in
-      <TzPicker bind:selectedTimezone />
+      <TzPicker bind:selectedTimezone={tzOffset} />
     </em>
   </div>
   <div class="flex justify-between gap-2">
@@ -100,10 +101,10 @@
           {/if}
         </h2>
         <ManualInput
-          dates={event.dates.map(dateStrToEpoch)}
-          timeRange={[event.start_time, event.end_time]}
+          ranges={event.dates}
           availability={mySavedAvailability ? loadAvailabilityOne(mySavedAvailability) : undefined}
           isDisabled={!isOnline}
+          {tzOffset}
         />
       </div>
       <div class="w-10"></div>
@@ -119,11 +120,11 @@
           <h2>Group Availability</h2>
           <ManualInput
             allParticipants={Array.from(new Set(event.availabilities.map(person => person.username)).add(globalThis?.localStorage?.name ?? "me"))}
-            dates={event.dates.map(dateStrToEpoch)}
+            ranges={event.dates}
             availablePeople={selectedAvailability}
-            timeRange={[event.start_time, event.end_time]}
+            {tzOffset}
             {useMulticolor}
-            availability={mergeAvailability(enforceAvailabilityValidity(loadAvailability(...event.availabilities), event.dates), $workingAvailability, globalThis?.localStorage?.name)}/>
+            availability={mergeAvailability(enforceAvailabilityValidity(loadAvailability(...event.availabilities), rangesToDate(event.dates).map(canonicalDateStr)), $workingAvailability, globalThis?.localStorage?.name)}/>
         </div>
       </div>
     </div>

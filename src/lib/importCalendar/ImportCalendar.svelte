@@ -8,9 +8,7 @@
     } from "flowbite-svelte";
     import { ChevronDownSolid } from "flowbite-svelte-icons";
     import {importedEvents} from '../store.ts'
-    import {applyAvailability, type Availability} from "$lib/manual/Availability.ts";
-    import {dateStrToEpoch} from "$lib/timeutils.ts";
-    import {compactAvailability} from "$lib/manual/Availability.js";
+    import {type Availability} from "$lib/manual/Availability.ts";
     import {importedWeeklyEvents} from "$lib/store.js";
 
     function get15MinuteIndexes(event: GptEvent) {

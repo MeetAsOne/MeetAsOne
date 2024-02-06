@@ -30,9 +30,16 @@ Demo video:
 2. Copy `sample.env.local` to `.env.local` and fill out the environment variables
 3. Start a development server with `npm run dev`
 
-If you are recreating the server, make sure to run this to ensure upsertion works correctly ([source](https://github.com/hasura/graphql-engine/issues/3981))
+If you are recreating the server, make sure to run this  ([source](https://github.com/hasura/graphql-engine/issues/3981))
 ```sql
+-- ensure upsertion works correctly
 ALTER TABLE availability ADD CONSTRAINT unique_event_username UNIQUE (event_id, username);
+
+-- Type definition
+CREATE TYPE datetime_range AS (
+    start INT,
+    stop INT
+);
 ```
 
 ## Building

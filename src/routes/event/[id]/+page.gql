@@ -1,8 +1,6 @@
 query GetEvent($id: uuid) {
   events(where: {id: {_eq: $id}}) {
     name
-    start_time
-    end_time
     dates
     availabilities {
       availability

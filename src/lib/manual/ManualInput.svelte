@@ -1,6 +1,13 @@
 <script lang="ts">
   import range from "$lib/range";
-  import {canonicalDateStr, type DateStr, dateStrToEpoch, intToTime} from "$lib/timeutils.js";
+  import {
+    canonicalDateStr,
+    type DateStr,
+    dateStrToEpoch,
+    type DatetimeRange,
+    intToTime, rangesToDate,
+    timeInRange
+  } from "$lib/timeutils.js";
   import {
     applyAvailability,
     type Availability, blankAvailability,
@@ -8,19 +15,24 @@
     type InternalAvailability,
     mergeAvailability
   } from "$lib/manual/Availability";
-  import {TIME_STEP} from "$lib/units";
+  import {DAY, TIME_STEP} from "$lib/units";
   import {page} from "$app/stores";
   import type {Writable} from "svelte/store";
   import {importedEvents, importedWeeklyEvents, workingAvailability} from "$lib/store";
   import saveServer from "$lib/manual/saveServer.ts";
 
-  /** Epoch timestamps for which to display the UI */
-  export let dates: number[];
+  /** Array of tuples, each ranges from 0 to 1439 (minutes in day since midnight) */
+  export let ranges: DatetimeRange[];
 
-  // Whether to allow input. Controls manual mode, not viewing mode
+  let dates = rangesToDate(ranges);
+
+  /** Whether to allow input. Controls manual mode, not viewing mode */
   export let isDisabled = false;
 
-  export let availability: InternalAvailability = blankAvailability(dates.map(d => canonicalDateStr(new Date(d))));
+  /** Minutes difference from UTC */
+  export let tzOffset: number;
+
+  export let availability: InternalAvailability = blankAvailability(dates.map(d => canonicalDateStr(d)));
   let formattedAvailability: Availability = {};
   let weeklyAvailability: Availability = {};
   $: [formattedAvailability, weeklyAvailability] = compactAvailability(availability);
@@ -48,11 +60,9 @@
   /** store to write to when hovering over group's time blocks. Setting this also disables input */
   export let availablePeople: Writable<string[]> | undefined = undefined;
 
-  /** Tuple, each ranges from 0 to 1439 (minutes in day) */
-  export let timeRange: [number, number];
-
   /** Array of starting times in 15-minute intervals since midnight for all possible blocks */
-  const blocks = range(...timeRange.map(t => Math.floor(t / TIME_STEP)) as typeof timeRange, 1);
+  const blocks = range(0, DAY / TIME_STEP).filter(timeInRange.bind(null, ranges));
+  console.log(blocks);
 
   /** Names of all participants */
   export let allParticipants: string[] = [];
@@ -148,7 +158,7 @@
             {/each}
         </div>
     {/if}
-    {#each dates.map(d => new Date(d)) as date}
+    {#each dates as date}
         <!-- <Column> -->
         {@const dateStr = canonicalDateStr(date)}
         {@const colAvailability = availability[dateStr]}
