@@ -54,14 +54,9 @@ export const timezones = new Map([
   [HOUR * -12, "(GMT+12:00) Fiji, Kamchatka, Marshall Is."],
 ]);
 
-/** Converts a date to the format m/dd/yy, regardless of the locale. Not displayed, but sent to database */
+/** Converts a date to the format yyyy-mm-dd, regardless of locale or timezone. Not displayed, used internally */
 export function canonicalDateStr(date: Date) {
-  // TODO: change to ISO format? Guarantees date is parsed as UTC (https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/parse)
-  return new Intl.DateTimeFormat('en-US', {
-    month: 'numeric',
-    day: 'numeric',
-    year: 'numeric'
-  }).format(date) as DateStr;
+  return date.toISOString().substring(0, 10) as DateStr;  // Remove the time component
 }
 
 /**
@@ -101,22 +96,9 @@ export function rangesToDate(ranges: DatetimeRange[]) {
   }, [] as number[]).map(timestamp => new Date(timestamp / MILLISECOND))
 }
 
-/**
- * Adds specified number of minutes to local datetime
- * @param date canonical date string
- * @param time minutes since midnight
- * @param offset minutes to add. Positive numbers move towards UTC
- * @returns [new canonical date string, new minutes since midnight]
- */
-export function offsetDateTime(date: DateStr, time: number, offset: number) {
-  const dateObj = new Date(date);
-  dateObj.setMinutes(time + offset);
-  return [canonicalDateStr(dateObj), dateObj.getHours() * 60 + dateObj.getMinutes()] as const;
-}
-
 /** Add the specified number of minutes to `date` copy & return it */
 export function offsetDate(date: Date | string | number, offsetMin: number) {
   const dateObj = new Date(date);
-  dateObj.setMinutes(dateObj.getHours() * HOUR + dateObj.getMinutes() + offsetMin);
+  dateObj.setUTCMinutes(dateObj.getUTCHours() * HOUR + dateObj.getUTCMinutes() + offsetMin);
   return dateObj;
 }
