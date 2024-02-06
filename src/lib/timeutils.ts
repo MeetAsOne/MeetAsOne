@@ -56,6 +56,7 @@ export const timezones = new Map([
 
 /** Converts a date to the format m/dd/yy, regardless of the locale. Not displayed, but sent to database */
 export function canonicalDateStr(date: Date) {
+  // TODO: change to ISO format? Guarantees date is parsed as UTC (https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/parse)
   return new Intl.DateTimeFormat('en-US', {
     month: 'numeric',
     day: 'numeric',
@@ -91,7 +92,9 @@ export function datetimeInRange(ranges: DatetimeRange[], target: number) {
 /** Convert a list of [start, stop] ranges (minutes since epoch) to unique dates they cover. Preserves order */
 export function rangesToDate(ranges: DatetimeRange[]) {
   return ranges.flat().reduce((acc, cur) => {
+    console.log(new Date(cur / MILLISECOND).toUTCString())
     cur = Math.floor(cur / DAY) * DAY;  // Set time to midnight
+    console.log(new Date(cur / MILLISECOND).toUTCString())
     if (!acc.includes(cur))
       acc.push(cur);
     return acc;

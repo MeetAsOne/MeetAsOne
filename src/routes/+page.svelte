@@ -24,13 +24,14 @@
 			const updater = new InsertEventStore();
 
 			const data = new FormData(ev.currentTarget as HTMLFormElement);
-			const start_day = new Date(data.get("start") as string).getTime() * MILLISECOND;
-			const end_day = new Date(data.get("end") as string).getTime() * MILLISECOND;
+			// TODO: + " UTC" might be inconsistent across browsers. Make a custom parseDateUTC fn?
+			const startDay = new Date(data.get("start") as string + " UTC").getTime() * MILLISECOND;
+			const endDay = new Date(data.get("end") as string + " UTC").getTime() * MILLISECOND;
 			const startTime = timeToInt(data.get("start_time") as string) + selectedTimezone;
 			const endTime = timeToInt(data.get("end_time") as string) + selectedTimezone;
 			const response = await updater.mutate({
 				name: name,
-				dates: range(start_day, end_day + DAY, DAY).map(day =>
+				dates: range(startDay, endDay + DAY, DAY).map(day =>
 					[day + startTime, day + endTime]
 				), // excludes endpoint, thus +DAY
 			});
