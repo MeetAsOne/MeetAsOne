@@ -3,9 +3,9 @@
   import {
     canonicalDateStr,
     type DateStr,
-    dateStrToEpoch,
+    dateStrToEpoch, datetimeInRange,
     type DatetimeRange,
-    intToTime, rangesToDate,
+    intToTime, offsetDate, rangesToDate,
     timeInRange
   } from "$lib/timeutils.js";
   import {
@@ -15,13 +15,13 @@
     type InternalAvailability,
     mergeAvailability
   } from "$lib/manual/Availability";
-  import {DAY, TIME_STEP} from "$lib/units";
+  import {DAY, MILLISECOND, TIME_STEP} from "$lib/units";
   import {page} from "$app/stores";
   import type {Writable} from "svelte/store";
   import {importedEvents, importedWeeklyEvents, workingAvailability} from "$lib/store";
   import saveServer from "$lib/manual/saveServer.ts";
 
-  /** Array of tuples, each ranges from 0 to 1439 (minutes in day since midnight) */
+  /** Array of [start, stop] tuples, representing minutes since epoch */
   export let ranges: DatetimeRange[];
 
   let dates = rangesToDate(ranges);
@@ -178,24 +178,28 @@
             <div class="bg-white" class:grayscale={isDisabled}>
                 {#each blocks as block}
                     <!-- <Cell> -->
-                    <div class="availability-cell flex" data-idx={block} data-date={date.getTime()}
-                         style:opacity={allParticipants.length && !useMulticolor ? (colAvailability[block]?.length ?? allParticipants.length) / allParticipants.length : "1"}
-                         class:cursor-pointer={!availablePeople && !isDisabled}
-                         class:cursor-not-allowed={isDisabled}
-                         class:available={selectRectIncludesBlock([date.getTime(), block], [dragStart, dragNow]) ? dragState : colAvailability[block]?.length}
-                         on:mousedown={() => handleMouseDown(dateStr, block)}
-                         on:mouseenter={() => handlePointerEnter(dateStr, block)}
-                         on:touchmove={ev => handlePointerEnter(...convertTouchEvent(ev))}
-                         role="cell"
-                         tabindex="0"
-                    >
-                        {#if allParticipants.length && useMulticolor}
-                            {#each (colAvailability[block] ?? []) as participant}
-                                {@const hue = (allParticipants.indexOf(participant) + 1) / allParticipants.length * 365}
-                                <div class="flex-1" style:background-color={`hsl(${hue}, 65%, 79%)`}></div>
-                            {/each}
-                        {/if}
-                    </div>
+                    {#if datetimeInRange(ranges, offsetDate(date, block * TIME_STEP).getTime() * MILLISECOND)}
+                        <div class="availability-cell flex" data-idx={block} data-date={date.getTime()}
+                             style:opacity={allParticipants.length && !useMulticolor ? (colAvailability[block]?.length ?? allParticipants.length) / allParticipants.length : "1"}
+                             class:cursor-pointer={!availablePeople && !isDisabled}
+                             class:cursor-not-allowed={isDisabled}
+                             class:available={selectRectIncludesBlock([date.getTime(), block], [dragStart, dragNow]) ? dragState : colAvailability[block]?.length}
+                             on:mousedown={() => handleMouseDown(dateStr, block)}
+                             on:mouseenter={() => handlePointerEnter(dateStr, block)}
+                             on:touchmove={ev => handlePointerEnter(...convertTouchEvent(ev))}
+                             role="cell"
+                             tabindex="0"
+                        >
+                            {#if allParticipants.length && useMulticolor}
+                                {#each (colAvailability[block] ?? []) as participant}
+                                    {@const hue = (allParticipants.indexOf(participant) + 1) / allParticipants.length * 365}
+                                    <div class="flex-1" style:background-color={`hsl(${hue}, 65%, 79%)`}></div>
+                                {/each}
+                            {/if}
+                        </div>
+                    {:else}
+                        <div class="h-[16px]"></div>
+                    {/if}
                     <!-- </Cell> -->
                 {/each}
             </div>

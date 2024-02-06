@@ -80,6 +80,15 @@ export function timeInRange(ranges: DatetimeRange[], target: number) {
   });
 }
 
+/** Checks if `target` is in any of the ranges
+ * @param ranges ranges in minutes since epoch of format [start, stop]
+ * @param target minutes since epoch
+ */
+export function datetimeInRange(ranges: DatetimeRange[], target: number) {
+  return ranges.some(([rangeStart, rangeEnd]) => target < rangeEnd && target > rangeStart);
+}
+
+/** Convert a list of [start, stop] ranges (minutes since epoch) to unique dates they cover. Preserves order */
 export function rangesToDate(ranges: DatetimeRange[]) {
   return ranges.flat().reduce((acc, cur) => {
     cur = Math.floor(cur / DAY) * DAY;  // Set time to midnight
@@ -100,4 +109,11 @@ export function offsetDateTime(date: DateStr, time: number, offset: number) {
   const dateObj = new Date(date);
   dateObj.setMinutes(time + offset);
   return [canonicalDateStr(dateObj), dateObj.getHours() * 60 + dateObj.getMinutes()] as const;
+}
+
+/** Add the specified number of minutes to `date` copy & return it */
+export function offsetDate(date: Date | string | number, offsetMin: number) {
+  const dateObj = new Date(date);
+  dateObj.setMinutes(dateObj.getHours() * HOUR + dateObj.getMinutes() + offsetMin);
+  return dateObj;
 }
