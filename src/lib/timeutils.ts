@@ -83,7 +83,10 @@ export function timeInRange(ranges: DatetimeRange[], target: number) {
  * @param ranges ranges in minutes since epoch of format [start, stop]
  * @param target minutes since epoch
  */
-export function datetimeInRange(ranges: DatetimeRange[], target: number) {
+export function datetimeInRange(ranges: DatetimeRange[], target: Date | number) {
+  if (target instanceof Date)
+    target = target.getTime() * MILLISECOND;
+  // @ts-ignore
   return ranges.some(([rangeStart, rangeEnd]) => target < rangeEnd && target > rangeStart);
 }
 

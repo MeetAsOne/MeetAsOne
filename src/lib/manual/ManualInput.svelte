@@ -77,8 +77,10 @@
     for (const date in availability) {
       // Iter over all blocks b/c `blocks` var is localized
       for (const block of range(0, DAY / TIME_STEP)) {
-        // TODO: don't fill cells that are outside `ranges` & invisible
-        availability[date][block] = (selectRectIncludesBlock([new Date(date).getTime(), block], dragStart, dragNow) ? dragState : availability[date][block]?.length) ? ["me"] : [];
+        const includeBlock = selectRectIncludesBlock([new Date(date).getTime(), block], dragStart, dragNow)
+                             && datetimeInRange(ranges, offsetDate(date, block * TIME_STEP));
+        if (includeBlock)
+          availability[date][block] = dragState ? ["me"] : [];
       }
     }
   }
@@ -187,7 +189,7 @@
                     {@const dateStr = canonicalDateStr(date)}
                     {@const colAvailability = availability[dateStr]}
                     {@const block = ((DAY + localTime) % DAY) / TIME_STEP}
-                    {#if datetimeInRange(ranges, offsetDate(date, block * TIME_STEP).getTime() * MILLISECOND)}
+                    {#if datetimeInRange(ranges, offsetDate(date, block * TIME_STEP))}
                         <div class="availability-cell flex" data-idx={block} data-date={date.getTime()}
                              style:opacity={allParticipants.length && !useMulticolor ? (colAvailability[block]?.length ?? allParticipants.length) / allParticipants.length : "1"}
                              class:cursor-pointer={!availablePeople && !isDisabled}
