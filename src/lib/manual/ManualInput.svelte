@@ -171,12 +171,13 @@
         <div class="flex-grow text-center" role="row">
             <!-- Column header -->
             <div role="columnheader" class="px-1">
-                {new Intl.DateTimeFormat(undefined, {weekday: "short"}).format(localDate)}
+                {new Intl.DateTimeFormat(undefined, {weekday: "short", timeZone: "UTC"}).format(localDate)}
                 <br />
                 <span class="text-sm">
                     {new Intl.DateTimeFormat(undefined, {
                       month: "short",
                       day: "numeric",
+                      timeZone: "UTC",
                     }).format(localDate)}
                 </span>
             </div>
