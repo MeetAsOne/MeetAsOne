@@ -5,7 +5,7 @@
     type DateStr,
     dateStrToEpoch, datetimeInRange,
     type DatetimeRange,
-    intToTime, offsetDate, rangesToDate,
+    intToTime, offsetDate, offsetRange, rangesToDate,
     timeInRange
   } from "$lib/timeutils.js";
   import {
@@ -21,10 +21,12 @@
   import {importedEvents, importedWeeklyEvents, workingAvailability} from "$lib/store";
   import saveServer from "$lib/manual/saveServer.ts";
 
-  /** Array of [start, stop] tuples, representing minutes since epoch */
+  /** Array of [start, stop] tuples, representing minutes since epoch. Does not change to timezone */
   export let ranges: DatetimeRange[];
 
+  /** Dates spanned by `ranges`. Changes with timezone */
   let dates = rangesToDate(ranges);
+  $: dates = rangesToDate(offsetRange(ranges, -tzOffset));
 
   /** Whether to allow input. Controls manual mode, not viewing mode */
   export let isDisabled = false;
@@ -32,7 +34,7 @@
   /** Minutes difference from UTC */
   export let tzOffset: number;
 
-  export let availability: InternalAvailability = blankAvailability(dates.map(d => canonicalDateStr(d)));
+  export let availability: InternalAvailability = blankAvailability(dates.map(canonicalDateStr));
   let formattedAvailability: Availability = {};
   let weeklyAvailability: Availability = {};
   $: [formattedAvailability, weeklyAvailability] = compactAvailability(availability);
@@ -60,9 +62,9 @@
   /** store to write to when hovering over group's time blocks. Setting this also disables input */
   export let availablePeople: Writable<string[]> | undefined = undefined;
 
-  /** Array of starting times in 15-minute intervals since midnight for all possible blocks */
-  const blocks = range(0, DAY / TIME_STEP).filter(timeInRange.bind(null, ranges));
-  console.log(blocks);
+  /** Array of starting times in 15-minute intervals since midnight for all possible blocks. Changes with timezone */
+  let blocks = [] as number[];
+  $: blocks = range(0, DAY / TIME_STEP).filter(block => timeInRange(offsetRange(ranges, -tzOffset), block));
 
   /** Names of all participants */
   export let allParticipants: string[] = [];
@@ -73,6 +75,7 @@
   /** Using dragStart, dragNow, and dragState, mark all cells within the dragged rectangle with their new respective value */
   function applyDragPreview() {
     for (const date in availability) {
+      // TODO: properly translate `block` back (fn?)
       for (const block of blocks) {
         availability[date][block] = (selectRectIncludesBlock([new Date(date).getTime(), block], [dragStart, dragNow]) ? dragState : availability[date][block]?.length) ? ["me"] : [];
       }
@@ -158,26 +161,29 @@
             {/each}
         </div>
     {/if}
-    {#each dates as date}
+    {#each dates as localDate}
         <!-- <Column> -->
-        {@const dateStr = canonicalDateStr(date)}
-        {@const colAvailability = availability[dateStr]}
         <div class="flex-grow text-center" role="row">
             <!-- Column header -->
             <div role="columnheader" class="px-1">
-                {new Intl.DateTimeFormat(undefined, {weekday: "short"}).format(date)}
+                {new Intl.DateTimeFormat(undefined, {weekday: "short"}).format(localDate)}
                 <br />
                 <span class="text-sm">
                     {new Intl.DateTimeFormat(undefined, {
                       month: "short",
                       day: "numeric",
-                    }).format(date)}
+                    }).format(localDate)}
                 </span>
             </div>
             <!-- Cell container -->
             <div class="bg-white" class:grayscale={isDisabled}>
-                {#each blocks as block}
+                {#each blocks as localBlock}
                     <!-- <Cell> -->
+                    {@const localTime = localBlock * TIME_STEP + tzOffset}
+                    {@const date = new Date(canonicalDateStr(offsetDate(localDate, localTime)))}
+                    {@const dateStr = canonicalDateStr(date)}
+                    {@const colAvailability = availability[dateStr]}
+                    {@const block = ((DAY + localTime) % DAY) / TIME_STEP}
                     {#if datetimeInRange(ranges, offsetDate(date, block * TIME_STEP).getTime() * MILLISECOND)}
                         <div class="availability-cell flex" data-idx={block} data-date={date.getTime()}
                              style:opacity={allParticipants.length && !useMulticolor ? (colAvailability[block]?.length ?? allParticipants.length) / allParticipants.length : "1"}

@@ -35,7 +35,7 @@
 
   const pastEvents = getPastEvents();
   /** Minutes difference in UTC of selected timezone */
-  let tzOffset: number;
+  let tzOffset = new Date().getTimezoneOffset();
 
   $: {
     if (

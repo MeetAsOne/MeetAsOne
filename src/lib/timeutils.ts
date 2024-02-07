@@ -87,18 +87,28 @@ export function datetimeInRange(ranges: DatetimeRange[], target: number) {
 /** Convert a list of [start, stop] ranges (minutes since epoch) to unique dates they cover. Preserves order */
 export function rangesToDate(ranges: DatetimeRange[]) {
   return ranges.flat().reduce((acc, cur) => {
-    console.log(new Date(cur / MILLISECOND).toUTCString())
     cur = Math.floor(cur / DAY) * DAY;  // Set time to midnight
-    console.log(new Date(cur / MILLISECOND).toUTCString())
     if (!acc.includes(cur))
       acc.push(cur);
     return acc;
   }, [] as number[]).map(timestamp => new Date(timestamp / MILLISECOND))
 }
 
-/** Add the specified number of minutes to `date` copy & return it */
+/** Add the specified number of minutes to `date` copy & return it
+ * @param date if number, will assume minutes
+ * @param offsetMin minutes to add
+ */
 export function offsetDate(date: Date | string | number, offsetMin: number) {
+  if (typeof date === "number")
+    date /= MILLISECOND;
   const dateObj = new Date(date);
-  dateObj.setUTCMinutes(dateObj.getUTCHours() * HOUR + dateObj.getUTCMinutes() + offsetMin);
-  return dateObj;
+  return new Date(dateObj.getTime() + offsetMin / MILLISECOND);
+}
+
+/** Offsets all provided ranges by specified offset
+ * @param ranges list of [start, stop] ranges (minutes since epoch)
+ * @param offsetMin minutes to add
+ */
+export function offsetRange(ranges: DatetimeRange[], offsetMin: number) {
+  return ranges.map(range => range.map(timestamp => offsetDate(timestamp, offsetMin).getTime() * MILLISECOND) as DatetimeRange);
 }
