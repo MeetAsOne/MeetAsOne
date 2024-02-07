@@ -1,11 +1,11 @@
 <script lang="ts">
   import range from "$lib/range";
   import {
-    canonicalDateStr,
+    canonicalDateStr, type Coord,
     type DateStr,
     dateStrToEpoch, datetimeInRange,
     type DatetimeRange,
-    intToTime, offsetDate, offsetRange, rangesToDate,
+    intToTime, offsetDate, offsetDatetime, offsetRange, rangesToDate,
     timeInRange
   } from "$lib/timeutils.js";
   import {
@@ -75,21 +75,20 @@
   /** Using dragStart, dragNow, and dragState, mark all cells within the dragged rectangle with their new respective value */
   function applyDragPreview() {
     for (const date in availability) {
-      // TODO: properly translate `block` back (fn?)
-      for (const block of blocks) {
-        availability[date][block] = (selectRectIncludesBlock([new Date(date).getTime(), block], [dragStart, dragNow]) ? dragState : availability[date][block]?.length) ? ["me"] : [];
+      // Iter over all blocks b/c `blocks` var is localized
+      for (const block of range(0, DAY / TIME_STEP)) {
+        // TODO: don't fill cells that are outside `ranges` & invisible
+        availability[date][block] = (selectRectIncludesBlock([new Date(date).getTime(), block], dragStart, dragNow) ? dragState : availability[date][block]?.length) ? ["me"] : [];
       }
     }
   }
 
-  /** Represents [Date (as ms since epoch), block idx since midnight] */
-  type Coord = [number, number];
-  let dragStart: Coord | null;
-  let dragNow: Coord | null;
-  let dragState: boolean | null;
+  let dragStart: Coord | undefined;
+  let dragNow: Coord | undefined;
+  let dragState: boolean | undefined;
 
   const toggleAvailability = (date: DateStr, timeIndex: number) => {
-    if (dragState == null) {
+    if (dragState == undefined) {
       dragState = !(availability[date][timeIndex]?.length ?? 0);
     }
 
@@ -133,18 +132,22 @@
         applyDragPreview();
         saveServer($page.params.id, availability);
       }
-      dragStart = dragNow = dragState = null;
+      dragStart = dragNow = dragState = undefined;
     }
   };
 
-  function selectRectIncludesBlock(coord: Coord, deps?: unknown[]) {
-    if (!dragStart || !dragNow) return false;
+  /** Returns a boolean whether `coord` is contained within a rectangle. Expects all `Coord`s to be in UTC */
+  function selectRectIncludesBlock(coord: Coord, corner1?: Coord, corner2?: Coord) {
+    if (!corner1 || !corner2) return false;
+    coord = offsetDatetime(coord, -tzOffset);
+    corner1 = offsetDatetime(corner1, -tzOffset);
+    corner2 = offsetDatetime(corner2, -tzOffset);
     const [x, y] = coord;
     const [x1, y1, x2, y2] = [
-      Math.min(dragStart[0], dragNow[0]),
-      Math.min(dragStart[1], dragNow[1]),
-      Math.max(dragStart[0], dragNow[0]),
-      Math.max(dragStart[1], dragNow[1]),
+      Math.min(corner1[0], corner2[0]),
+      Math.min(corner1[1], corner2[1]),
+      Math.max(corner1[0], corner2[0]),
+      Math.max(corner1[1], corner2[1]),
     ];
     return x >= x1 && x <= x2 && y >= y1 && y <= y2;
   }
@@ -189,7 +192,7 @@
                              style:opacity={allParticipants.length && !useMulticolor ? (colAvailability[block]?.length ?? allParticipants.length) / allParticipants.length : "1"}
                              class:cursor-pointer={!availablePeople && !isDisabled}
                              class:cursor-not-allowed={isDisabled}
-                             class:available={selectRectIncludesBlock([date.getTime(), block], [dragStart, dragNow]) ? dragState : colAvailability[block]?.length}
+                             class:available={selectRectIncludesBlock([date.getTime(), block], dragStart, dragNow) ? dragState : colAvailability[block]?.length}
                              on:mousedown={() => handleMouseDown(dateStr, block)}
                              on:mouseenter={() => handlePointerEnter(dateStr, block)}
                              on:touchmove={ev => handlePointerEnter(...convertTouchEvent(ev))}

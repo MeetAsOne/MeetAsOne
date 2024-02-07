@@ -6,6 +6,9 @@ export type DateStr = `${number}/${number}/${number}` | string;
 /** Minutes since epoch representing start and stop datetimes */
 export type DatetimeRange = [number, number];
 
+/** Represents [Date (as ms since epoch), block idx since midnight] */
+export type Coord = [number, number];
+
 /** convert "2:50 AM" or "15:43" to minutes since midnight */
 export function timeToInt(timeString: string) {
   const [hours, minutes, ampm] = timeString.split(/[: ]/);
@@ -92,6 +95,13 @@ export function rangesToDate(ranges: DatetimeRange[]) {
       acc.push(cur);
     return acc;
   }, [] as number[]).map(timestamp => new Date(timestamp / MILLISECOND))
+}
+
+/** Add offset in minutes to a `Coord`, return copy */
+export function offsetDatetime(coord: Coord, offsetMin: number) {
+  const [date, blockIdx] = coord;
+  const sum = date + blockIdx * TIME_STEP + offsetMin;
+  return [Math.floor(sum / DAY), sum % DAY] as Coord;
 }
 
 /** Add the specified number of minutes to `date` copy & return it
