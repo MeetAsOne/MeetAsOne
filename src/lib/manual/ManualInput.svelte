@@ -141,10 +141,9 @@
   /** Returns a boolean whether `coord` is contained within a rectangle. Expects all `Coord`s to be in UTC */
   function selectRectIncludesBlock(coord: Coord, corner1?: Coord, corner2?: Coord) {
     if (!corner1 || !corner2) return false;
-    coord = offsetDatetime(coord, -tzOffset);
     corner1 = offsetDatetime(corner1, -tzOffset);
     corner2 = offsetDatetime(corner2, -tzOffset);
-    const [x, y] = coord;
+    const [x, y] = offsetDatetime(coord, -tzOffset);
     const [x1, y1, x2, y2] = [
       Math.min(corner1[0], corner2[0]),
       Math.min(corner1[1], corner2[1]),

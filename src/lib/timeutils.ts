@@ -102,9 +102,10 @@ export function rangesToDate(ranges: DatetimeRange[]) {
 
 /** Add offset in minutes to a `Coord`, return copy */
 export function offsetDatetime(coord: Coord, offsetMin: number) {
-  const [date, blockIdx] = coord;
-  const sum = date + blockIdx * TIME_STEP + offsetMin;
-  return [Math.floor(sum / DAY), sum % DAY] as Coord;
+  const [dateMs, blockIdx] = coord;
+  const sumMin = dateMs * MILLISECOND + blockIdx * TIME_STEP + offsetMin;
+  const DAYS_TO_MS = DAY / MILLISECOND;
+  return [Math.floor(sumMin / DAY) * DAYS_TO_MS, (sumMin % DAY) * DAYS_TO_MS] as Coord;
 }
 
 /** Add the specified number of minutes to `date` copy & return it
