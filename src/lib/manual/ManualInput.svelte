@@ -34,6 +34,13 @@
   /** Minutes difference from UTC */
   export let tzOffset: number;
 
+  export const clear = () => {
+    const blank = blankAvailability(dates.map(canonicalDateStr));
+    availability = blank;
+    saveServer($page.params.id, availability);
+    workingAvailability.set(blank);
+  }
+
   export let availability: InternalAvailability = blankAvailability(dates.map(canonicalDateStr));
   let formattedAvailability: Availability = {};
   let weeklyAvailability: Availability = {};

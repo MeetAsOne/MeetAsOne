@@ -104,10 +104,6 @@
     }
 
     let showModal = false;
-
-    const localAvailability: Availability = JSON.parse(
-      globalThis?.localStorage?.["general-availability"] ?? '{"days": {}}',
-    ).days;
 </script>
 
 <div>
@@ -120,11 +116,6 @@
         <DropdownItem on:click={() => (showModal = true)}
             >Scan image</DropdownItem
         >
-        {#if Object.keys(localAvailability).length}
-            <DropdownItem on:click={() => importedWeeklyEvents.set(localAvailability)}
-                >Load saved</DropdownItem
-            >
-        {/if}
     </Dropdown>
 </div>
 

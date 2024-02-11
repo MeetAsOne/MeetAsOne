@@ -14,7 +14,7 @@
 	let name: string = "";
 	let selectedTimezone: number;
 
-	const pastEvents = getPastEvents();
+	let pastEvents = getPastEvents();
 
 	async function createEvent(ev: SubmitEvent) {
 		ev.preventDefault();
@@ -43,7 +43,7 @@
 				return;
 			}
 			const id = response.data?.insert_events?.returning[0].id!;
-			pastEvents.created.push({ id, name });
+			pastEvents.push({ id, name, imOwner: true });
 			savePastEvents(pastEvents);
 			goto("event/" + id);
 		}
@@ -80,13 +80,13 @@
 			>
 				Created Events
 			</h2>
-			<OldEvents bind:events={pastEvents.created} />
+			<OldEvents bind:events={pastEvents} imOwner={true} />
 			<h2
 				style="margin-top: 40px; font-weight: bold; text-transform: uppercase;"
 			>
 				Events Responded to
 			</h2>
-			<OldEvents bind:events={pastEvents.responded} />
+			<OldEvents bind:events={pastEvents} imOwner={false} />
 		</div>
 		<div class="create-event-box">
 

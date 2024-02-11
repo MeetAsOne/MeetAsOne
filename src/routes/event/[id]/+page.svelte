@@ -13,8 +13,8 @@
     import {getPastEvents, savePastEvents} from "$lib/storage";
     import {writable} from "svelte/store";
     import AvailabilityComponent from "$lib/Availability.svelte";
-    import {isSaved, workingAvailability} from "$lib/store.ts";
-    import {Button, Checkbox, Spinner} from "flowbite-svelte";
+    import {importedWeeklyEvents, isSaved, workingAvailability} from "$lib/store.ts";
+    import {Button, Checkbox, DropdownItem, Spinner} from "flowbite-svelte";
     import {timeoutToast, editToast, newToast} from "$lib/Toaster.svelte";
     import saveServer from "$lib/manual/saveServer.ts";
     import TzPicker from "$lib/TzPicker.svelte";
@@ -39,11 +39,10 @@
 
   $: {
     if (
-      pastEvents.created.every((event) => event.id != $page.params.id) &&
-      pastEvents.responded.every((event) => event.id != $page.params.id) &&
+      pastEvents.every((event) => event.id != $page.params.id) &&
       event
     ) {
-      pastEvents.responded.push({ id: $page.params.id, name: event.name });
+      pastEvents.push({ id: $page.params.id, name: event.name, imOwner: false });
       savePastEvents(pastEvents);
     }
   }
@@ -64,6 +63,12 @@
     isOnline = false;
     toastRef = newToast("Editing disabled while offline");
   });
+
+  const localAvailability: Availability = JSON.parse(
+          globalThis?.localStorage?.["general-availability"] ?? '{"days": {}}',
+  ).days;
+
+  let clear: () => {};
 </script>
 
 <svelte:head>
@@ -86,8 +91,21 @@
       <TzPicker bind:selectedTimezone={tzOffset} />
     </em>
   </div>
-  <div class="flex justify-between gap-2">
+  <div class="flex gap-2 flex-wrap">
     <Button on:click={() => localStorage["general-availability"] = localStorage.draftAvailability}>Save availability to browser</Button>
+    {#if Object.keys(localAvailability).length}
+      <Button on:click={() => importedWeeklyEvents.set(localAvailability)}>
+        Load saved
+      </Button>
+    {/if}
+    <div class="border-l-2 border-orange-400"></div>
+    <Button on:click={clear}>
+      Clear
+    </Button>
+    <Button on:click={() => importedWeeklyEvents.set(localAvailability)}>
+      Change name
+    </Button>
+    <div class="border-l-2 border-orange-400"></div>
     <ImportCalendar />
   </div>
 
@@ -104,6 +122,7 @@
           ranges={event.dates}
           availability={mySavedAvailability ? loadAvailabilityOne(mySavedAvailability) : undefined}
           isDisabled={!isOnline}
+          bind:clear
           {tzOffset}
         />
       </div>
