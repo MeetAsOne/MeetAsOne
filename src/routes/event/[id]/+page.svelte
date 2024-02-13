@@ -108,20 +108,26 @@
     </em>
   </div>
   <div class="flex gap-2 flex-wrap">
-    <Button on:click={() => localStorage["general-availability"] = localStorage.draftAvailability}>Save availability to browser</Button>
-    {#if Object.keys(localAvailability).length}
-      <Button on:click={() => importedWeeklyEvents.set(localAvailability)}>
-        Load saved
+    <div class="flex gap-2">
+      <Button on:click={() => localStorage["general-availability"] = localStorage.draftAvailability}>
+        Save availability to browser
       </Button>
-    {/if}
-    <div class="border-l-2 border-orange-400"></div>
-    <Button on:click={clear}>
-      Clear
-    </Button>
-    <Button on:click={() => myName = undefined}>
-      Change name
-    </Button>
-    <div class="border-l-2 border-orange-400"></div>
+      {#if Object.keys(localAvailability).length}
+        <Button on:click={() => importedWeeklyEvents.set(localAvailability)}>
+          Load saved
+        </Button>
+      {/if}
+      <div class="border-l-2 border-orange-400"></div>
+    </div>
+    <div class="flex gap-2">
+      <Button on:click={clear}>
+        Clear
+      </Button>
+      <Button on:click={() => myName = undefined}>
+        Change name
+      </Button>
+      <div class="border-l-2 border-orange-400"></div>
+    </div>
     <ImportCalendar />
   </div>
 
