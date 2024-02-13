@@ -26,6 +26,8 @@
 
   /** Dates spanned by `ranges`. Changes with timezone */
   let dates = rangesToDate(ranges);
+  /** Dates in UTC format */
+  const UTCDates = dates;
   $: dates = rangesToDate(offsetRange(ranges, -tzOffset));
 
   /** Whether to allow input. Controls manual mode, not viewing mode */
@@ -35,13 +37,13 @@
   export let tzOffset: number;
 
   export const clear = () => {
-    const blank = blankAvailability(dates.map(canonicalDateStr));
+    const blank = blankAvailability(UTCDates.map(canonicalDateStr));
     availability = blank;
     saveServer($page.params.id, availability);
     workingAvailability.set(blank);
   }
 
-  export let availability: InternalAvailability = blankAvailability(dates.map(canonicalDateStr));
+  export let availability: InternalAvailability = blankAvailability(UTCDates.map(canonicalDateStr));
   let formattedAvailability: Availability = {};
   let weeklyAvailability: Availability = {};
   $: [formattedAvailability, weeklyAvailability] = compactAvailability(availability);

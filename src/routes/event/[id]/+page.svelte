@@ -10,11 +10,11 @@
     import type {PageData} from "$houdini/types/src/routes/event/[id]/$houdini";
     import {canonicalDateStr, dateStrToEpoch, rangesToDate} from "$lib/timeutils";
     import {page} from "$app/stores";
-    import {getPastEvents, savePastEvents} from "$lib/storage";
+    import {type EventSummary, getPastEvents, savePastEvents} from "$lib/storage";
     import {writable} from "svelte/store";
     import AvailabilityComponent from "$lib/Availability.svelte";
     import {importedWeeklyEvents, isSaved, workingAvailability} from "$lib/store.ts";
-    import {Button, Checkbox, DropdownItem, Spinner} from "flowbite-svelte";
+    import {Button, ButtonGroup, Checkbox, DropdownItem, Input, Label, Spinner} from "flowbite-svelte";
     import {timeoutToast, editToast, newToast} from "$lib/Toaster.svelte";
     import saveServer from "$lib/manual/saveServer.ts";
     import TzPicker from "$lib/TzPicker.svelte";
@@ -48,7 +48,7 @@
   }
 
   let mySavedAvailability: Availability | undefined;
-  $: mySavedAvailability = event?.availabilities.find(avail => avail.username === globalThis?.localStorage?.name)?.availability;
+  $: mySavedAvailability = event?.availabilities.find(avail => avail.username === myName)?.availability;
 
   let isOnline = true;
   let toastRef: number;
@@ -68,7 +68,23 @@
           globalThis?.localStorage?.["general-availability"] ?? '{"days": {}}',
   ).days;
 
+  /** Function bound to my ManualInput availability that when called, clears your availability for this event */
   let clear: () => {};
+
+  let myName = pastEvents.find(ev => ev.id === $page.params.id)?.myName;
+  $: {
+    const thisEventSummary = pastEvents.find(ev => ev.id === $page.params.id);
+    if (thisEventSummary) {
+      thisEventSummary.myName = myName;
+      savePastEvents(pastEvents);
+    }
+  }
+
+  function submitName(ev: SubmitEvent) {
+    const data = new FormData(ev.currentTarget as HTMLFormElement);
+    data.get("setMyName");
+    myName = data.get("myName") as string;
+  }
 </script>
 
 <svelte:head>
@@ -102,7 +118,7 @@
     <Button on:click={clear}>
       Clear
     </Button>
-    <Button on:click={() => importedWeeklyEvents.set(localAvailability)}>
+    <Button on:click={() => myName = undefined}>
       Change name
     </Button>
     <div class="border-l-2 border-orange-400"></div>
@@ -112,19 +128,29 @@
   <div class="mt-10 flex items-center justify-center">
     <div class="flex flex-row flex-wrap items-center justify-center">
       <div>
-        <h2>
-          Your availability
-          {#if !$isSaved}
-            <Spinner size={6} title="Saving..." />
-          {/if}
-        </h2>
-        <ManualInput
-          ranges={event.dates}
-          availability={mySavedAvailability ? loadAvailabilityOne(mySavedAvailability) : undefined}
-          isDisabled={!isOnline}
-          bind:clear
-          {tzOffset}
-        />
+        {#if myName}
+          <h2>
+            Your availability
+            {#if !$isSaved}
+              <Spinner size={6} title="Saving..." />
+            {/if}
+          </h2>
+          <ManualInput
+            ranges={event.dates}
+            availability={mySavedAvailability ? loadAvailabilityOne(mySavedAvailability) : undefined}
+            isDisabled={!isOnline}
+            bind:clear
+            {tzOffset}
+          />
+        {:else}
+          <form on:submit|preventDefault={submitName}>
+            <label class="mb-2 block" for="setMyName">Your name (only for this event):</label>
+            <ButtonGroup>
+              <Input id="setMyName" name="myName" placeholder="Name" />
+              <Button type="submit">Save</Button>
+            </ButtonGroup>
+          </form>
+        {/if}
       </div>
       <div class="w-10"></div>
       <div class="flex flex-row">
@@ -138,12 +164,12 @@
         <div>
           <h2>Group Availability</h2>
           <ManualInput
-            allParticipants={Array.from(new Set(event.availabilities.map(person => person.username)).add(globalThis?.localStorage?.name ?? "me"))}
+            allParticipants={Array.from(new Set(event.availabilities.map(person => person.username)).add(myName ?? "me"))}
             ranges={event.dates}
             availablePeople={selectedAvailability}
             {tzOffset}
             {useMulticolor}
-            availability={mergeAvailability(enforceAvailabilityValidity(loadAvailability(...event.availabilities), rangesToDate(event.dates).map(canonicalDateStr)), $workingAvailability, globalThis?.localStorage?.name)}/>
+            availability={mergeAvailability(enforceAvailabilityValidity(loadAvailability(...event.availabilities), rangesToDate(event.dates).map(canonicalDateStr)), $workingAvailability, myName)}/>
         </div>
       </div>
     </div>

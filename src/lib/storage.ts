@@ -1,7 +1,8 @@
-export interface EventSummary { name: string; id: string, imOwner: boolean }
-interface PastEvents {
-  created: EventSummary[];
-  responded: EventSummary[];
+export interface EventSummary {
+  name: string,
+  id: string,
+  imOwner: boolean,
+  myName?: string,
 }
 
 export function getPastEvents() {
