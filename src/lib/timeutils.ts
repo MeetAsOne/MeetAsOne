@@ -97,7 +97,7 @@ export function rangesToDate(ranges: DatetimeRange[]) {
     if (!acc.includes(cur))
       acc.push(cur);
     return acc;
-  }, [] as number[]).map(timestamp => new Date(timestamp / MILLISECOND))
+  }, [] as number[]).map(timestamp => new Date(timestamp / MILLISECOND));
 }
 
 /** Add offset in minutes to a `Coord`, return copy */

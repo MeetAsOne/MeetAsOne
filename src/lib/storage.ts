@@ -6,7 +6,7 @@ export interface EventSummary {
 }
 
 export function getPastEvents() {
-  let pastEventsString = globalThis?.localStorage?.getItem?.("pastEvents");
+  const pastEventsString = globalThis?.localStorage?.getItem?.("pastEvents");
 
   let pastEvents: EventSummary[];
 

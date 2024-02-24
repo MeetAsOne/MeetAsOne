@@ -9,7 +9,7 @@ export default async function saveServer(eventId: string, availability: Internal
   // Reactive statement should update this, but timing is inconsistent (Svelte runes should fix this)
   const [formattedAvailability, weeklyAvailability] = compactAvailability(availability);
 
-  globalThis?.localStorage?.setItem?.('draftAvailability', JSON.stringify({
+  globalThis?.localStorage?.setItem?.("draftAvailability", JSON.stringify({
     days: weeklyAvailability,
   }));
 
@@ -24,7 +24,7 @@ export default async function saveServer(eventId: string, availability: Internal
   if (res.errors)
     res.errors.forEach(console.error);
   else if (res.data?.insert_availability?.affected_rows === 0)
-    console.error("No rows were changed")
+    console.error("No rows were changed");
   else
     isSaved.set(true);
 }

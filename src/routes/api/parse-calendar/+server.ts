@@ -1,11 +1,11 @@
 import OpenAI from "openai";
-import { json, error } from '@sveltejs/kit';
-import { RetryAfterRateLimiter } from 'sveltekit-rate-limiter/server';
+import { json, error } from "@sveltejs/kit";
+import { RetryAfterRateLimiter } from "sveltekit-rate-limiter/server";
 
 
 const limiter = new RetryAfterRateLimiter({
-  IP: [1, '15s'],
-  IPUA: [1, '15s']
+  IP: [1, "15s"],
+  IPUA: [1, "15s"]
 });
 
 const openai = new OpenAI({
@@ -19,7 +19,7 @@ export async function POST(event) {
 
   if (status.limited) {
     event.setHeaders({
-      'Retry-After': status.retryAfter.toString()
+      "Retry-After": status.retryAfter.toString()
     });
     return error(429);
   }
@@ -58,12 +58,12 @@ export async function POST(event) {
     max_tokens: 4096
   });
 
-  const messageContent = chatCompletion.choices[0].message.content || '';
+  const messageContent = chatCompletion.choices[0].message.content || "";
 
-  console.log(messageContent)
+  console.log(messageContent);
 
-  const startIndex = messageContent.indexOf('[');
-  const endIndex = messageContent.lastIndexOf(']') + 1; // +1 to include the closing bracket
+  const startIndex = messageContent.indexOf("[");
+  const endIndex = messageContent.lastIndexOf("]") + 1; // +1 to include the closing bracket
 
   if (startIndex === -1 || endIndex === -1 || startIndex >= endIndex) {
     return error(500);
