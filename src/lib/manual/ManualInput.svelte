@@ -243,7 +243,6 @@
         position: sticky;
         top: 0;
         background-color: var(--color-bg-1);
-        z-index: 100;
     }
 
     .availability-cell {
