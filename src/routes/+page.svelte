@@ -27,15 +27,12 @@
 			const updater = new InsertEventStore();
 
 			const data = new FormData(ev.currentTarget as HTMLFormElement);
-			// TODO: + " UTC" might be inconsistent across browsers. Make a custom parseDateUTC fn?
-			const startDay = new Date(data.get("start") as string + " UTC").getTime() * MILLISECOND;
-			const endDay = new Date(data.get("end") as string + " UTC").getTime() * MILLISECOND;
 			const startTime = timeToInt(data.get("start_time") as string) + selectedTimezone;
 			const endTime = timeToInt(data.get("end_time") as string) + selectedTimezone;
 			const response = await updater.mutate({
 				name: name,
-				dates: range(startDay, endDay + DAY, DAY).map(day =>
-					[day + startTime, day + endTime]
+				dates: selectedDates.map(day =>
+					[day.getTime() * MILLISECOND + startTime, day.getTime() * MILLISECOND + endTime]
 				), // excludes endpoint, thus +DAY
 			});
 			if (response.errors) {
@@ -53,13 +50,15 @@
 	}
 	$: savePastEvents(pastEvents);
 
+	let selectedDates: Date[] = [];
 	onMount(() => {
 		flatpickr("#flatpickr", {
-			altInput: true,
-			altFormat: "F j",
-			dateFormat: "Y-m-d",
+			dateFormat: "F j",
 			minDate: "today",
 			mode: "multiple",
+			onChange: newSelectedDates => {
+				selectedDates = newSelectedDates;
+			}
 		});
 	});
 </script>
