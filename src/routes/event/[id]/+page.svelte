@@ -130,9 +130,7 @@
     </div>
     <ImportCalendar />
   </div>
-
-  <div class="mt-10 flex items-center justify-center">
-    <div class="flex flex-row flex-wrap items-center justify-center">
+    <div class="flex flex-row flex-wrap items-center justify-center gap-x-20 gap-y-10 mt-10">
       <div>
         {#if myName}
           <h2>
@@ -158,7 +156,6 @@
           </form>
         {/if}
       </div>
-      <div class="w-10"></div>
       <div class="flex flex-row">
         <div>
           <Checkbox class="dark:text-black" bind:checked={useMulticolor}>Multicolor</Checkbox>
@@ -179,5 +176,4 @@
         </div>
       </div>
     </div>
-  </div>
 {/if}
