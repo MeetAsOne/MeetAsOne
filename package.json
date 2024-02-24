@@ -2,7 +2,8 @@
   "name": "meetasone",
   "version": "0.0.1",
   "scripts": {
-    "dev": "vite dev",
+    "dev": "npm run pull-schema && vite dev",
+    "pull-schema": "npx houdini pull-schema",
     "build": "vite build",
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json",
