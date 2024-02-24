@@ -1,5 +1,5 @@
 import {UpsertAvailabilityStore} from "$houdini";
-import {getOrSetName} from "$lib/storage.ts";
+import {getPastEvent} from "$lib/storage.ts";
 import {compactAvailability, type InternalAvailability} from "$lib/manual/Availability.ts";
 import {isSaved} from "$lib/store.ts";
 
@@ -10,12 +10,11 @@ export default async function saveServer(eventId: string, availability: Internal
   const [formattedAvailability, weeklyAvailability] = compactAvailability(availability);
 
   globalThis?.localStorage?.setItem?.('draftAvailability', JSON.stringify({
-    "time-zone": 1,  // TODO
     days: weeklyAvailability,
   }));
 
   const updater = new UpsertAvailabilityStore();
-  const username = getOrSetName();
+  const username = getPastEvent(eventId)?.myName;
   if (!username) return;
   const res = await updater.mutate({
     availability: formattedAvailability,
