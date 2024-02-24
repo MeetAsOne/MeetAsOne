@@ -1,7 +1,7 @@
 <script lang="ts">
 	import welcome_fallback from "$lib/images/HomepageTitle.png";
 	import { Label, Input } from "flowbite-svelte";
-	import { Datepicker, DarkMode, GradientButton } from "flowbite-svelte";
+	import { GradientButton } from "flowbite-svelte";
 	import { InsertEventStore } from "$houdini";
 	import { goto } from "$app/navigation";
 	import range from "$lib/range";
@@ -10,6 +10,9 @@
 	import { savePastEvents, getPastEvents } from "$lib/storage";
 	import OldEvents from "./OldEvents.svelte";
 	import TzPicker from "$lib/TzPicker.svelte";
+	import flatpickr from "flatpickr";
+	import {onMount} from "svelte";
+	import {CalendarWeekSolid} from "flowbite-svelte-icons";
 
 	let name: string = "";
 	let selectedTimezone: number;
@@ -49,6 +52,16 @@
 		}
 	}
 	$: savePastEvents(pastEvents);
+
+	onMount(() => {
+		flatpickr("#flatpickr", {
+			altInput: true,
+			altFormat: "F j",
+			dateFormat: "Y-m-d",
+			minDate: "today",
+			mode: "multiple",
+		});
+	});
 </script>
 
 <svelte:head>
@@ -109,21 +122,21 @@
 
 				<div class="flex gap-2">
 					<div class="flex-1">
-						<Label for="start_time" color="undefined"
-							>Start time</Label
-						>
+						<Label for="start_time" class="text-black dark:text-black">Start time</Label>
 						<Input type="time" id="start_time" name="start_time" />
 					</div>
 					<div class="flex-1">
-						<Label for="end_time" color="undefined">End time</Label>
+						<Label for="end_time"  class="text-black dark:text-black">End time</Label>
 						<Input type="time" id="end_time" name="end_time" />
 					</div>
 				</div>
 
 				<TzPicker bind:selectedTimezone={selectedTimezone} />
 
-				<!-- Start input has name "start". End input has name "end" -->
-				<Datepicker range />
+				<!-- According to docs, I shouldn't need left padding, but otherwise text overlaps icon -->
+				<Input class="pl-10" id="flatpickr">
+					<CalendarWeekSolid slot="left" class="w-5 h-5" />
+				</Input>
 				<div class="my-button">
 					<GradientButton
 						size="xl"
