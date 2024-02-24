@@ -24,7 +24,7 @@
   /** list of people available for focused block*/
   const selectedAvailability = writable([] as string[]);
   let useMulticolor = globalThis?.localStorage?.useMulticolor === "true";
-  $: if (globalThis?.localStorage) globalThis.localStorage.useMulticolor = useMulticolor;
+  $: if (globalThis?.localStorage) globalThis.localStorage.useMulticolor = useMulticolor.toString();
 
   // pull the store reference from the route props
   $: ({ GetEvent } = data);
@@ -136,7 +136,7 @@
           <h2>
             Your availability
             {#if !$isSaved}
-              <Spinner size={6} title="Saving..." />
+              <Spinner size="6" title="Saving..." />
             {/if}
           </h2>
           <ManualInput
