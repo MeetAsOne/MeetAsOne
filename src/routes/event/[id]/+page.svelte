@@ -130,7 +130,7 @@
     </div>
     <ImportCalendar />
   </div>
-    <div class="flex flex-row flex-wrap items-center justify-center gap-x-20 gap-y-10 mt-10">
+    <div class="flex flex-row flex-wrap justify-center gap-x-20 gap-y-10 mt-10">
       <div>
         {#if myName}
           <h2>
