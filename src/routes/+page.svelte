@@ -11,13 +11,15 @@
 	import OldEvents from "./OldEvents.svelte";
 	import TzPicker from "$lib/TzPicker.svelte";
 	import flatpickr from "flatpickr";
-	import {onMount} from "svelte";
-	import {CalendarWeekSolid} from "flowbite-svelte-icons";
+	import { onMount } from "svelte";
+	import { CalendarWeekSolid } from "flowbite-svelte-icons";
 
 	let name: string = "";
 	let selectedTimezone: number;
 
 	let pastEvents = getPastEvents();
+	let eventsCreated = pastEvents.filter((event) => event.imOwner);
+	let eventsResponded = pastEvents.filter((event) => !event.imOwner);
 
 	async function createEvent(ev: SubmitEvent) {
 		ev.preventDefault();
@@ -27,8 +29,10 @@
 			const updater = new InsertEventStore();
 
 			const data = new FormData(ev.currentTarget as HTMLFormElement);
-			const startTime = timeToInt(data.get("start_time") as string) + selectedTimezone;
-			const endTime = timeToInt(data.get("end_time") as string) + selectedTimezone;
+			const startTime =
+				timeToInt(data.get("start_time") as string) + selectedTimezone;
+			const endTime =
+				timeToInt(data.get("end_time") as string) + selectedTimezone;
 			const response = await updater.mutate({
 				name: name,
 				dates: selectedDates.map(day =>
@@ -56,9 +60,9 @@
 			dateFormat: "F j",
 			minDate: "today",
 			mode: "multiple",
-			onChange: newSelectedDates => {
+			onChange: (newSelectedDates) => {
 				selectedDates = newSelectedDates;
-			}
+			},
 		});
 	});
 </script>
@@ -87,30 +91,30 @@
 	<!-- Past Events -->
 	<div class="container">
 		<div class="section">
-			<h2
-				style="margin-top: 40px; font-weight: bold; text-transform: uppercase; "
-			>
-				Created Events
-			</h2>
-			<OldEvents bind:events={pastEvents} imOwner={true} />
-			<h2
-				style="margin-top: 40px; font-weight: bold; text-transform: uppercase;"
-			>
-				Events Responded to
-			</h2>
-			<OldEvents bind:events={pastEvents} imOwner={false} />
+			{#if eventsCreated.length != 0}
+				<h2
+					style="margin-top: 40px; font-weight: bold; text-transform: uppercase; "
+				>
+					Created Events
+				</h2>
+				<OldEvents bind:events={eventsCreated} />
+			{/if}
+			{#if eventsResponded.length != 0}
+				<h2
+					style="margin-top: 40px; font-weight: bold; text-transform: uppercase;"
+				>
+					Events Responded to
+				</h2>
+				<OldEvents bind:events={eventsResponded} />
+			{/if}
 		</div>
 		<div class="create-event-box">
-
 			<form
 				class="flex flex-grow gap-4 align-items-center content-center flex-col items-center"
 				on:submit={createEvent}
 				autocomplete="off"
 			>
-
-			<h2 style="font-weight: bold; ">
-				Create New Event
-			</h2>
+				<h2 style="font-weight: bold; ">Create New Event</h2>
 				<Input
 					id="disabled-input"
 					class="w-auto"
@@ -121,16 +125,22 @@
 
 				<div class="flex gap-2">
 					<div class="flex-1">
-						<Label for="start_time" class="text-black dark:text-black">Start&#160;time</Label>
+						<Label
+							for="start_time"
+							class="text-black dark:text-black"
+							>Start&#160;time</Label
+						>
 						<Input type="time" id="start_time" name="start_time" />
 					</div>
 					<div class="flex-1">
-						<Label for="end_time"  class="text-black dark:text-black">End&#160;time</Label>
+						<Label for="end_time" class="text-black dark:text-black"
+							>End&#160;time</Label
+						>
 						<Input type="time" id="end_time" name="end_time" />
 					</div>
 				</div>
 
-				<TzPicker bind:selectedTimezone={selectedTimezone} />
+				<TzPicker bind:selectedTimezone />
 
 				<!-- According to docs, I shouldn't need left padding, but otherwise text overlaps icon -->
 				<Input class="pl-10" id="flatpickr">
