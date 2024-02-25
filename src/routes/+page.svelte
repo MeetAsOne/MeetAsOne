@@ -90,8 +90,8 @@
 
 	<!-- Past Events -->
 	<div class="container">
-		<div class="section">
-			{#if eventsCreated.length != 0}
+		<div class="section" class:nonempty={eventsCreated.length !== 0 && eventsResponded.length !== 0}>
+			{#if eventsCreated.length !== 0}
 				<h2
 					style="margin-top: 40px; font-weight: bold; text-transform: uppercase; "
 				>
@@ -99,7 +99,7 @@
 				</h2>
 				<OldEvents bind:events={eventsCreated} />
 			{/if}
-			{#if eventsResponded.length != 0}
+			{#if eventsResponded.length !== 0}
 				<h2
 					style="margin-top: 40px; font-weight: bold; text-transform: uppercase;"
 				>
@@ -128,13 +128,13 @@
 						<Label
 							for="start_time"
 							class="text-black dark:text-black"
-							>Start&#160;time</Label
+							>Start&nbsp;time</Label
 						>
 						<Input type="time" id="start_time" name="start_time" />
 					</div>
 					<div class="flex-1">
 						<Label for="end_time" class="text-black dark:text-black"
-							>End&#160;time</Label
+							>End&nbsp;time</Label
 						>
 						<Input type="time" id="end_time" name="end_time" />
 					</div>
@@ -241,14 +241,16 @@
 	}
 
 	.section {
-		flex: 1;
-		min-width: 300px;
 		display: flex;
 		flex-direction: column;
 		align-items: normal;
 		margin-top: 10px;
 		padding: 0.9%;
 		align-self: self-start;
+	}
+	.section.nonempty {
+		flex: 1;
+		min-width: 300px;
 	}
 
 	.content {
