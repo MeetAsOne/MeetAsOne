@@ -128,7 +128,7 @@
 					<CalendarWeekSolid slot="left" class="w-5 h-5" />
 				</Input>
 
-				<div class="flex gap-2">
+				<div class="flex gap-2 w-full">
 					<div class="flex-1">
 						<Label
 							for="start_time"
