@@ -9,17 +9,18 @@ const config = {
     extend: {
       colors: {
         // flowbite-svelte
+        // Generated thanks to https://www.tailwindshades.com/
         primary: {
-          50: '#FFF5F2',
-          100: '#FFF1EE',
-          200: '#FFE4DE',
-          300: '#FFD5CC',
-          400: '#FFBCAD',
-          500: '#FE795D',
-          600: '#EF562F',
-          700: '#EB4F27',
-          800: '#CC4522',
-          900: '#A5371B'
+          50: '#FFF1B2',
+          100: '#FFEE9E',
+          200: '#FFE775',
+          300: '#FFDF4C',
+          400: '#FFD824',
+          500: '#FACE00',
+          600: '#D1AC00',
+          700: '#997E00',
+          800: '#615000',
+          900: '#292100',
         }
       }
     }

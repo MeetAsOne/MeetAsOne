@@ -17,14 +17,14 @@
         <div class="event-button">
             <ButtonGroup>
                 <Button
-                        style="background-color:#D1AC00"
                         href={"/event/" + respondedEvent.id}
                         class="!border-r-0"
+                        color="primary"
                 >
                     {respondedEvent.name}
                 </Button>
-                <Button on:click={del.bind(globalThis, respondedEvent.id)} style="background-color:#D1AC00" class="pl-0 !border-l-0" title="Forget">
-                    <CloseSolid />
+                <Button on:click={del.bind(globalThis, respondedEvent.id)} class="pl-0 !border-l-0" color="primary" title="Forget">
+                    <CloseSolid tabindex="-1" class="w-4 h-4" />
                 </Button>
             </ButtonGroup>
         </div>

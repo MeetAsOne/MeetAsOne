@@ -15,11 +15,10 @@
   }
 </script>
 
-<Button style="background-color:#D1AC00">
+<Button>
     {globalThis.window ? timezones.get(selectedTimezone) : "Select timezone"}
     <ChevronDownSolid class="w-3 h-3 ms-2 text-white dark:text-white" />
-</Button
->
+</Button>
 <Dropdown
         class="overflow-y-auto px-3 pb-3 text-sm h-44"
         bind:open={showDropdown}

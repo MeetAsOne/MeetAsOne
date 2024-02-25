@@ -143,9 +143,10 @@
 						outline
 						color="redToYellow"
 						type="submit"
-						style="background-color:#D1AC00"
+						style="background-color: var(--color-theme)"
 						>Create New Event</GradientButton
 					>
+					<!-- bg color must be style, not class b/c it will apply to container div instead of button -->
 				</div>
 			</form>
 		</div>
