@@ -74,7 +74,7 @@ export function timeInRange(ranges: DatetimeRange[], target: number) {
     // Convert to minutes since day start
     rangeStart %= DAY;
     rangeEnd %= DAY;
-    const isDisjoint = rangeEnd < rangeStart;
+    const isDisjoint = rangeEnd < rangeStart;  // AKA spans multiple days
     return isDisjoint ? (target < rangeEnd || target > rangeStart) : (target > rangeStart && target < rangeEnd);
   });
 }

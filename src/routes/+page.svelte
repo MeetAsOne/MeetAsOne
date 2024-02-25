@@ -5,7 +5,7 @@
 	import { InsertEventStore } from "$houdini";
 	import { goto } from "$app/navigation";
 	import range from "$lib/range";
-	import {DAY, MILLISECOND} from "$lib/units";
+	import {DAY, MILLISECOND, TIME_STEP} from "$lib/units";
 	import {timeToInt} from "$lib/timeutils";
 	import { savePastEvents, getPastEvents } from "$lib/storage";
 	import OldEvents from "./OldEvents.svelte";
@@ -32,8 +32,8 @@
 			const response = await updater.mutate({
 				name: name,
 				dates: selectedDates.map(day =>
-					[day.setUTCHours(0) * MILLISECOND + startTime, day.getTime() * MILLISECOND + endTime]
-				), // excludes endpoint, thus +DAY
+					[day.setUTCHours(0) * MILLISECOND + startTime, day.getTime() * MILLISECOND + endTime + TIME_STEP]
+				), // excludes endpoint, thus +TIME_STEP (hacky)
 			});
 			if (response.errors) {
 				alert(
