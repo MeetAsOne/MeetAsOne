@@ -4,7 +4,6 @@
   import { CloseSolid } from 'flowbite-svelte-icons';
 
   export let events: EventSummary[];
-  export let imOwner: boolean;
 
   function del(id: string) {
     events.splice(events.findIndex(ev => ev.id === id), 1);
@@ -13,7 +12,7 @@
 </script>
 
 <div class="flex flex-wrap max-w-[350px] m-auto">
-    {#each events.filter(ev => ev.imOwner === imOwner) as respondedEvent}
+    {#each events as respondedEvent}
         <div class="event-button">
             <ButtonGroup>
                 <Button
