@@ -1,0 +1,34 @@
+table:
+  name: availability
+  schema: public
+object_relationships:
+  - name: event
+    using:
+      foreign_key_constraint_on: event_id
+insert_permissions:
+  - role: public
+    permission:
+      check: {}
+      columns:
+        - availability
+        - event_id
+        - username
+    comment: ""
+select_permissions:
+  - role: public
+    permission:
+      columns:
+        - availability
+        - event_id
+        - id
+        - username
+      filter: {}
+    comment: ""
+update_permissions:
+  - role: public
+    permission:
+      columns:
+        - availability
+      filter: {}
+      check: null
+    comment: ""
