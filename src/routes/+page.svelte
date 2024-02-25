@@ -119,6 +119,11 @@
 					bind:value={name}
 				/>
 
+				<!-- According to docs, I shouldn't need left padding, but otherwise text overlaps icon -->
+				<Input class="pl-10" id="flatpickr" placeholder="Select dates">
+					<CalendarWeekSolid slot="left" class="w-5 h-5" />
+				</Input>
+
 				<div class="flex gap-2">
 					<div class="flex-1">
 						<Label for="start_time" class="text-black dark:text-black">Start&#160;time</Label>
@@ -132,10 +137,6 @@
 
 				<TzPicker bind:selectedTimezone={selectedTimezone} />
 
-				<!-- According to docs, I shouldn't need left padding, but otherwise text overlaps icon -->
-				<Input class="pl-10" id="flatpickr">
-					<CalendarWeekSolid slot="left" class="w-5 h-5" />
-				</Input>
 				<div class="my-button">
 					<GradientButton
 						size="xl"
