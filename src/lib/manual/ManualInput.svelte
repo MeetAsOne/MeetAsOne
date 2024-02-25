@@ -169,7 +169,7 @@
         <div class="labels text-right pr-1">
             {#each [...blocks, blocks.at(-1) + 1] as block, idx}
                 <div class="label" role="rowheader">
-                    {idx % 2 === 0 ? intToTime((block - 1) * TIME_STEP).replace(" ", "\xa0") : " "}
+                    {idx % 2 === 0 ? intToTime(block * TIME_STEP).replace(" ", "\xa0") : " "}
                 </div>
             {/each}
         </div>

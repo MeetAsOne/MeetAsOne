@@ -17,6 +17,7 @@ export function timeToInt(timeString: string) {
   return (Number(hours) + Number(ampm?.toLowerCase() === "pm") * 12) * HOUR + Number(minutes);
 }
 
+/** Converts minutes since midnight to "2:50 AM" or "15:43" */
 export function intToTime(midnightOffset: number, military = false) {
   const hours = Math.floor(midnightOffset / HOUR);
   const minutes = midnightOffset % HOUR;
@@ -75,7 +76,7 @@ export function timeInRange(ranges: DatetimeRange[], target: number) {
     rangeStart %= DAY;
     rangeEnd %= DAY;
     const isDisjoint = rangeEnd < rangeStart;  // AKA spans multiple days
-    return isDisjoint ? (target < rangeEnd || target > rangeStart) : (target > rangeStart && target < rangeEnd);
+    return isDisjoint ? (target <= rangeEnd || target >= rangeStart) : (target >= rangeStart && target <= rangeEnd);
   });
 }
 
@@ -87,7 +88,7 @@ export function datetimeInRange(ranges: DatetimeRange[], target: Date | number) 
   if (target instanceof Date)
     target = target.getTime() * MILLISECOND;
   // @ts-ignore
-  return ranges.some(([rangeStart, rangeEnd]) => target < rangeEnd && target > rangeStart);
+  return ranges.some(([rangeStart, rangeEnd]) => target <= rangeEnd && target >= rangeStart);
 }
 
 /** Convert a list of [start, stop] ranges (minutes since epoch) to unique dates they cover. Preserves order */

@@ -32,8 +32,8 @@
 			const response = await updater.mutate({
 				name: name,
 				dates: selectedDates.map(day =>
-					[day.setUTCHours(0) * MILLISECOND + startTime, day.getTime() * MILLISECOND + endTime + TIME_STEP]
-				), // excludes endpoint, thus +TIME_STEP (hacky)
+					[day.setUTCHours(0) * MILLISECOND + startTime, day.getTime() * MILLISECOND + endTime]
+				),
 			});
 			if (response.errors) {
 				alert(
