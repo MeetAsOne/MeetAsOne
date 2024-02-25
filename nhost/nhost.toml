@@ -10,7 +10,7 @@ type = 'HS256'
 key = '{{ secrets.HASURA_GRAPHQL_JWT_SECRET }}'
 
 [hasura.settings]
-corsDomain = ['*']
+corsDomain = ['https://*.app.github.dev', 'http://localhost:5173', 'https://meetas.one']
 devMode = true
 enableAllowList = false
 enableConsole = true
