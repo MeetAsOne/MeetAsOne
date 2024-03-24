@@ -14,7 +14,7 @@
     import {writable} from "svelte/store";
     import AvailabilityComponent from "$lib/Availability.svelte";
     import {importedWeeklyEvents, isSaved, workingAvailability} from "$lib/store.ts";
-    import {Button, ButtonGroup, Checkbox, DropdownItem, Input, Label, Spinner} from "flowbite-svelte";
+    import {Button, ButtonGroup, Checkbox, DropdownItem, Input, Label, Spinner, Tooltip} from "flowbite-svelte";
     import {timeoutToast, editToast, newToast} from "$lib/Toaster.svelte";
     import saveServer from "$lib/manual/saveServer.ts";
     import TzPicker from "$lib/TzPicker.svelte";
@@ -159,14 +159,16 @@
       </div>
       <div class="flex flex-row">
         <div>
-          <Checkbox class="dark:text-black" bind:checked={useMulticolor}>Multicolor</Checkbox>
-          <AvailabilityComponent
-                  everyone={event.availabilities.map((person) => person.username)}
-                  available={$selectedAvailability}
-          />
+          <Tooltip triggeredBy=".availability-cell" class="z-[1000]">
+            <AvailabilityComponent
+                    everyone={event.availabilities.map((person) => person.username)}
+                    available={$selectedAvailability}
+            />
+          </Tooltip>
         </div>
         <div>
           <h2>Group Availability</h2>
+          <Checkbox class="dark:text-black justify-center" bind:checked={useMulticolor}>Multicolor</Checkbox>
           <ManualInput
             allParticipants={Array.from(new Set(event.availabilities.map(person => person.username)).add(myName ?? "me"))}
             ranges={event.dates}
