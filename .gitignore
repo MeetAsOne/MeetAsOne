@@ -13,3 +13,6 @@ vite.config.ts.timestamp-*
 
 $houdini
 schema.graphql
+
+.secrets
+.nhost
