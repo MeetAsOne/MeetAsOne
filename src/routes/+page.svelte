@@ -13,6 +13,7 @@
 	import flatpickr from "flatpickr";
 	import { onMount } from "svelte";
 	import { CalendarWeekSolid } from "flowbite-svelte-icons";
+	import DaySelector from "$lib/DaySelector/DaySelector.svelte";
 
 	let name: string = "";
 	let shouldUseWeekdays = false;
@@ -127,10 +128,17 @@
 
 				<Checkbox bind:checked={shouldUseWeekdays} class="text-black dark:text-black">Select days of week</Checkbox>
 
-				<!-- According to docs, I shouldn't need left padding, but otherwise text overlaps icon -->
-				<Input class="pl-10" id="flatpickr" placeholder="Select dates">
-					<CalendarWeekSolid slot="left" class="w-5 h-5" />
-				</Input>
+				{#if shouldUseWeekdays}
+					<DaySelector onChange={console.log} />
+				{/if}
+
+				<!-- Use hidden class instead of if b/c would need to reinit date capabilities if destroying -->
+				<div class:hidden={shouldUseWeekdays}>
+					<!-- According to docs, I shouldn't need left padding, but otherwise text overlaps icon -->
+					<Input class="pl-10" id="flatpickr" placeholder="Select dates">
+						<CalendarWeekSolid slot="left" class="w-5 h-5" />
+					</Input>
+				</div>
 
 				<div class="flex gap-2 w-full">
 					<div class="flex-1">
