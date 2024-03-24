@@ -10,6 +10,7 @@
 <style>
     .switch {
         flex-grow: 1;
+        height: 41.6px;  /* TODO: don't use magic constants. This ensures no layout shifting when toggling weekday/date mode */
     }
 
     .switch input {
@@ -20,15 +21,18 @@
     }
 
     .slider {
-        display: inline-block;
+        display: flex;
+        align-items: center;
         cursor: pointer;
-        background-color: #ccc;
+        background-color: rgb(55 65 81);
+        color: white;
+        user-select: none;
         transition: .4s;
         height: 100%;
     }
 
     input:checked + .slider {
-        background-color: #2196F3;
+        background-color: var(--color-theme);
     }
 
     input:focus + .slider {
