@@ -36,6 +36,9 @@
   /** Minutes difference from UTC */
   export let tzOffset: number;
 
+  /** if true, only show days of week (monday, tues, etc). Useful for recurring weekly meetings. If false, also show day of month (eg 13th) */
+  export let shouldUseWeekdays: boolean;
+
   export const clear = () => {
     const blank = blankAvailability(UTCDates.map(canonicalDateStr));
     availability = blank;
@@ -180,14 +183,16 @@
             <!-- Column header -->
             <div role="columnheader" class="px-1">
                 {new Intl.DateTimeFormat(undefined, {weekday: "short", timeZone: "UTC"}).format(localDate)}
-                <br />
-                <span class="text-sm">
-                    {new Intl.DateTimeFormat(undefined, {
-                      month: "short",
-                      day: "numeric",
-                      timeZone: "UTC",
-                    }).format(localDate)}
-                </span>
+                {#if !shouldUseWeekdays}
+                    <br />
+                    <span class="text-sm">
+                        {new Intl.DateTimeFormat(undefined, {
+                          month: "short",
+                          day: "numeric",
+                          timeZone: "UTC",
+                        }).format(localDate)}
+                    </span>
+                {/if}
             </div>
             <!-- Cell container -->
             <div class="bg-white" class:grayscale={isDisabled}>

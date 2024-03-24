@@ -1,5 +1,5 @@
-mutation InsertEvent($name: String, $dates: [datetime_range!]) {
-  insert_events(objects: {name: $name, dates: $dates}) {
+mutation InsertEvent($name: String, $dates: [datetime_range!], $shouldUseWeekdays: Boolean) {
+  insert_events(objects: {name: $name, dates: $dates, shouldUseWeekdays: $shouldUseWeekdays}) {
     affected_rows
     returning {
       name

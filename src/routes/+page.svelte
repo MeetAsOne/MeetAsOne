@@ -1,6 +1,6 @@
 <script lang="ts">
 	import welcome_fallback from "$lib/images/HomepageTitle.png";
-	import { Label, Input } from "flowbite-svelte";
+	import {Label, Input, Checkbox} from "flowbite-svelte";
 	import { GradientButton } from "flowbite-svelte";
 	import { InsertEventStore } from "$houdini";
 	import { goto } from "$app/navigation";
@@ -15,6 +15,7 @@
 	import { CalendarWeekSolid } from "flowbite-svelte-icons";
 
 	let name: string = "";
+	let shouldUseWeekdays = false;
 	let selectedTimezone: number;
 
 	let pastEvents = getPastEvents();
@@ -35,6 +36,7 @@
 				timeToInt(data.get("end_time") as string) + selectedTimezone;
 			const response = await updater.mutate({
 				name: name,
+				shouldUseWeekdays,
 				dates: selectedDates.map(day =>
 					[day.setUTCHours(0) * MILLISECOND + startTime, day.getTime() * MILLISECOND + endTime]
 				),
@@ -122,6 +124,8 @@
 					placeholder="Event Name"
 					bind:value={name}
 				/>
+
+				<Checkbox bind:checked={shouldUseWeekdays} class="text-black dark:text-black">Select days of week</Checkbox>
 
 				<!-- According to docs, I shouldn't need left padding, but otherwise text overlaps icon -->
 				<Input class="pl-10" id="flatpickr" placeholder="Select dates">

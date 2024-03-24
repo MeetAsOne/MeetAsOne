@@ -145,6 +145,7 @@
             isDisabled={!isOnline}
             bind:clear
             {tzOffset}
+            shouldUseWeekdays={event.shouldUseWeekdays}
           />
         {:else}
           <form on:submit|preventDefault={submitName}>
@@ -172,7 +173,9 @@
             availablePeople={selectedAvailability}
             {tzOffset}
             {useMulticolor}
-            availability={mergeAvailability(enforceAvailabilityValidity(loadAvailability(...event.availabilities), rangesToDate(event.dates).map(canonicalDateStr)), $workingAvailability, myName)}/>
+            availability={mergeAvailability(enforceAvailabilityValidity(loadAvailability(...event.availabilities), rangesToDate(event.dates).map(canonicalDateStr)), $workingAvailability, myName)}
+            shouldUseWeekdays={event.shouldUseWeekdays}
+          />
         </div>
       </div>
     </div>

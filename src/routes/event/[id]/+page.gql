@@ -2,6 +2,7 @@ query GetEvent($id: uuid) {
   events(where: {id: {_eq: $id}}) {
     name
     dates
+    shouldUseWeekdays
     availabilities {
       availability
       username
