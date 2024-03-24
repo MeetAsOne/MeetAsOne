@@ -282,7 +282,6 @@
 		/* margin-top: 20px; */
 		/* Adjust size properties as needed */
 		max-width: 500px; /* Example: Set the maximum width */
-		max-height: 400px;
 		margin-left: auto; /* Example: Center the box horizontally */
 		margin-right: auto;
 		margin-top: 5%;
