@@ -25,35 +25,38 @@
 
 	async function createEvent(ev: SubmitEvent) {
 		ev.preventDefault();
-		if (name.length == 0) {
-			alert("Please fill in details");
-		} else {
-			const updater = new InsertEventStore();
+		const updater = new InsertEventStore();
 
-			const data = new FormData(ev.currentTarget as HTMLFormElement);
-			const startTime =
-				timeToInt(data.get("start_time") as string) + selectedTimezone;
-			const endTime =
-				timeToInt(data.get("end_time") as string) + selectedTimezone;
-			const response = await updater.mutate({
-				name: name,
-				shouldUseWeekdays,
-				dates: selectedDates.map(day =>
-					[day.setUTCHours(0) * MILLISECOND + startTime, day.getTime() * MILLISECOND + endTime]
-				),
-			});
-			if (response.errors) {
-				alert(
-					"Your configuration is invalid. Make sure end time is after start & you selected no more than 7 days.\n" +
-						response.errors.map((err) => err.message).join("/n"),
-				);
-				return;
-			}
-			const id = response.data?.insert_events?.returning[0].id!;
-			pastEvents.push({ id, name, imOwner: true });
-			savePastEvents(pastEvents);
-			goto("event/" + id);
+		const data = new FormData(ev.currentTarget as HTMLFormElement);
+		const startTime =
+			timeToInt(data.get("start_time") as string) + selectedTimezone;
+		const endTime =
+			timeToInt(data.get("end_time") as string) + selectedTimezone;
+		const startTimeElem = document.getElementById("start_time") as HTMLInputElement;
+		startTimeElem.setCustomValidity("");
+		if (endTime < startTime) {
+			startTimeElem.setCustomValidity("Start time must be before end time");
 		}
+		if (!(ev.currentTarget as HTMLFormElement).reportValidity())
+			return;
+		const response = await updater.mutate({
+			name: name,
+			shouldUseWeekdays,
+			dates: selectedDates.map(day =>
+				[day.setUTCHours(0) * MILLISECOND + startTime, day.getTime() * MILLISECOND + endTime]
+			),
+		});
+		if (response.errors) {
+			alert(
+				"Your configuration is invalid. Make sure end time is after start & you selected no more than 7 days.\n" +
+					response.errors.map((err) => err.message).join("/n"),
+			);
+			return;
+		}
+		const id = response.data?.insert_events?.returning[0].id!;
+		pastEvents.push({ id, name, imOwner: true });
+		savePastEvents(pastEvents);
+		goto("event/" + id);
 	}
 	$: savePastEvents(pastEvents);
 
@@ -113,6 +116,7 @@
 		</div>
 		<div class="create-event-box">
 			<form
+				novalidate
 				class="flex flex-grow gap-4 align-items-center content-center flex-col items-center"
 				on:submit={createEvent}
 				autocomplete="off"
@@ -147,13 +151,13 @@
 							class="text-black dark:text-black"
 							>Start&nbsp;time</Label
 						>
-						<Input type="time" id="start_time" name="start_time" />
+						<Input required type="time" id="start_time" name="start_time" />
 					</div>
 					<div class="flex-1">
 						<Label for="end_time" class="text-black dark:text-black"
 							>End&nbsp;time</Label
 						>
-						<Input type="time" id="end_time" name="end_time" />
+						<Input required type="time" id="end_time" name="end_time" />
 					</div>
 				</div>
 
