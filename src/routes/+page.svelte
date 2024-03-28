@@ -255,6 +255,7 @@
 		flex-wrap: wrap-reverse;
 		justify-content: space-between;
 		max-width: 1000px;
+		align-items: start;
 	}
 
 	.section {
@@ -286,6 +287,7 @@
 		/* margin-top: 20px; */
 		/* Adjust size properties as needed */
 		max-width: 500px; /* Example: Set the maximum width */
+		max-height: 433px;
 		margin-left: auto; /* Example: Center the box horizontally */
 		margin-right: auto;
 		margin-top: 5%;
