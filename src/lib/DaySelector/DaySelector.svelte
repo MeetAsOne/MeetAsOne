@@ -1,5 +1,5 @@
 <script lang="ts">
-    import TogglableBox from "$lib/DaySelector/TogglableBox.svelte";
+    import ToggleableBox from "$lib/DaySelector/ToggleableBox.svelte";
 
     export let onChange: (val: boolean[]) => void;
 
@@ -13,6 +13,6 @@
 
 <div class="flex gap-1 w-full">
     {#each days as day, idx}
-        <TogglableBox bind:checked={checked[idx]}>{day}</TogglableBox>
+        <ToggleableBox bind:checked={checked[idx]}>{day}</ToggleableBox>
     {/each}
 </div>
