@@ -129,7 +129,7 @@
 				<Checkbox bind:checked={shouldUseWeekdays} class="text-black dark:text-black">Select days of week</Checkbox>
 
 				{#if shouldUseWeekdays}
-					<DaySelector onChange={console.log} />
+					<DaySelector bind:value={selectedDates} />
 				{/if}
 
 				<!-- Use hidden class instead of if b/c would need to reinit date capabilities if destroying -->

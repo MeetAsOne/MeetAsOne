@@ -3,10 +3,11 @@
 </script>
 
 <label class="switch">
-    <input type="checkbox" {checked}>
+    <input type="checkbox" bind:checked>
     <span class="slider"><slot></slot></span>
 </label>
 
+<!-- Adapted from https://www.w3schools.com/howto/howto_css_switch.asp -->
 <style>
     .switch {
         flex-grow: 1;
