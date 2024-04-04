@@ -1,9 +1,9 @@
 <script>
-	import "../app.pcss";
+    import "../app.pcss";
     import Header from './Header.svelte';
     import './styles.css';
-	import Toaster from "$lib/Toaster.svelte";
-	import {page} from "$app/stores";
+    import Toaster from "$lib/Toaster.svelte";
+    import {page} from "$app/stores";
 </script>
 
 <div class="app dark">

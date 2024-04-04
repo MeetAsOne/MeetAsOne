@@ -14,6 +14,7 @@
 	import { CalendarWeekSolid } from "flowbite-svelte-icons";
 	import DaySelector from "$lib/DaySelector/DaySelector.svelte";
 	import logo from "$lib/images/logo.svg";
+	import Competitors from "./Competitors.svelte";
 
 	let name: string = "";
 	let shouldUseWeekdays = false;
@@ -92,7 +93,7 @@
 			MeetAsOne
 		</h1>
 		<h2>
-			The better alternative to When2Meet
+			The better alternative to <Competitors />
 		</h2>
 	</div>
 	<hr class="border-black hidden sm:block" style="width: calc((100% - 600px) / 3 + 600px)" />
