@@ -5,9 +5,7 @@
 	import Toaster from "$lib/Toaster.svelte";
 </script>
 
-<div class="app">
-	<Header></Header>
-
+<div class="app dark">
 	<main>
 		<slot></slot>
 	</main>

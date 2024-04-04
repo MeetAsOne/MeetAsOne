@@ -13,6 +13,7 @@
 	import { onMount } from "svelte";
 	import { CalendarWeekSolid } from "flowbite-svelte-icons";
 	import DaySelector from "$lib/DaySelector/DaySelector.svelte";
+	import logo from "$lib/images/logo.svg";
 
 	let name: string = "";
 	let shouldUseWeekdays = false;
@@ -82,7 +83,14 @@
 
 <section class="main-section">
 	<div class="flex items-center justify-evenly w-full pb-4">
-		<h1 class="font-bold hr">MeetAsOne</h1>
+		<h1 class="font-bold flex items-center flex-wrap justify-center">
+			<img
+				src={logo}
+				alt="MeetAsOne"
+				style="width: 40px; height: auto; margin-right:16px; display: inline-block;"
+			/>
+			MeetAsOne
+		</h1>
 		<h2>
 			The better alternative to When2Meet
 		</h2>
