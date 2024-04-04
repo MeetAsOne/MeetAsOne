@@ -1,5 +1,4 @@
 <script lang="ts">
-	import welcome_fallback from "$lib/images/HomepageTitle.png";
 	import {Label, Input, Checkbox} from "flowbite-svelte";
 	import { GradientButton } from "flowbite-svelte";
 	import { InsertEventStore } from "$houdini";
@@ -82,17 +81,13 @@
 </svelte:head>
 
 <section class="main-section">
-	<div class="header">
-		<h1>
-			<span class="welcome">
-				<img
-					src={welcome_fallback}
-					alt="MeetAsOne"
-					style="width: 680px; height: auto;"
-				/>
-			</span>
-		</h1>
+	<div class="flex items-center justify-evenly w-full pb-4">
+		<h1 class="font-bold hr">MeetAsOne</h1>
+		<h2>
+			The better alternative to When2Meet
+		</h2>
 	</div>
+	<hr class="border-black hidden sm:block" style="width: calc((100% - 600px) / 3 + 600px)" />
 
 	<!-- Past Events -->
 	<div class="container">
@@ -239,23 +234,12 @@
 		justify-content: center;
 	}
 
-	.welcome {
-		display: inline;
-		position: relative;
-		width: 100%;
-		height: 0;
-		padding: 0 0 calc(100% * 680 / 2048) 0;
-		background-size: contain;
-		background-position: center;
-		/* border: 0.5px solid black; Adjust border size */
-		/* margin-bottom: 0px; Add margin to separate from description */
-	}
 	.container {
 		display: flex;
 		flex-wrap: wrap-reverse;
 		justify-content: space-between;
 		max-width: 1000px;
-		align-items: start;
+		align-items: self-start;
 	}
 
 	.section {
@@ -280,6 +264,7 @@
 		align-items: center;
 	}
 	.create-event-box {
+		width: 370px;
 		background-color: #bdb48090; /* Set background color as needed */
 		padding: 20px;
 		border-radius: 4px;
