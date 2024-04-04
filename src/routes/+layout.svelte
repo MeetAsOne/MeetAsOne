@@ -3,9 +3,14 @@
     import Header from './Header.svelte';
     import './styles.css';
 	import Toaster from "$lib/Toaster.svelte";
+	import {page} from "$app/stores";
 </script>
 
 <div class="app dark">
+	{#if $page.url.pathname.startsWith("/event")}
+		<Header></Header>
+	{/if}
+
 	<main>
 		<slot></slot>
 	</main>

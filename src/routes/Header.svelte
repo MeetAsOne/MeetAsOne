@@ -1,6 +1,5 @@
 <script>
   import { Navbar, NavBrand } from "flowbite-svelte";
-  import { DarkMode } from "flowbite-svelte";
   import logo from "$lib/images/logo.svg";
 </script>
 
@@ -14,9 +13,9 @@
           style="width: 40px; height: auto; margin-right:16px"
         />
       </span>
+      MeetAsOne
     </NavBrand>
     <div style="flex: 1"></div>
     <a href="https://github.com/MeetAsOne/MeetAsOne" target="_blank" class="p-2">GitHub</a>
-    <DarkMode />
   </Navbar>
 </header>
