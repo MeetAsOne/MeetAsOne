@@ -9,13 +9,12 @@
         <TableHeadCell>When2Meet</TableHeadCell>
         <TableHeadCell>LettuceMeet</TableHeadCell>
         <TableHeadCell>Doodle</TableHeadCell>
-        <TableHeadCell>Rallly</TableHeadCell>
+        <!-- Not included: whenisgood.net, whenavailable.com, schej.it, rallly -->
     </TableHead>
     <TableBody class="divide-y">
         <TableBodyRow>
             <TableBodyCell>Import from screenshot</TableBodyCell>
             <TableBodyCell>✅</TableBodyCell>
-            <TableBodyCell>❌</TableBodyCell>
             <TableBodyCell>❌</TableBodyCell>
             <TableBodyCell>❌</TableBodyCell>
             <TableBodyCell>❌</TableBodyCell>
@@ -26,7 +25,6 @@
             <TableBodyCell>❌</TableBodyCell>
             <TableBodyCell>❌</TableBodyCell>
             <TableBodyCell>❌</TableBodyCell>
-            <TableBodyCell>❌</TableBodyCell>
         </TableBodyRow>
         <TableBodyRow>
             <TableBodyCell>Mobile-friendly</TableBodyCell>
@@ -34,14 +32,12 @@
             <TableBodyCell>❌</TableBodyCell>
             <TableBodyCell><abbr title="Cannot drag to multiselect times on mobile">*️⃣</abbr></TableBodyCell>
             <TableBodyCell>❔</TableBodyCell>
-            <TableBodyCell>❔</TableBodyCell>
         </TableBodyRow>
         <TableBodyRow>
             <TableBodyCell>Timezone translation</TableBodyCell>
             <TableBodyCell>✅</TableBodyCell>
             <TableBodyCell>✅</TableBodyCell>
             <TableBodyCell><abbr title="Only local timezone, cannot switch to others">*️⃣</abbr></TableBodyCell>
-            <TableBodyCell>❔</TableBodyCell>
             <TableBodyCell>❔</TableBodyCell>
         </TableBodyRow>
         <TableBodyRow>
@@ -52,7 +48,6 @@
             <TableBodyCell>❌</TableBodyCell>
             <TableBodyCell><abbr title="There's an unofficial open-source inspired repo called CabbageMeet">*️⃣</abbr></TableBodyCell>
             <TableBodyCell>❌</TableBodyCell>
-            <TableBodyCell>✅</TableBodyCell>
         </TableBodyRow>
     </TableBody>
 </Table>

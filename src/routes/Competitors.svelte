@@ -5,7 +5,6 @@
         <ul>
             <li>When2Meet</li>
             <li>LettuceMeet</li>
-            <li>Rallly</li>
             <li>Doodle</li>
             <li>When2Meet</li>
         </ul>
@@ -48,7 +47,7 @@
   }
 
   // Variables
-  $item-count: 5;
+  $item-count: 4;
   $time-out: calc(100 / ($item-count - 1));
 
   @keyframes scrollUp {
