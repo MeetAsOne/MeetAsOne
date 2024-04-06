@@ -169,7 +169,7 @@
 		</div>
 	</div>
 
-	<div class="content">
+	<div class="content w-full">
 		<div class="create-event-box2">
 			<div class="description-and-features">
 				<ComparisonTable />
