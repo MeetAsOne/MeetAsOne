@@ -125,7 +125,7 @@
     </div>
     <ImportCalendar />
   </div>
-    <div class="flex flex-row flex-wrap justify-between gap-x-20 gap-y-10 mt-10">
+    <div id="availability-container" class="flex flex-row flex-wrap justify-between gap-x-20 gap-y-10 mt-10">
       <div>
         {#if myName}
           <h2>
@@ -154,7 +154,7 @@
           </form>
         {/if}
       </div>
-      <div class="flex flex-row">
+      <div>
         <div>
           <Tooltip triggeredBy=".availability-cell" class="z-[1000]">
             <AvailabilityComponent
@@ -179,3 +179,12 @@
       </div>
     </div>
 {/if}
+
+<style>
+  #availability-container > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-grow: 1;
+  }
+</style>
