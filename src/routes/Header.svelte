@@ -1,21 +1,28 @@
 <script>
-  import { Navbar, NavBrand } from "flowbite-svelte";
   import logo from "$lib/images/logo.svg";
+  import Competitors from "./Competitors.svelte";
+  import {page} from "$app/stores";
 </script>
 
 <header>
-  <Navbar>
-    <NavBrand href="/">
-      <span class="welcome">
-        <img
-          src={logo}
-          alt="MeetAsOne"
-          style="width: 40px; height: auto; margin-right:16px"
-        />
-      </span>
+  <div class="flex items-center justify-evenly w-full pb-4">
+    <h1>
+      <a href="/" class="font-bold flex items-center flex-wrap justify-center">
+      <img
+              src={logo}
+              alt="MeetAsOne"
+              style="width: 40px; height: auto; margin-right:16px; display: inline-block;"
+      />
       MeetAsOne
-    </NavBrand>
-    <div style="flex: 1"></div>
-    <a href="https://github.com/MeetAsOne/MeetAsOne" target="_blank" class="p-2">GitHub</a>
-  </Navbar>
+      </a>
+    </h1>
+    <h2>
+      {#if $page.url.pathname.startsWith("/event")}
+        <a href="https://github.com/MeetAsOne/MeetAsOne" target="_blank">Github</a>
+      {:else}
+        The better alternative to <Competitors />
+      {/if}
+    </h2>
+  </div>
+  <hr class="border-black hidden sm:block mx-auto" style="width: calc((100% - 600px) / 3 + 600px)" />
 </header>

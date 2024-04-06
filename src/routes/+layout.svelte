@@ -4,12 +4,15 @@
     import './styles.css';
     import Toaster from "$lib/Toaster.svelte";
     import {page} from "$app/stores";
+	import Ad from "$lib/Ad.svelte";
 </script>
 
 <div class="app dark">
-	{#if $page.url.pathname.startsWith("/event")}
-		<Header></Header>
-	{/if}
+	<Header />
+
+	<div class="fixed inset-x-0 bottom-0 z-50">
+		<Ad />
+	</div>
 
 	<main>
 		<slot></slot>
@@ -22,6 +25,7 @@
 		display: flex;
 		flex-direction: column;
 		min-height: 100vh;
+		padding-bottom: 100px;
 	}
 
 	main {

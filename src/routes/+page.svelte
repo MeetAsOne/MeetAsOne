@@ -84,21 +84,6 @@
 </svelte:head>
 
 <section class="main-section">
-	<div class="flex items-center justify-evenly w-full pb-4">
-		<h1 class="font-bold flex items-center flex-wrap justify-center">
-			<img
-				src={logo}
-				alt="MeetAsOne"
-				style="width: 40px; height: auto; margin-right:16px; display: inline-block;"
-			/>
-			MeetAsOne
-		</h1>
-		<h2>
-			The better alternative to <Competitors />
-		</h2>
-	</div>
-	<hr class="border-black hidden sm:block" style="width: calc((100% - 600px) / 3 + 600px)" />
-
 	<!-- Past Events -->
 	<div class="container">
 		<div class="section" class:nonempty={eventsCreated.length !== 0 && eventsResponded.length !== 0}>
