@@ -254,29 +254,4 @@
 		/* margin: auto; */
 		margin-top: 0;
 	}
-
-	.description,
-	.features-section {
-		max-width: 1000px;
-		margin-top: 20px;
-	}
-
-	.description h2 {
-		color: #333;
-		font-size: 1.5em;
-		margin-bottom: 10px;
-	}
-
-	.description p {
-		color: #555;
-	}
-
-	.features-section {
-		text-align: left;
-		margin-top: 20px; /* Add margin to separate from description */
-	}
-
-	ul {
-		list-style-type: square;
-	}
 </style>
