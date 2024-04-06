@@ -27,7 +27,8 @@ CREATE TABLE public.events (
     name text NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     paid_extrapeople boolean DEFAULT false NOT NULL,
-    dates public.datetime_range[] NOT NULL
+    dates public.datetime_range[] NOT NULL,
+    "shouldUseWeekdays" boolean DEFAULT false NOT NULL
 );
 ALTER TABLE ONLY public.availability
     ADD CONSTRAINT availability_pkey PRIMARY KEY (id);

@@ -34,5 +34,6 @@ select_permissions:
         - id
         - name
         - paid_extrapeople
+        - shouldUseWeekdays
       filter: {}
     comment: ""
