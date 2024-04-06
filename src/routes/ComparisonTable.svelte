@@ -2,7 +2,7 @@
   import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
 </script>
 
-<Table>
+<Table color="custom">
     <TableHead>
         <TableHeadCell>Feature</TableHeadCell>
         <TableHeadCell>MeetAsOne</TableHeadCell>
@@ -58,6 +58,10 @@
 </Table>
 
 <style>
+    :global(tr > :first-child) {
+        color: black !important;
+    }
+
     :global(tr > :not(:first-child)) {
         text-align: center;
     }
