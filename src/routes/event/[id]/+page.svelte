@@ -107,34 +107,31 @@
       <TzPicker bind:selectedTimezone={tzOffset} />
     </em>
   </div>
-  <div class="flex gap-2 flex-wrap">
-    <div class="flex gap-2">
+  <div class="flex gap-2 flex-wrap justify-between">
+    <div class="flex gap-2 items-center">
+      Availability:
       <Button on:click={() => localStorage["general-availability"] = localStorage.draftAvailability}>
-        Save availability to browser
+        Save
       </Button>
       {#if Object.keys(localAvailability).length}
         <Button on:click={() => importedWeeklyEvents.set(localAvailability)}>
-          Load saved
+          Load
+        </Button>
+        <Button on:click={clear}>
+          Clear
         </Button>
       {/if}
       <div class="border-l-2 border-orange-400"></div>
     </div>
-    <div class="flex gap-2">
-      <Button on:click={clear}>
-        Clear
-      </Button>
-      <Button on:click={() => myName = undefined}>
-        Change name
-      </Button>
-      <div class="border-l-2 border-orange-400"></div>
-    </div>
     <ImportCalendar />
   </div>
-    <div class="flex flex-row flex-wrap justify-center gap-x-20 gap-y-10 mt-10">
+    <div class="flex flex-row flex-wrap justify-between gap-x-20 gap-y-10 mt-10">
       <div>
         {#if myName}
           <h2>
-            Your availability
+            <Button on:click={() => myName = undefined}>
+              {myName}'s
+            </Button> availability
             {#if !$isSaved}
               <Spinner size="6" title="Saving..." />
             {/if}

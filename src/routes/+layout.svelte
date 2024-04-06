@@ -26,6 +26,8 @@
 		flex-direction: column;
 		min-height: 100vh;
 		padding-bottom: 100px;
+		max-width: 1100px;
+		margin: 0 auto;
 	}
 
 	main {
