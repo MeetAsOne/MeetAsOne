@@ -121,7 +121,6 @@
           Clear
         </Button>
       {/if}
-      <div class="border-l-2 border-orange-400"></div>
     </div>
     <ImportCalendar />
   </div>

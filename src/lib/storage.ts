@@ -10,7 +10,7 @@ export function getPastEvents() {
 
   let pastEvents: EventSummary[];
 
-  if (!pastEventsString) {
+  if (!pastEventsString || pastEventsString[0] === '{') {
     pastEvents = [];
   } else {
     pastEvents = JSON.parse(pastEventsString);
