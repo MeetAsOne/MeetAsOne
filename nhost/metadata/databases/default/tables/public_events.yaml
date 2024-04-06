@@ -24,6 +24,7 @@ insert_permissions:
       columns:
         - dates
         - name
+        - shouldUseWeekdays
     comment: ""
 select_permissions:
   - role: public
