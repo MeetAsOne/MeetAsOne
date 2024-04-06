@@ -49,17 +49,17 @@
 
   // Variables
   $item-count: 5;
-  $time-out: 100 / ($item-count - 1);
+  $time-out: calc(100 / ($item-count - 1));
 
   @keyframes scrollUp {
     @for $i from 1 through ($item-count - 1) {
       #{$i * $time-out - 10%},
       #{$i * $time-out * 1%} {
-        transform: translateY((-100% / $item-count) * $i);
+        transform: translateY(calc(-100% / $item-count) * $i);
       }
 
       #{$i * $time-out - 7.5%} {
-        transform: translateY(((-100% / $item-count) * $i) + 1.5%);
+        transform: translateY((calc(-100% / $item-count) * $i) + 1.5%);
       }
     }
   }
