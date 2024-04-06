@@ -5,6 +5,10 @@ import { defineConfig } from "vite";
 export default defineConfig({
   plugins: [houdini(), sveltekit()],
 
+  build: {
+    sourcemap: true,
+  },
+
   css: {
     preprocessorOptions: {
       scss: {
