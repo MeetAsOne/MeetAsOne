@@ -122,7 +122,7 @@
       <Button on:click={clear}>
         Clear
       </Button>
-      <EditSaved {isOnline} />
+<!-- TODO:      <EditSaved {isOnline} />-->
     </div>
     <ImportCalendar />
   </div>

@@ -1,6 +1,11 @@
 <script lang="ts">
   import { Button, Modal } from 'flowbite-svelte';
-  import {type Availability, enforceAvailabilityValidity, loadAvailabilityOne} from "$lib/manual/Availability.js";
+  import {
+    applyAvailability,
+    type Availability,
+    enforceAvailabilityValidity,
+    loadAvailabilityOne
+  } from "$lib/manual/Availability.js";
   import ManualInput from "$lib/manual/ManualInput.svelte";
   import {canonicalDateStr, weekdayDateRanges, weekdayDates} from "$lib/timeutils.ts";
 
@@ -10,11 +15,14 @@
   /** Function bound to my ManualInput availability that when called, clears your availability for this event */
   let clear: () => {};
   let availability = enforceAvailabilityValidity(
-    loadAvailabilityOne(JSON.parse(
-        globalThis?.localStorage?.["general-availability"] ?? '{"days": {}}',
-      ).days as Availability),
+    applyAvailability(
+        weekdayDates(),
+        JSON.parse(
+            globalThis?.localStorage?.["general-availability"] ?? '{"days": {}}',
+          ).days as Availability
+      ),
     weekdayDates().map(canonicalDateStr)
-  );
+  )
 </script>
 
 <!-- TODO: decouple database saving from ManualInput -->
