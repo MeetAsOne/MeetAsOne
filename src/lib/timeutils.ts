@@ -107,6 +107,8 @@ export function getTzOffset(timeZone = 'UTC', date = new Date()) {
   return (tzDate.getTime() - utcDate.getTime()) * MILLISECOND;
 }
 
+// get local tz offset with `new Date().getTimezoneOffset()`
+
 export const getLocalTzName = () => Intl.DateTimeFormat().resolvedOptions().timeZone;
 
 export const getAllTzNames = () => Intl.supportedValuesOf('timeZone');
@@ -114,18 +116,19 @@ export const getAllTzNames = () => Intl.supportedValuesOf('timeZone');
 /**
  * Arbitrary dates within one week, one for each day from Monday to Sunday in that order
  * Generated from https://stackoverflow.com/a/43008875 (exact day doesn't matter)
+ * @param tzOffset offset in minutes from UTC. Defaults to local time
  */
-export const weekdayDates = [
-  new Date("2017-02-27T05:00:00.000Z"),
-  new Date("2017-02-28T05:00:00.000Z"),
-  new Date("2017-03-01T05:00:00.000Z"),
-  new Date("2017-03-02T05:00:00.000Z"),
-  new Date("2017-03-03T05:00:00.000Z"),
-  new Date("2017-03-04T05:00:00.000Z"),
-  new Date("2017-03-05T05:00:00.000Z"),
-] as const;
+export const weekdayDates = (tzOffset = new Date().getTimezoneOffset()) => ([
+  new Date("2017-02-27T00:00:00.000Z"),
+  new Date("2017-02-28T00:00:00.000Z"),
+  new Date("2017-03-01T00:00:00.000Z"),
+  new Date("2017-03-02T00:00:00.000Z"),
+  new Date("2017-03-03T00:00:00.000Z"),
+  new Date("2017-03-04T00:00:00.000Z"),
+  new Date("2017-03-05T00:00:00.000Z"),
+].map(date => offsetDate(date, tzOffset)));
 
-export const weekdayDateRanges = weekdayDates.map(weekdayDate => ([
+export const weekdayDateRanges = (tzOffset = new Date().getTimezoneOffset()) => weekdayDates(tzOffset).map(weekdayDate => ([
   weekdayDate.getTime() * MILLISECOND,
   weekdayDate.getTime() * MILLISECOND + 11 * HOUR + 59 * MINUTE,
 ] as DatetimeRange))

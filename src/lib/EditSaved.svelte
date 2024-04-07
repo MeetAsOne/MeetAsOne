@@ -7,26 +7,25 @@
   export let isOnline: boolean;
 
   let clickOutsideModal = false;
-  let tzOffset = new Date().getTimezoneOffset();
   /** Function bound to my ManualInput availability that when called, clears your availability for this event */
   let clear: () => {};
   let availability = enforceAvailabilityValidity(
     loadAvailabilityOne(JSON.parse(
         globalThis?.localStorage?.["general-availability"] ?? '{"days": {}}',
       ).days as Availability),
-    weekdayDates.map(canonicalDateStr)
-  )
+    weekdayDates().map(canonicalDateStr)
+  );
 </script>
 
 <Button on:click={() => (clickOutsideModal = true)}>Edit</Button>
 
 <Modal title="Edit saved availability" bind:open={clickOutsideModal} autoclose outsideclose>
     <ManualInput
-            ranges={weekdayDateRanges}
+            ranges={weekdayDateRanges()}
             availability={availability}
             isDisabled={!isOnline}
             bind:clear
-            {tzOffset}
+            tzOffset={new Date().getTimezoneOffset()}
             shouldUseWeekdays={true}
     />
 

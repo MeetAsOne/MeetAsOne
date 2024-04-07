@@ -3,13 +3,14 @@
     import {weekdayDates} from "$lib/timeutils.ts";
 
     export let value: Date[] = [];
+    export let tz: number;
 
     // TODO: localize
     const days = ["mon", "tues", "wed", "thurs", "fri", "sat", "sun"] as const;
 
     const checked: boolean[] = Array(days.length).fill(false);
 
-    $: value = weekdayDates.filter((_, idx) => checked[idx]);
+    $: value = weekdayDates(tz).filter((_, idx) => checked[idx]);
 </script>
 
 <div class="flex gap-1 w-full">
