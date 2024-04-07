@@ -17,6 +17,8 @@
   );
 </script>
 
+<!-- TODO: decouple database saving from ManualInput -->
+
 <Button on:click={() => (clickOutsideModal = true)}>Edit</Button>
 
 <Modal title="Edit saved availability" bind:open={clickOutsideModal} autoclose outsideclose>
