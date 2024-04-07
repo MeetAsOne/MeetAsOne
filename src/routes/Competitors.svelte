@@ -1,6 +1,7 @@
 <!-- Adapted from codepen.io/parthv2/pen/BavyJog -->
 
 <div class="competitor-container">
+    <div class="my-shadow"></div>
     <div class="textBox animate">
         <ul>
             <li>When2Meet</li>
@@ -16,6 +17,14 @@
     display: inline-flex;
     align-items: center;
     height: 4rem;
+    position: relative;
+  }
+
+  .my-shadow {
+    position: absolute;
+    inset: 0;
+    z-index: 100;
+    background: linear-gradient(0deg, var(--color-bg-1) 0%, rgba(0,0,0,0) 30%, rgba(0,0,0,0) 60%, var(--color-bg-1) 100%);
   }
 
   .textBox {
@@ -26,7 +35,7 @@
     ul {
       padding: 0;
       /* Don't repeat infinitely b/c accessibility https://webaim.org/standards/wcag/checklist#sc2.2.2 */
-      animation: scrollUp 4s forwards 1s ease-out infinite;
+      animation: scrollUp 9s forwards 1s ease-out infinite;
       width: max-content;
 
       li {
@@ -55,10 +64,6 @@
       #{$i * $time-out - 10%},
       #{$i * $time-out * 1%} {
         transform: translateY(calc(-100% / $item-count) * $i);
-      }
-
-      #{$i * $time-out - 7.5%} {
-        transform: translateY((calc(-100% / $item-count) * $i) + 1.5%);
       }
     }
   }

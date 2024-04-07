@@ -5,7 +5,7 @@
 </script>
 
 <header>
-  <div class="flex items-center justify-evenly w-full pb-4">
+  <div class="flex items-center justify-evenly w-full py-4">
     <h1>
       <a href="/" class="font-bold flex items-center flex-wrap justify-center">
       <img

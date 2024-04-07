@@ -43,10 +43,10 @@
         <TableBodyRow>
             <TableBodyCell>Open Source</TableBodyCell>
             <TableBodyCell>
-                <a href="https://github.com/MeetAsOne/MeetAsOne" target="_blank">✅<br />GitHub</a>
+                <a href="https://github.com/MeetAsOne/MeetAsOne" target="_blank">✅</a>
             </TableBodyCell>
             <TableBodyCell>❌</TableBodyCell>
-            <TableBodyCell><abbr title="There's an unofficial open-source inspired repo called CabbageMeet">*️⃣</abbr></TableBodyCell>
+            <TableBodyCell>❌</TableBodyCell>
             <TableBodyCell>❌</TableBodyCell>
         </TableBodyRow>
     </TableBody>

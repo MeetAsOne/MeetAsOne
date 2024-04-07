@@ -100,7 +100,7 @@
 {#if $GetEvent.errors || $GetEvent.data?.events?.length === 0}
   Event doesn't exist. <a href="/">Go home?</a>
 {:else if event}
-  <h1>{event?.name ?? ""}</h1>
+  <h1 class="pt-4">{event?.name ?? ""}</h1>
   <div class="flex justify-center items-center">
     <em class="m-5">
       Times are in
