@@ -6,6 +6,7 @@ import type {DateStr} from "$lib/timeutils.ts";
 export type Availability = Record<DateStr, number[]>;
 export type InternalAvailability = Record<DateStr, string[][]>;
 export type GenericAvailability = Availability | InternalAvailability;
+export type DateCompatible = number | string | Date;
 
 type GetEvent$availability = GetEvent$result["events"][number]["availabilities"][number];
 
@@ -49,7 +50,7 @@ export function compactAvailability(availability: InternalAvailability) {
  * @param dates The new timeframe you want to shift the availability into
  * @param availability Date & time of availability that you know
  */
-export function applyAvailability(dates: number[], availability: Availability) {
+export function applyAvailability(dates: DateCompatible[], availability: Availability) {
   const out: Availability = {};
   for (const date of dates) {
     out[new Date(date).toLocaleDateString()] = availability[new Date(date).getDay()] ?? [];
