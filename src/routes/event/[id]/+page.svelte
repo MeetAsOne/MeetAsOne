@@ -117,10 +117,10 @@
         <Button on:click={() => importedWeeklyEvents.set(localAvailability)}>
           Load
         </Button>
-        <Button on:click={clear}>
-          Clear
-        </Button>
       {/if}
+      <Button on:click={clear}>
+        Clear
+      </Button>
     </div>
     <ImportCalendar />
   </div>
@@ -131,9 +131,7 @@
             <Button on:click={() => myName = undefined}>
               {myName}'s
             </Button> availability
-            {#if !$isSaved}
-              <Spinner size="6" title="Saving..." />
-            {/if}
+            <Spinner size="6" title="Saving..." class={$isSaved ? "invisible" : ""} />
           </h2>
           <ManualInput
             ranges={event.dates}
@@ -185,5 +183,6 @@
     flex-direction: column;
     align-items: center;
     flex-grow: 1;
+    max-width: 100%;
   }
 </style>
