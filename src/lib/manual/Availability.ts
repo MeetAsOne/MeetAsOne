@@ -74,6 +74,28 @@ export function mergeAvailability(existing: InternalAvailability, newer: Availab
   return existing;
 }
 
+/**
+ * Merges two availabilities similar to `mergeAvailability`,
+ * except that if `newer` does not contain a block `existing` contains, it is not included in the resultant availability
+ */
+export function mergeServerLocal(existing: InternalAvailability, newer: Availability, user = "me") {
+  mergeAvailability(existing, newer, user);
+  for (const existingDateStr in existing) {
+    for (let timeBlock=0; timeBlock<existing[existingDateStr].length; timeBlock++) {
+      // Remove if not included in `newer`
+      const availableBlocksNewer = newer[existingDateStr] ?? [];
+      if (!availableBlocksNewer.includes(timeBlock)) {
+        const rmIdx = existing[existingDateStr][timeBlock]?.indexOf(user);
+        if (rmIdx == undefined || rmIdx < 0) continue;
+        existing[existingDateStr][timeBlock].splice(rmIdx, 1);
+        if (existing[existingDateStr][timeBlock].length === 0)
+          delete existing[existingDateStr][timeBlock];
+      }
+    }
+  }
+  return existing;
+}
+
 export function blankAvailability(dates: DateStr[]) {
   console.log(enforceAvailabilityValidity({}, dates));
   return enforceAvailabilityValidity({}, dates);

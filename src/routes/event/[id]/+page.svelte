@@ -3,7 +3,7 @@
     import {
       type Availability, enforceAvailabilityValidity,
       loadAvailability, loadAvailabilityOne,
-      mergeAvailability
+      mergeAvailability, mergeServerLocal
     } from "$lib/manual/Availability.js";
     import ManualInput from "$lib/manual/ManualInput.svelte";
     import type {GetEvent$result} from "$houdini";
@@ -169,7 +169,7 @@
             availablePeople={selectedAvailability}
             {tzOffset}
             {useMulticolor}
-            availability={mergeAvailability(enforceAvailabilityValidity(loadAvailability(...event.availabilities), rangesToDate(event.dates).map(canonicalDateStr)), $workingAvailability, myName)}
+            availability={mergeServerLocal(enforceAvailabilityValidity(loadAvailability(...event.availabilities), rangesToDate(event.dates).map(canonicalDateStr)), $workingAvailability, myName)}
             shouldUseWeekdays={event.shouldUseWeekdays}
           />
         </div>
