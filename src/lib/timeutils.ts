@@ -1,4 +1,4 @@
-import {DAY, HOUR, MILLISECOND, TIME_STEP} from "$lib/units.ts";
+import {DAY, HOUR, MILLISECOND, MINUTE, TIME_STEP} from "$lib/units.ts";
 
 /** Date formatted in en-US locale, m/dd/yy. TODO: tighten this type */
 export type DateStr = `${number}/${number}/${number}` | string;
@@ -110,3 +110,22 @@ export function getTzOffset(timeZone = 'UTC', date = new Date()) {
 export const getLocalTzName = () => Intl.DateTimeFormat().resolvedOptions().timeZone;
 
 export const getAllTzNames = () => Intl.supportedValuesOf('timeZone');
+
+/**
+ * Arbitrary dates within one week, one for each day from Monday to Sunday in that order
+ * Generated from https://stackoverflow.com/a/43008875 (exact day doesn't matter)
+ */
+export const weekdayDates = [
+  new Date("2017-02-27T05:00:00.000Z"),
+  new Date("2017-02-28T05:00:00.000Z"),
+  new Date("2017-03-01T05:00:00.000Z"),
+  new Date("2017-03-02T05:00:00.000Z"),
+  new Date("2017-03-03T05:00:00.000Z"),
+  new Date("2017-03-04T05:00:00.000Z"),
+  new Date("2017-03-05T05:00:00.000Z"),
+] as const;
+
+export const weekdayDateRanges = weekdayDates.map(weekdayDate => ([
+  weekdayDate.getTime() * MILLISECOND,
+  weekdayDate.getTime() * MILLISECOND + 11 * HOUR + 59 * MINUTE,
+] as DatetimeRange))

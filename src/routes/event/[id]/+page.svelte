@@ -18,6 +18,7 @@
     import {timeoutToast, editToast, newToast} from "$lib/Toaster.svelte";
     import saveServer from "$lib/manual/saveServer.ts";
     import TzPicker from "$lib/TzPicker.svelte";
+    import EditSaved from "$lib/EditSaved.svelte";
 
     export let data: PageData;
   let event: GetEvent$result["events"][number] | undefined;
@@ -121,6 +122,7 @@
       <Button on:click={clear}>
         Clear
       </Button>
+      <EditSaved {isOnline} />
     </div>
     <ImportCalendar />
   </div>
