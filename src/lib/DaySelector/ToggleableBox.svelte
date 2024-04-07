@@ -24,6 +24,7 @@
     .slider {
         display: flex;
         align-items: center;
+        justify-content: center;
         cursor: pointer;
         background-color: rgb(55 65 81);
         color: white;

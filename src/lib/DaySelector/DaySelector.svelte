@@ -21,8 +21,21 @@
     $: value = dates.filter((_, idx) => checked[idx]);
 </script>
 
-<div class="flex gap-1 w-full">
+<div class="flex w-full">
     {#each days as day, idx}
         <ToggleableBox bind:checked={checked[idx]}>{day}</ToggleableBox>
     {/each}
 </div>
+
+<style>
+    .flex > :global(:first-child) {
+        border-bottom-left-radius: 0.5rem;
+        border-top-left-radius: 0.5rem;
+        overflow: hidden;
+    }
+    .flex > :global(:last-child) {
+        border-bottom-right-radius: 0.5rem;
+        border-top-right-radius: 0.5rem;
+        overflow: hidden;
+    }
+</style>
