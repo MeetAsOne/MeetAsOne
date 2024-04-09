@@ -7,11 +7,7 @@ import {isSaved} from "$lib/store.ts";
 export default async function saveServer(eventId: string, availability: InternalAvailability) {
   isSaved.set(false);
   // Reactive statement should update this, but timing is inconsistent (Svelte runes should fix this)
-  const [formattedAvailability, weeklyAvailability] = compactAvailability(availability);
-
-  globalThis?.localStorage?.setItem?.("draftAvailability", JSON.stringify({
-    days: weeklyAvailability,
-  }));
+  const formattedAvailability = compactAvailability(availability)[0];
 
   const updater = new UpsertAvailabilityStore();
   const username = getPastEvent(eventId)?.myName;

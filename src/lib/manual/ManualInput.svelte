@@ -18,7 +18,7 @@
   import {DAY, MILLISECOND, TIME_STEP} from "$lib/units";
   import {page} from "$app/stores";
   import type {Writable} from "svelte/store";
-  import {importedEvents, importedWeeklyEvents, workingAvailability} from "$lib/store";
+  import {importedEvents, workingAvailability} from "$lib/store";
   import saveServer from "$lib/manual/saveServer.ts";
 
   /** Array of [start, stop] tuples, representing minutes since epoch. Does not change to timezone */
@@ -57,18 +57,6 @@
   importedEvents.subscribe((currentValue) => {
     mergeAvailability(availability, currentValue)
     availability = {...availability}; // Trigger Svelte's reactivity by reassigning the variable
-  });
-
-  importedWeeklyEvents.subscribe((currentValue) => {
-    if (!Object.keys(currentValue).length) return;
-    availability = mergeAvailability(availability,
-      compactAvailability(applyAvailability(
-        Object.keys(availability).map(dateStrToEpoch),
-        currentValue,
-      ))[0]
-    );
-    importedWeeklyEvents.set({});
-    saveServer($page.params.id, availability);
   });
 
   /** store to write to when hovering over group's time blocks. Setting this also disables input */

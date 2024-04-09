@@ -1,7 +1,8 @@
 <script lang="ts">
     import ImportCalendar from "$lib/importCalendar/ImportCalendar.svelte";
     import {
-      type Availability, enforceAvailabilityValidity,
+      applyAvailability,
+      type Availability, compactAvailability, enforceAvailabilityValidity,
       loadAvailability, loadAvailabilityOne,
       mergeAvailability, mergeServerLocal
     } from "$lib/manual/Availability.js";
@@ -13,7 +14,7 @@
     import {type EventSummary, getPastEvents, savePastEvents} from "$lib/storage";
     import {writable} from "svelte/store";
     import AvailabilityComponent from "$lib/Availability.svelte";
-    import {importedWeeklyEvents, isSaved, workingAvailability} from "$lib/store.ts";
+    import {isSaved, workingAvailability} from "$lib/store.ts";
     import {Button, ButtonGroup, Checkbox, DropdownItem, Input, Label, Spinner, Tooltip} from "flowbite-svelte";
     import {timeoutToast, editToast, newToast} from "$lib/Toaster.svelte";
     import saveServer from "$lib/manual/saveServer.ts";
@@ -69,6 +70,20 @@
           globalThis?.localStorage?.["general-availability"] ?? '{"days": {}}',
   ).days;
 
+  function loadSaved() {
+    const currentValue = $workingAvailability;
+    const availability = loadAvailabilityOne(currentValue);
+    if (!Object.keys(currentValue).length) return;
+    const newAvailability = mergeAvailability(availability,
+            compactAvailability(applyAvailability(
+                    Object.keys(availability).map(dateStrToEpoch),
+                    currentValue,
+            ))[0]
+    );
+    workingAvailability.set(compactAvailability(newAvailability)[0]);
+    saveServer($page.params.id, newAvailability);
+  }
+
   /** Function bound to my ManualInput availability that when called, clears your availability for this event */
   let clear: () => {};
 
@@ -115,7 +130,7 @@
         Save
       </Button>
       {#if Object.keys(localAvailability).length}
-        <Button on:click={() => importedWeeklyEvents.set(localAvailability)}>
+        <Button on:click={loadSaved}>
           Load
         </Button>
       {/if}
