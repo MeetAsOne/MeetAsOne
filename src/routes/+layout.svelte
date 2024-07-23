@@ -10,9 +10,9 @@
 <div class="app dark">
 	<Header />
 
-	<div class="fixed inset-x-0 bottom-0 z-50">
+	<!--div class="fixed inset-x-0 bottom-0 z-50">
 		<Ad />
-	</div>
+	</div-->
 
 	<main>
 		<slot></slot>
