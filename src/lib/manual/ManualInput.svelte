@@ -103,7 +103,8 @@
       handlePointerUp();
     else {
       ev.preventDefault();
-      const target = document.elementFromPoint(ev.touches[0].clientX, ev.touches[0].clientY) as HTMLElement;
+      const target = document.elementFromPoint(ev.touches[0].clientX, ev.touches[0].clientY) as HTMLElement | null;
+      if (!target || !target.classList.contains("availability-cell")) return [undefined, undefined];
       const idx = Number.parseInt(target.dataset.idx!);
       const date = Number.parseInt(target.dataset.date!);
       if (!dragStart && !availablePeople && !isDisabled)
