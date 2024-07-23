@@ -1,5 +1,4 @@
 <script lang="ts">
-    import ImportCalendar from "$lib/importCalendar/ImportCalendar.svelte";
     import {
       applyAvailability,
       type Availability, compactAvailability, enforceAvailabilityValidity,
@@ -55,19 +54,19 @@
   let isOnline = true;
   let toastRef: number;
 
-  globalThis?.window?.addEventListener('online', function() {
+  globalThis?.window?.addEventListener("online", function() {
     isOnline = true;
     timeoutToast(editToast(toastRef, "Connection restored!"), 1000);
     // TODO: saveServer($page.params.id, availability);
   });
 
-  globalThis?.window?.addEventListener('offline', function() {
+  globalThis?.window?.addEventListener("offline", function() {
     isOnline = false;
     toastRef = newToast("Editing disabled while offline");
   });
 
   const localAvailability: Availability = JSON.parse(
-          globalThis?.localStorage?.["general-availability"] ?? '{"days": {}}',
+    globalThis?.localStorage?.["general-availability"] ?? "{\"days\": {}}",
   ).days;
 
   function loadSaved() {
@@ -139,7 +138,6 @@
       </Button>
 <!-- TODO:      <EditSaved {isOnline} />-->
     </div>
-    <ImportCalendar />
   </div>
     <div id="availability-container" class="flex flex-row flex-wrap justify-between gap-x-20 gap-y-10 mt-10">
       <div>

@@ -1,7 +1,7 @@
 <script>
     import "../app.pcss";
-    import Header from './Header.svelte';
-    import './styles.css';
+    import Header from "./Header.svelte";
+    import "./styles.css";
     import Toaster from "$lib/Toaster.svelte";
     import {page} from "$app/stores";
 	import Ad from "$lib/Ad.svelte";
@@ -10,9 +10,9 @@
 <div class="app dark">
 	<Header />
 
-	<div class="fixed inset-x-0 bottom-0 z-50">
+	<!--div class="fixed inset-x-0 bottom-0 z-50">
 		<Ad />
-	</div>
+	</div-->
 
 	<main>
 		<slot></slot>

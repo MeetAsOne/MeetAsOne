@@ -44,7 +44,7 @@
     availability = blank;
     saveServer($page.params.id, availability);
     workingAvailability.set(blank);
-  }
+  };
 
   export let availability: InternalAvailability = blankAvailability(UTCDates.map(canonicalDateStr));
   let formattedAvailability: Availability = {};
@@ -55,7 +55,7 @@
   $: console.log("formattedAvailability", formattedAvailability);
 
   importedEvents.subscribe((currentValue) => {
-    mergeAvailability(availability, currentValue)
+    mergeAvailability(availability, currentValue);
     availability = {...availability}; // Trigger Svelte's reactivity by reassigning the variable
   });
 
@@ -100,12 +100,12 @@
   // Had to implement 2 separate touch and mouse handlers (instead of using pointer handler) b/c `touch-none` prevents 2-finger panning but without it, page scrolls while selecting
   function convertTouchEvent(ev: TouchEvent): [DateStr | undefined, number | undefined] {
     if (ev.touches.length > 1)
-      handlePointerUp()
+      handlePointerUp();
     else {
       ev.preventDefault();
       const target = document.elementFromPoint(ev.touches[0].clientX, ev.touches[0].clientY) as HTMLElement;
       const idx = Number.parseInt(target.dataset.idx!);
-      const date = Number.parseInt(target.dataset.date!)
+      const date = Number.parseInt(target.dataset.date!);
       if (!dragStart && !availablePeople && !isDisabled)
         dragStart = dragNow = [date, idx];
       return [canonicalDateStr(new Date(date)), idx];
@@ -157,7 +157,8 @@
 <div class="flex items-stretch select-none">
     <!-- Row headers -->
     {#if dates.length > 0}
-        <div class="labels text-right pr-1">
+        <!-- TODO: don't use magic constants -->
+        <div class="text-right pr-1" style:padding-top={shouldUseWeekdays ? "17px" : "40px"}>
             {#each [...blocks, blocks.at(-1) + 1] as block, idx}
                 <div class="label" role="rowheader">
                     {idx % 2 === 0 ? intToTime(block * TIME_STEP).replace(" ", "\xa0") : " "}
@@ -223,11 +224,6 @@
 <svelte:window on:pointerup={handlePointerUp} />
 
 <style>
-    .labels {
-        /* TODO: don't use magic constants */
-        /*line-height: 1.1;*/
-        padding-top: 40px;
-    }
     .label {
         height: 16px;
         line-height: 16px;

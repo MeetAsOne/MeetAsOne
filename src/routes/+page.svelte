@@ -26,52 +26,52 @@
 	let eventsResponded = pastEvents.filter((event) => !event.imOwner);
 
 	async function createEvent(ev: SubmitEvent) {
-		ev.preventDefault();
-		const updater = new InsertEventStore();
+	  ev.preventDefault();
+	  const updater = new InsertEventStore();
 
-		const data = new FormData(ev.currentTarget as HTMLFormElement);
-		const startTime =
+	  const data = new FormData(ev.currentTarget as HTMLFormElement);
+	  const startTime =
 			timeToInt(data.get("start_time") as string) + selectedTimezone;
-		const endTime =
+	  const endTime =
 			timeToInt(data.get("end_time") as string) + selectedTimezone;
-		const startTimeElem = document.getElementById("start_time") as HTMLInputElement;
-		startTimeElem.setCustomValidity("");
-		if (endTime < startTime) {
-			startTimeElem.setCustomValidity("Start time must be before end time");
-		}
-		if (!(ev.currentTarget as HTMLFormElement).reportValidity())
-			return;
-		const response = await updater.mutate({
-			name: name,
-			shouldUseWeekdays,
-			dates: selectedDates.map(day =>
-				[day.setUTCHours(0) * MILLISECOND + startTime, day.getTime() * MILLISECOND + endTime]
-			),
-		});
-		if (response.errors) {
-			alert(
-				"Your configuration is invalid. Make sure end time is after start & you selected no more than 7 days.\n" +
+	  const startTimeElem = document.getElementById("start_time") as HTMLInputElement;
+	  startTimeElem.setCustomValidity("");
+	  if (endTime < startTime) {
+	    startTimeElem.setCustomValidity("Start time must be before end time");
+	  }
+	  if (!(ev.currentTarget as HTMLFormElement).reportValidity())
+	    return;
+	  const response = await updater.mutate({
+	    name: name,
+	    shouldUseWeekdays,
+	    dates: selectedDates.map(day =>
+	      [day.setUTCHours(0) * MILLISECOND + startTime, day.getTime() * MILLISECOND + endTime]
+	    ),
+	  });
+	  if (response.errors) {
+	    alert(
+	      "Your configuration is invalid. Make sure end time is after start & you selected no more than 7 days.\n" +
 					response.errors.map((err) => err.message).join("/n"),
-			);
-			return;
-		}
-		const id = response.data?.insert_events?.returning[0].id!;
-		pastEvents.push({ id, name, imOwner: true });
-		savePastEvents(pastEvents);
-		goto("event/" + id);
+	    );
+	    return;
+	  }
+	  const id = response.data?.insert_events?.returning[0].id!;
+	  pastEvents.push({ id, name, imOwner: true });
+	  savePastEvents(pastEvents);
+	  goto("event/" + id);
 	}
 	$: savePastEvents(pastEvents);
 
 	let selectedDates: Date[] = [];
 	onMount(() => {
-		flatpickr("#flatpickr", {
-			dateFormat: "F j",
-			minDate: "today",
-			mode: "multiple",
-			onChange: (newSelectedDates) => {
-				selectedDates = newSelectedDates;
-			},
-		});
+	  flatpickr("#flatpickr", {
+	    dateFormat: "F j",
+	    minDate: "today",
+	    mode: "multiple",
+	    onChange: (newSelectedDates) => {
+	      selectedDates = newSelectedDates;
+	    },
+	  });
 	});
 </script>
 

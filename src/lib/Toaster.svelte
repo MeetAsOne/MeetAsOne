@@ -10,15 +10,15 @@
 
     /** Shows an error toast with the given message and returns an id for that toast to cancel it later */
     export function newToast(message: string, iconType: keyof typeof icons = "error") {
-        queue.update(prev => [...prev, message]);
-        return id++;
+      queue.update(prev => [...prev, message]);
+      return id++;
     }
 
     export function editToast(id: number, newMsg: string) {
       queue.update(prev => {
         prev[id] = newMsg;
         return prev;
-      })
+      });
       return id;
     }
 
