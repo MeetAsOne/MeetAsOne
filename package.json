@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "npm run pull-schema && vite dev",
+    "lint": "eslint . --fix",
     "pull-schema": "npx houdini pull-schema",
     "build": "vite build",
     "preview": "vite preview",

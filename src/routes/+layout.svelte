@@ -1,7 +1,7 @@
 <script>
     import "../app.pcss";
-    import Header from './Header.svelte';
-    import './styles.css';
+    import Header from "./Header.svelte";
+    import "./styles.css";
     import Toaster from "$lib/Toaster.svelte";
     import {page} from "$app/stores";
 	import Ad from "$lib/Ad.svelte";

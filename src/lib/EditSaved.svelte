@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Button, Modal } from 'flowbite-svelte';
+  import { Button, Modal } from "flowbite-svelte";
   import {
     applyAvailability,
     type Availability,
@@ -16,13 +16,13 @@
   let clear: () => {};
   let availability = enforceAvailabilityValidity(
     applyAvailability(
-        weekdayDates(),
+      weekdayDates(),
         JSON.parse(
-            globalThis?.localStorage?.["general-availability"] ?? '{"days": {}}',
-          ).days as Availability
-      ),
+          globalThis?.localStorage?.["general-availability"] ?? "{\"days\": {}}",
+        ).days as Availability
+    ),
     weekdayDates().map(canonicalDateStr)
-  )
+  );
 </script>
 
 <!-- TODO: decouple database saving from ManualInput -->

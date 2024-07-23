@@ -53,19 +53,19 @@
   let isOnline = true;
   let toastRef: number;
 
-  globalThis?.window?.addEventListener('online', function() {
+  globalThis?.window?.addEventListener("online", function() {
     isOnline = true;
     timeoutToast(editToast(toastRef, "Connection restored!"), 1000);
     // TODO: saveServer($page.params.id, availability);
   });
 
-  globalThis?.window?.addEventListener('offline', function() {
+  globalThis?.window?.addEventListener("offline", function() {
     isOnline = false;
     toastRef = newToast("Editing disabled while offline");
   });
 
   const localAvailability: Availability = JSON.parse(
-          globalThis?.localStorage?.["general-availability"] ?? '{"days": {}}',
+    globalThis?.localStorage?.["general-availability"] ?? "{\"days\": {}}",
   ).days;
 
   /** Function bound to my ManualInput availability that when called, clears your availability for this event */
