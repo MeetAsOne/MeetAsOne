@@ -219,6 +219,14 @@
                                 {/each}
                             {/if}
                         </div>
+                        {#if allParticipants.length && colAvailability[block]}
+                            <Tooltip class="z-[1000] pointer-events-none">
+                                <AvailabilityComponent
+                                        everyone={allParticipants}
+                                        available={colAvailability[block]}
+                                />
+                            </Tooltip>
+                        {/if}
                     {:else}
                         <div class="h-[16px]"></div>
                     {/if}

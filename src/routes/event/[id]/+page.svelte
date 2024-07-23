@@ -16,9 +16,8 @@
   import {page} from "$app/stores";
   import {getPastEvents, savePastEvents} from "$lib/storage";
   import {writable} from "svelte/store";
-  import AvailabilityComponent from "$lib/Availability.svelte";
   import {isSaved, workingAvailability} from "$lib/store.ts";
-  import {Button, ButtonGroup, Checkbox, Input, Spinner, Tooltip} from "flowbite-svelte";
+  import {Button, ButtonGroup, Checkbox, Input, Spinner} from "flowbite-svelte";
   import {editToast, newToast, timeoutToast} from "$lib/Toaster.svelte";
   import saveServer from "$lib/manual/saveServer.ts";
   import TzPicker from "$lib/TzPicker.svelte";
@@ -182,28 +181,18 @@
           </form>
         {/if}
       </div>
-      <div>
-        <div>
-          <Tooltip triggeredBy=".availability-cell" class="z-[1000]">
-            <AvailabilityComponent
-                    everyone={event.availabilities.map((person) => person.username)}
-                    available={$selectedAvailability}
-            />
-          </Tooltip>
-        </div>
-        <div>
-          <h2>Group Availability</h2>
-          <Checkbox class="dark:text-black justify-center" bind:checked={useMulticolor}>Multicolor</Checkbox>
-          <ManualInput
-            allParticipants={Array.from(new Set(event.availabilities.map(person => person.username)).add(myName ?? "me"))}
-            ranges={event.dates}
-            availablePeople={selectedAvailability}
-            {tzOffset}
-            {useMulticolor}
-            availability={mergeServerLocal(enforceAvailabilityValidity(loadAvailability(...event.availabilities), rangesToDate(event.dates).map(canonicalDateStr)), $workingAvailability, myName)}
-            shouldUseWeekdays={event.shouldUseWeekdays}
-          />
-        </div>
+      <div id="group-availability">
+        <h2>Group Availability</h2>
+        <Checkbox class="dark:text-black justify-center" bind:checked={useMulticolor}>Multicolor</Checkbox>
+        <ManualInput
+          allParticipants={Array.from(new Set(event.availabilities.map(person => person.username)).add(myName ?? "me"))}
+          ranges={event.dates}
+          availablePeople={selectedAvailability}
+          {tzOffset}
+          {useMulticolor}
+          availability={mergeServerLocal(enforceAvailabilityValidity(loadAvailability(...event.availabilities), rangesToDate(event.dates).map(canonicalDateStr)), $workingAvailability, myName)}
+          shouldUseWeekdays={event.shouldUseWeekdays}
+        />
       </div>
     </div>
 {/if}
