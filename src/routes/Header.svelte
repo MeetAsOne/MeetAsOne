@@ -16,9 +16,10 @@
       MeetAsOne
       </a>
     </h1>
-    <h2>
+    <h2 class="flex gap-5">
       {#if $page.url.pathname.startsWith("/event")}
         <a href="https://github.com/MeetAsOne/MeetAsOne" target="_blank">Github</a>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSf5-yinCVqlVBEU_3AQlN4glPiqySzhms4-wA_Oe0sNBO6iOg/viewform?usp=pp_url&entry.173233276={location.pathname.split('/').at(-1)}" target="_blank">Report feedback/issue</a>
       {:else}
         The better alternative to <Competitors />
       {/if}
