@@ -1,31 +1,45 @@
 <script lang="ts">
-    import {
-      applyAvailability,
-      type Availability, compactAvailability, enforceAvailabilityValidity,
-      loadAvailability, loadAvailabilityOne,
-      mergeAvailability, mergeServerLocal
-    } from "$lib/manual/Availability.js";
-    import ManualInput from "$lib/manual/ManualInput.svelte";
-    import type {GetEvent$result} from "$houdini";
-    import type {PageData} from "$houdini/types/src/routes/event/[id]/$houdini";
-    import {canonicalDateStr, dateStrToEpoch, rangesToDate} from "$lib/timeutils";
-    import {page} from "$app/stores";
-    import {type EventSummary, getPastEvents, savePastEvents} from "$lib/storage";
-    import {writable} from "svelte/store";
-    import AvailabilityComponent from "$lib/Availability.svelte";
-    import {isSaved, workingAvailability} from "$lib/store.ts";
-    import {Button, ButtonGroup, Checkbox, DropdownItem, Input, Label, Spinner, Tooltip} from "flowbite-svelte";
-    import {timeoutToast, editToast, newToast} from "$lib/Toaster.svelte";
-    import saveServer from "$lib/manual/saveServer.ts";
-    import TzPicker from "$lib/TzPicker.svelte";
-    import EditSaved from "$lib/EditSaved.svelte";
+  import {
+    applyAvailability,
+    type Availability,
+    compactAvailability,
+    enforceAvailabilityValidity,
+    loadAvailability,
+    loadAvailabilityOne,
+    mergeAvailability,
+    mergeServerLocal
+  } from "$lib/manual/Availability.js";
+  import ManualInput from "$lib/manual/ManualInput.svelte";
+  import type {GetEvent$result} from "$houdini";
+  import type {PageData} from "$houdini/types/src/routes/event/[id]/$houdini";
+  import {canonicalDateStr, dateStrToEpoch, rangesToDate} from "$lib/timeutils";
+  import {page} from "$app/stores";
+  import {getPastEvents, savePastEvents} from "$lib/storage";
+  import {writable} from "svelte/store";
+  import AvailabilityComponent from "$lib/Availability.svelte";
+  import {isSaved, workingAvailability} from "$lib/store.ts";
+  import {Button, ButtonGroup, Checkbox, Input, Spinner, Tooltip} from "flowbite-svelte";
+  import {editToast, newToast, timeoutToast} from "$lib/Toaster.svelte";
+  import saveServer from "$lib/manual/saveServer.ts";
+  import TzPicker from "$lib/TzPicker.svelte";
 
-    export let data: PageData;
+  export let data: PageData;
   let event: GetEvent$result["events"][number] | undefined;
   /** list of people available for focused block*/
   const selectedAvailability = writable([] as string[]);
   let useMulticolor = globalThis?.localStorage?.useMulticolor === "true";
   $: if (globalThis?.localStorage) globalThis.localStorage.useMulticolor = useMulticolor.toString();
+
+  // reference to a timeout that is called if trying to save for too long
+  let savingTimeout: number;
+  $: {
+    if ($isSaved) {
+      if (!isOnline) onOnline();
+      window.clearTimeout(savingTimeout);
+    } else {
+      savingTimeout = window.setTimeout(onOffline, 3000);
+    }
+  }
 
   // pull the store reference from the route props
   $: ({ GetEvent } = data);
@@ -54,16 +68,18 @@
   let isOnline = true;
   let toastRef: number;
 
-  globalThis?.window?.addEventListener("online", function() {
+  function onOnline() {
     isOnline = true;
     timeoutToast(editToast(toastRef, "Connection restored!"), 1000);
     // TODO: saveServer($page.params.id, availability);
-  });
-
-  globalThis?.window?.addEventListener("offline", function() {
+  }
+  function onOffline() {
     isOnline = false;
     toastRef = newToast("Editing disabled while offline");
-  });
+  }
+
+  globalThis?.window?.addEventListener("online", onOnline);
+  globalThis?.window?.addEventListener("offline", onOffline);
 
   const localAvailability: Availability = JSON.parse(
     globalThis?.localStorage?.["general-availability"] ?? "{\"days\": {}}",
