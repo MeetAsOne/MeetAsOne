@@ -1,25 +1,32 @@
 <script lang="ts">
   import range from "$lib/range";
   import {
-    canonicalDateStr, type Coord,
+    canonicalDateStr,
+    type Coord,
     type DateStr,
-    dateStrToEpoch, datetimeInRange,
+    datetimeInRange,
     type DatetimeRange,
-    intToTime, offsetDate, offsetDatetime, offsetRange, rangesToDate,
+    intToTime,
+    offsetDate,
+    offsetDatetime,
+    offsetRange,
+    rangesToDate,
     timeInRange
   } from "$lib/timeutils.js";
   import {
-    applyAvailability,
-    type Availability, blankAvailability,
+    type Availability,
+    blankAvailability,
     compactAvailability,
     type InternalAvailability,
     mergeAvailability
   } from "$lib/manual/Availability";
-  import {DAY, MILLISECOND, TIME_STEP} from "$lib/units";
+  import {DAY, TIME_STEP} from "$lib/units";
   import {page} from "$app/stores";
   import type {Writable} from "svelte/store";
   import {importedEvents, workingAvailability} from "$lib/store";
   import saveServer from "$lib/manual/saveServer.ts";
+  import {Tooltip} from "flowbite-svelte";
+  import AvailabilityComponent from "$lib/Availability.svelte";
 
   /** Array of [start, stop] tuples, representing minutes since epoch. Does not change to timezone */
   export let ranges: DatetimeRange[];
