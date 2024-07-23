@@ -1,5 +1,4 @@
 <script lang="ts">
-    import ImportCalendar from "$lib/importCalendar/ImportCalendar.svelte";
     import {
       type Availability, enforceAvailabilityValidity,
       loadAvailability, loadAvailabilityOne,
@@ -124,7 +123,6 @@
       </Button>
 <!-- TODO:      <EditSaved {isOnline} />-->
     </div>
-    <ImportCalendar />
   </div>
     <div id="availability-container" class="flex flex-row flex-wrap justify-between gap-x-20 gap-y-10 mt-10">
       <div>
