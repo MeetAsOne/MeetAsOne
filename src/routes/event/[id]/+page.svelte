@@ -74,10 +74,10 @@
     const availability = loadAvailabilityOne(currentValue);
     if (!Object.keys(currentValue).length) return;
     const newAvailability = mergeAvailability(availability,
-            compactAvailability(applyAvailability(
-                    Object.keys(availability).map(dateStrToEpoch),
-                    currentValue,
-            ))[0]
+      compactAvailability(applyAvailability(
+        Object.keys(availability).map(dateStrToEpoch),
+        currentValue,
+      ))[0]
     );
     workingAvailability.set(compactAvailability(newAvailability)[0]);
     saveServer($page.params.id, newAvailability);

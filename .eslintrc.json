@@ -5,6 +5,7 @@
   },
   "extends": [
     "eslint:recommended",
+    // "plugin:@typescript-eslint/recommended",  // TODO: why does this crash?
     "plugin:svelte/recommended"
   ],
   "parser": "@typescript-eslint/parser",
