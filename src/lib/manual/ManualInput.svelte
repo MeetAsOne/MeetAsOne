@@ -169,7 +169,8 @@
 <div class="flex items-stretch select-none">
     <!-- Row headers -->
     {#if dates.length > 0}
-        <div class="labels text-right pr-1">
+        <!-- TODO: don't use magic constants -->
+        <div class="text-right pr-1" style:padding-top={shouldUseWeekdays ? "17px" : "40px"}>
             {#each [...blocks, blocks.at(-1) + 1] as block, idx}
                 <div class="label" role="rowheader">
                     {idx % 2 === 0 ? intToTime(block * TIME_STEP).replace(" ", "\xa0") : " "}
@@ -235,11 +236,6 @@
 <svelte:window on:pointerup={handlePointerUp} />
 
 <style>
-    .labels {
-        /* TODO: don't use magic constants */
-        /*line-height: 1.1;*/
-        padding-top: 40px;
-    }
     .label {
         height: 16px;
         line-height: 16px;
