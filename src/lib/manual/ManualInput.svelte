@@ -162,88 +162,79 @@
   }
 </script>
 
-<div class="flex items-stretch select-none">
-    <!-- Row headers -->
+<div class="flex flex-col items-stretch select-none">
+    <!-- Column headers -->
     {#if dates.length > 0}
-        <!-- TODO: don't use magic constants -->
-        <div class="text-right pr-1" style:padding-top={shouldUseWeekdays ? "17px" : "40px"}>
-            {#each [...blocks, blocks.at(-1) + 1] as block, idx}
-                <div class="label" role="rowheader">
-                    {idx % 2 === 0 ? intToTime(block * TIME_STEP).replace(" ", "\xa0") : " "}
+        <div class="flex">
+            <div class="w-20"></div> <!-- Empty space for row headers -->
+            {#each dates as localDate}
+                <div class="flex-grow text-center" role="columnheader">
+                    {new Intl.DateTimeFormat(undefined, {weekday: "short", timeZone: "UTC"}).format(localDate)}
+                    {#if !shouldUseWeekdays}
+                        <br />
+                        <span class="text-sm">
+                            {new Intl.DateTimeFormat(undefined, {
+                              month: "short",
+                              day: "numeric",
+                              timeZone: "UTC",
+                            }).format(localDate)}
+                        </span>
+                    {/if}
                 </div>
             {/each}
         </div>
     {/if}
-    {#each dates as localDate}
-        <!-- <Column> -->
-        <div class="flex-grow text-center" role="row">
-            <!-- Column header -->
-            <div role="columnheader" class="px-1">
-                {new Intl.DateTimeFormat(undefined, {weekday: "short", timeZone: "UTC"}).format(localDate)}
-                {#if !shouldUseWeekdays}
-                    <br />
-                    <span class="text-sm">
-                        {new Intl.DateTimeFormat(undefined, {
-                          month: "short",
-                          day: "numeric",
-                          timeZone: "UTC",
-                        }).format(localDate)}
-                    </span>
-                {/if}
+    <!-- Rows -->
+    {#each blocks as block, idx}
+        <div class="flex items-center">
+            <!-- Row header -->
+            <div class="text-right pr-1 w-20 leading-4 relative bottom-2">
+                {idx % 2 === 0 ? intToTime(block * TIME_STEP).replace(" ", "\xa0") : " "}
             </div>
-            <!-- Cell container -->
-            <div class="bg-white" class:grayscale={isDisabled}>
-                {#each blocks as localBlock}
-                    <!-- <Cell> -->
-                    {@const localTime = localBlock * TIME_STEP + tzOffset}
-                    {@const date = new Date(canonicalDateStr(offsetDate(localDate, localTime)))}
-                    {@const dateStr = canonicalDateStr(date)}
-                    {@const colAvailability = availability[dateStr]}
-                    {@const block = ((DAY + localTime) % DAY) / TIME_STEP}
-                    {#if datetimeInRange(ranges, offsetDate(date, block * TIME_STEP))}
-                        <div class="availability-cell flex" data-idx={block} data-date={date.getTime()}
-                             style:opacity={allParticipants.length && !useMulticolor ? (colAvailability[block]?.length ?? allParticipants.length) / allParticipants.length : "1"}
-                             class:cursor-pointer={!availablePeople && !isDisabled}
-                             class:cursor-not-allowed={isDisabled}
-                             class:available={selectRectIncludesBlock([date.getTime(), block], dragStart, dragNow) ? dragState : colAvailability[block]?.length}
-                             on:mousedown={() => handleMouseDown(dateStr, block)}
-                             on:mouseenter={() => handlePointerEnter(dateStr, block)}
-                             on:touchmove={ev => handlePointerEnter(...convertTouchEvent(ev))}
-                             role="cell"
-                             tabindex="0"
-                        >
-                            {#if allParticipants.length && useMulticolor}
-                                {#each (colAvailability[block] ?? []) as participant}
-                                    {@const hue = (allParticipants.indexOf(participant) + 1) / allParticipants.length * 365}
-                                    <div class="flex-1" style:background-color={`hsl(${hue}, 65%, 79%)`}></div>
-                                {/each}
-                            {/if}
-                        </div>
-                        {#if allParticipants.length && colAvailability[block]}
-                            <Tooltip class="z-[1000] pointer-events-none">
-                                <AvailabilityComponent
-                                        everyone={allParticipants}
-                                        available={colAvailability[block]}
-                                />
-                            </Tooltip>
+            <!-- Cells -->
+            {#each dates as localDate}
+                {@const localTime = block * TIME_STEP + tzOffset}
+                {@const date = new Date(canonicalDateStr(offsetDate(localDate, localTime)))}
+                {@const dateStr = canonicalDateStr(date)}
+                {@const colAvailability = availability[dateStr]}
+                {@const blockIndex = ((DAY + localTime) % DAY) / TIME_STEP}
+                {#if datetimeInRange(ranges, offsetDate(date, blockIndex * TIME_STEP))}
+                    <div class="availability-cell flex flex-grow" data-idx={blockIndex} data-date={date.getTime()}
+                         style:opacity={allParticipants.length && !useMulticolor ? (colAvailability[blockIndex]?.length ?? allParticipants.length) / allParticipants.length : "1"}
+                         class:cursor-pointer={!availablePeople && !isDisabled}
+                         class:cursor-not-allowed={isDisabled}
+                         class:available={selectRectIncludesBlock([date.getTime(), blockIndex], dragStart, dragNow) ? dragState : colAvailability[blockIndex]?.length}
+                         on:mousedown={() => handleMouseDown(dateStr, blockIndex)}
+                         on:mouseenter={() => handlePointerEnter(dateStr, blockIndex)}
+                         on:touchmove={ev => handlePointerEnter(...convertTouchEvent(ev))}
+                         role="cell"
+                         tabindex="0"
+                    >
+                        {#if allParticipants.length && useMulticolor}
+                            {#each (colAvailability[blockIndex] ?? []) as participant}
+                                {@const hue = (allParticipants.indexOf(participant) + 1) / allParticipants.length * 365}
+                                <div class="flex-1" style:background-color={`hsl(${hue}, 65%, 79%)`}></div>
+                            {/each}
                         {/if}
-                    {:else}
-                        <div class="h-[16px]"></div>
+                    </div>
+                    {#if allParticipants.length && colAvailability[blockIndex]}
+                        <Tooltip class="z-[1000] pointer-events-none">
+                            <AvailabilityComponent
+                                    everyone={allParticipants}
+                                    available={colAvailability[blockIndex]}
+                            />
+                        </Tooltip>
                     {/if}
-                    <!-- </Cell> -->
-                {/each}
-            </div>
+                {:else}
+                    <div class="h-[16px] flex-grow"></div>
+                {/if}
+            {/each}
         </div>
-        <!-- </Column> -->
     {/each}
 </div>
 <svelte:window on:pointerup={handlePointerUp} />
 
 <style>
-    .label {
-        height: 16px;
-        line-height: 16px;
-    }
     [role="columnheader"] {
         position: sticky;
         top: 0;
