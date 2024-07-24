@@ -2,7 +2,7 @@
   "name": "meetasone",
   "version": "0.0.1",
   "scripts": {
-    "dev": "npm run pull-schema && vite dev",
+    "dev": "npm run pull-schema && vite dev --host",
     "lint": "eslint . --fix",
     "pull-schema": "npx houdini pull-schema",
     "build": "vite build",
