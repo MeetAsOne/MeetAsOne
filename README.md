@@ -27,7 +27,7 @@ Demo video:
 ## Developing
 
 1. Install dependencies with `npm install` (or `pnpm install` or `yarn`)
-2. Copy `sample.env.local` to `.env.local` and fill out the environment variables
+2. Copy `.sample.env.local` to `.env.local` and fill out the environment variables
 3. Start a development server with `npm run dev`
 
 ## Building
