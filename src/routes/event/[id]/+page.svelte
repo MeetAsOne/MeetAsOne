@@ -168,7 +168,7 @@
             availability={mySavedAvailability ? loadAvailabilityOne(mySavedAvailability) : undefined}
             isDisabled={!isOnline}
             bind:clear
-            {tzOffset}
+            tzOffset={-tzOffset}
             shouldUseWeekdays={event.shouldUseWeekdays}
           />
         {:else}
@@ -188,7 +188,7 @@
           allParticipants={Array.from(new Set(event.availabilities.map(person => person.username)).add(myName ?? "me"))}
           ranges={event.dates}
           availablePeople={selectedAvailability}
-          {tzOffset}
+          tzOffset={-tzOffset}
           {useMulticolor}
           availability={mergeServerLocal(enforceAvailabilityValidity(loadAvailability(...event.availabilities), rangesToDate(event.dates).map(canonicalDateStr)), $workingAvailability, myName)}
           shouldUseWeekdays={event.shouldUseWeekdays}

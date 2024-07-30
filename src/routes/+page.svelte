@@ -1,20 +1,16 @@
 <script lang="ts">
-  import {Label, Input, Checkbox} from "flowbite-svelte";
-  import { GradientButton } from "flowbite-svelte";
-  import { InsertEventStore } from "$houdini";
-  import { goto } from "$app/navigation";
-  import range from "$lib/range";
-  import {DAY, MILLISECOND, TIME_STEP} from "$lib/units";
+  import {Checkbox, GradientButton, Input, Label} from "flowbite-svelte";
+  import {InsertEventStore} from "$houdini";
+  import {goto} from "$app/navigation";
+  import {MILLISECOND} from "$lib/units";
   import {timeToInt} from "$lib/timeutils";
-  import { savePastEvents, getPastEvents } from "$lib/storage";
+  import {getPastEvents, savePastEvents} from "$lib/storage";
   import OldEvents from "./OldEvents.svelte";
   import TzPicker from "$lib/TzPicker.svelte";
   import flatpickr from "flatpickr";
-  import { onMount } from "svelte";
-  import { CalendarWeekSolid } from "flowbite-svelte-icons";
+  import {onMount} from "svelte";
+  import {CalendarWeekSolid} from "flowbite-svelte-icons";
   import DaySelector from "$lib/DaySelector/DaySelector.svelte";
-  import logo from "$lib/images/logo.svg";
-  import Competitors from "./Competitors.svelte";
   import ComparisonTable from "./ComparisonTable.svelte";
 
   let name: string = "";
@@ -31,9 +27,9 @@
 
     const data = new FormData(ev.currentTarget as HTMLFormElement);
     const startTime =
-      timeToInt(data.get("start_time") as string) + selectedTimezone;
+      timeToInt(data.get("start_time") as string) - selectedTimezone;
     const endTime =
-      timeToInt(data.get("end_time") as string) + selectedTimezone;
+      timeToInt(data.get("end_time") as string) - selectedTimezone;
     const startTimeElem = document.getElementById("start_time") as HTMLInputElement;
     startTimeElem.setCustomValidity("");
     if (endTime < startTime) {
