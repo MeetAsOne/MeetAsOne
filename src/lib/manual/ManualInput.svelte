@@ -71,6 +71,7 @@
 
   /** Array of starting times in 15-minute intervals since midnight for all possible blocks. Changes with timezone */
   let blocks = [] as number[];
+  // right now range(0, DAY / TIME_STEP) is num mins in a day / 15 which is num blocks in a day
   $: blocks = range(0, DAY / TIME_STEP).filter(block => timeInRange(offsetRange(ranges, -tzOffset), block));
 
   /** Names of all participants */
