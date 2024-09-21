@@ -56,7 +56,7 @@
     savePastEvents(pastEvents);
     goto("event/" + id);
   }
-  $: savePastEvents(pastEvents);
+  $: savePastEvents(eventsCreated.concat(eventsResponded));
 
   let selectedDates: Date[] = [];
   onMount(() => {
