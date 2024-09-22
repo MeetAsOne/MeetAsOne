@@ -34,8 +34,8 @@ const config = {
       /** Parse API response
              * @param {{start: number, stop: number}[]} ranges - The array containing 'start' and 'stop' properties.
              */
-      unmarshal(ranges) {
-        return ranges.map(({start, stop}) => [start, stop]);
+      unmarshal({start, stop}) {
+        return [start, stop];
       },
       /** Serialize to Graphql format
              * @param {import('./src/lib/timeutils.ts').DatetimeRange} datetimeRange
