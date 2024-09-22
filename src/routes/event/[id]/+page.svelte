@@ -116,9 +116,9 @@
     myName = data.get("myName") as string;
   }
 
-  // $: gtag('event', 'toggle_multicolor', {
-  //   multicolor: useMulticolor,
-  // });
+  $: gtag('event', 'multicolor', {
+    enabled: useMulticolor,
+  });
 </script>
 
 <svelte:head>

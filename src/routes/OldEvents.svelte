@@ -19,6 +19,7 @@
                         href={"/event/" + respondedEvent.id}
                         class="!border-r-0 pr-1 ga-revisit-event"
                         color="primary"
+                        on:click={() => gtag('event', 'revisit_chip')}
                 >
                     {respondedEvent.name}
                 </Button>

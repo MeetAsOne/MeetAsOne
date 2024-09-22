@@ -47,6 +47,7 @@
   export let shouldUseWeekdays: boolean;
 
   export const clear = () => {
+    () => gtag('event', 'clear_availability');
     const blank = blankAvailability(UTCDates.map(canonicalDateStr));
     availability = blank;
     saveServer($page.params.id, availability);
