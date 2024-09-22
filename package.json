@@ -39,6 +39,7 @@
   },
   "type": "module",
   "dependencies": {
+    "availability-selector": "workspace:^",
     "flatpickr": "^4.6.13",
     "openai": "^4.24.7"
   }
