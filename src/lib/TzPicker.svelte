@@ -16,6 +16,7 @@
   // TODO: it would be nice if selected timezone scrolled into view, but ehhhhh
 
   function handleOptionSelect(option: string) {
+    gtag('event', 'tz_change');
     selectedTimezoneName = option;
     showDropdown = false;
   }

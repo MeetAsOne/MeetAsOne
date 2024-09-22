@@ -115,6 +115,10 @@
     data.get("setMyName");
     myName = data.get("myName") as string;
   }
+
+  $: gtag('event', 'multicolor', {
+    enabled: useMulticolor,
+  });
 </script>
 
 <svelte:head>
