@@ -17,14 +17,14 @@
             <ButtonGroup>
                 <Button
                         href={"/event/" + respondedEvent.id}
-                        class="!border-r-0 pr-1 ga-revisit-event"
+                        class="!border-r-0 pr-1"
                         color="primary"
                         on:click={() => gtag('event', 'revisit_chip')}
                 >
                     {respondedEvent.name}
                 </Button>
                 <Button on:click={del.bind(globalThis, respondedEvent.id)}
-                        class="pl-1 !border-l-0 ga-rm-event" color="primary" title="Forget">
+                        class="pl-1 !border-l-0" color="primary" title="Forget">
                     <CloseSolid tabindex="-1" class="w-4 h-4" />
                 </Button>
             </ButtonGroup>
