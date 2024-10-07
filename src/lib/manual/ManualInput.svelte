@@ -202,7 +202,7 @@
                 {@const blockIndex = ((DAY + localTime) % DAY) / TIME_STEP}
                 {#if datetimeInRange(ranges, offsetDate(date, blockIndex * TIME_STEP))}
                     <div class="availability-cell flex flex-grow" data-idx={blockIndex} data-date={date.getTime()}
-                         style:opacity={allParticipants.length && !useMulticolor ? (colAvailability[blockIndex]?.length ?? allParticipants.length) / allParticipants.length : "1"}
+                         style:--lightness={allParticipants.length && !useMulticolor ? (1 - (colAvailability[blockIndex]?.length ?? allParticipants.length) / allParticipants.length) * 70 + 30 + "%" : "30%"}
                          class:cursor-pointer={!availablePeople && !isDisabled}
                          class:cursor-not-allowed={isDisabled}
                          class:available={selectRectIncludesBlock([date.getTime(), blockIndex], dragStart, dragNow) ? dragState : colAvailability[blockIndex]?.length}
@@ -251,6 +251,7 @@
         display: flex;
     }
     .available {
-        background-color: #90ee90;
+        /* I like how https://www.schemecolor.com/light-dark-green-gradient.php looks, but don't know how to replicate in code */
+        background-color: hsl(120, 73%, var(--lightness));
     }
 </style>
