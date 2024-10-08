@@ -167,7 +167,7 @@
 <div class="flex flex-col items-stretch select-none">
     <!-- Column headers -->
     {#if dates.length > 0}
-        <div class="flex">
+        <div class="flex sticky top-0">
             <div class="w-20"></div> <!-- Empty space for row headers -->
             {#each dates as localDate}
                 <div class="flex-grow text-center" role="columnheader">
@@ -241,6 +241,10 @@
         position: sticky;
         top: 0;
         background-color: var(--color-bg-1);
+    }
+
+    [role="columnheader"], .availability-cell {
+        min-width: 2em;
     }
 
     .availability-cell {
