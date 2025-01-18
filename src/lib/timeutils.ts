@@ -56,8 +56,9 @@ export function timeInRange(ranges: DatetimeRange[], target: number) {
 export function datetimeInRange(ranges: DatetimeRange[], target: Date | number) {
   if (target instanceof Date)
     target = target.getTime() * MILLISECOND;
-  // @ts-ignore
-  return ranges.some(([rangeStart, rangeEnd]) => target <= rangeEnd && target >= rangeStart);
+  // end time is excluded so last cell is labeled but extra row not made (issue #95)
+  // @ts-ignore `target` is guaranteed to be a number here
+  return ranges.some(([rangeStart, rangeEnd]) => target < rangeEnd && target >= rangeStart);
 }
 
 /** Convert a list of [start, stop] ranges (minutes since epoch) to unique dates they cover. Preserves order */
