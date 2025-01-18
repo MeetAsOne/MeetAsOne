@@ -21,7 +21,7 @@ export function timeToInt(timeString: string) {
 export function intToTime(midnightOffset: number, military = false) {
   const hours = Math.floor(midnightOffset / HOUR);
   const minutes = midnightOffset % HOUR;
-  return `${military ? hours : (hours <= 12 ? hours : hours % 13 + 1)}:${String(minutes).padStart(2, "0")}` + (military ? "" : (hours > 12 ? " PM" : " AM"));
+  return `${military ? hours : (hours <= 12 ? hours : hours % 13 + 1)}:${String(minutes).padStart(2, "0")}` + (military ? "" : (hours >= 12 ? " PM" : " AM"));
 }
 
 /** Milliseconds since epoch for date string */
