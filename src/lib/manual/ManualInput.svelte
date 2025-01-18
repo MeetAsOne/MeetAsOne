@@ -187,11 +187,11 @@
         </div>
     {/if}
     <!-- Rows -->
-    {#each blocks as block, idx}
+    {#each blocks as block}
         <div class="flex items-center">
             <!-- Row header -->
             <div class="text-right pr-1 w-20 leading-4 relative bottom-2">
-                {idx % 2 === 0 ? intToTime(block * TIME_STEP).replace(" ", "\xa0") : " "}
+                {block % 2 === 0 ? intToTime(block * TIME_STEP).replace(" ", "\xa0") : " "}
             </div>
             <!-- Cells -->
             {#each dates as localDate}
