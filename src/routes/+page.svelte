@@ -41,7 +41,8 @@
       name: name,
       shouldUseWeekdays,
       dates: selectedDates.map(day =>
-        [day.setUTCHours(0) * MILLISECOND + startTime, day.getTime() * MILLISECOND + endTime]
+        // subtract 1 ms to make it exclusive
+        [day.setUTCHours(0) * MILLISECOND + startTime, day.getTime() * MILLISECOND + endTime - 1]
       ),
     });
     if (response.errors) {
