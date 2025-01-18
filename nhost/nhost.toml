@@ -1,7 +1,7 @@
 [global]
 
 [hasura]
-version = 'v2.33.4-ce'
+version = 'v2.44.0-ce'
 adminSecret = '{{ secrets.HASURA_GRAPHQL_ADMIN_SECRET }}'
 webhookSecret = '{{ secrets.NHOST_WEBHOOK_SECRET }}'
 
@@ -29,7 +29,7 @@ httpPoolSize = 100
 version = 18
 
 [auth]
-version = '0.24.1'
+version = '0.37.0'
 
 [auth.redirections]
 clientUrl = 'http://localhost:3000'
@@ -135,12 +135,12 @@ timeout = 60000
 enabled = false
 
 [postgres]
-version = '14.6-20231218-1'
+version = '14.13-20250108-1'
 
 [provider]
 
 [storage]
-version = '0.5.1'
+version = '0.6.1'
 
 [observability]
 [observability.grafana]
