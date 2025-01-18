@@ -144,9 +144,6 @@
   <div class="flex gap-2 flex-wrap justify-between">
     <div class="flex gap-2 items-center">
       Availability:
-      <Button on:click={() => localStorage["general-availability"] = localStorage.draftAvailability}>
-        Save
-      </Button>
       {#if Object.keys(localAvailability).length}
         <Button on:click={loadSaved}>
           Load
