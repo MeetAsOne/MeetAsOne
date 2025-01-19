@@ -19,9 +19,12 @@ export function timeToInt(timeString: string) {
 
 /** Converts minutes since midnight to "2:50 AM" or "15:43" */
 export function intToTime(midnightOffset: number, military = false) {
-  const hours = Math.floor(midnightOffset / HOUR);
+  let hours = Math.floor(midnightOffset / HOUR);
   const minutes = midnightOffset % HOUR;
-  return `${military ? hours : (hours <= 12 ? hours : hours % 13 + 1)}:${String(minutes).padStart(2, "0")}` + (military ? "" : (hours >= 12 ? " PM" : " AM"));
+  const isPM = hours >= 12;
+  hours = military ? hours : (isPM ? hours % 13 + 1 : hours);
+  if (hours === 0 && !military) hours = 12;
+  return `${hours}:${String(minutes).padStart(2, "0")}` + (military ? "" : (isPM ? " PM" : " AM"));
 }
 
 /** Milliseconds since epoch for date string */
