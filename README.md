@@ -26,22 +26,36 @@ Demo video:
 
 ## Developing
 
-1. Install dependencies with `npm install` (or `pnpm install` or `yarn`)
+**Frontend**
+1. Install dependencies with `pnpm install`
 2. Copy `.sample.env.local` to `.env.local` and fill out the environment variables
-3. Start a development server with `npm run dev`
+3. Start a development server with `pnpm dev`
+
+**Local backend (broken)**
+1. [Install the Nhost CLI](https://docs.nhost.io/development/cli/getting-started) or use the devcontainer
+2. Start Nhost: `nhost up`
 
 ## Building
 
-To create a production version of the app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
+1. To create a production version of the app: `pnpm run build`
+2. You can preview the production build with `pnpm run preview`.
 
 ## Deploying
 
 [Vercel](https://vercel.com) DOESN'T work great. 10 sec timeout for hobby projects so Import calendar which uses OpenAI GPT requests that take longer doesn't work. 
 
 Install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment instead.
+
+## Analytics
+- **Google Analytics 4 (GA4)**: easier advanced programmatic dispatch
+- ~~Google Tag Manager: must add tags and configure the console~~
+
+### Resources
+- Read about the [data layer](https://developers.google.com/tag-platform/tag-manager/datalayer)
+- [Video series crash course](https://www.youtube.com/watch?v=QmEOPuJr05w&list=PLI5YfMzCfRtZ4bHJJDl_IJejxMwZFiBwz&index=7)
+
+### Tracking new event
+1. Gtag is configured in `app.html`
+2. Add `gtag('event', '<name>', {DATA})`
+3. In the "realtime overview" page of GA4, find the "Event count
+   by Event name" card and look for your custom events

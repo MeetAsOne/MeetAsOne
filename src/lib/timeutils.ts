@@ -19,9 +19,12 @@ export function timeToInt(timeString: string) {
 
 /** Converts minutes since midnight to "2:50 AM" or "15:43" */
 export function intToTime(midnightOffset: number, military = false) {
-  const hours = Math.floor(midnightOffset / HOUR);
+  let hours = Math.floor(midnightOffset / HOUR);
   const minutes = midnightOffset % HOUR;
-  return `${military ? hours : (hours <= 12 ? hours : hours % 13 + 1)}:${String(minutes).padStart(2, "0")}` + (military ? "" : (hours > 12 ? " PM" : " AM"));
+  const isPM = hours >= 12;
+  hours = military ? hours : (isPM ? hours % 13 + 1 : hours);
+  if (hours === 0 && !military) hours = 12;
+  return `${hours}:${String(minutes).padStart(2, "0")}` + (military ? "" : (isPM ? " PM" : " AM"));
 }
 
 /** Milliseconds since epoch for date string */
@@ -56,8 +59,9 @@ export function timeInRange(ranges: DatetimeRange[], target: number) {
 export function datetimeInRange(ranges: DatetimeRange[], target: Date | number) {
   if (target instanceof Date)
     target = target.getTime() * MILLISECOND;
-  // @ts-ignore
-  return ranges.some(([rangeStart, rangeEnd]) => target <= rangeEnd && target >= rangeStart);
+  // end time is excluded so last cell is labeled but extra row not made (issue #95)
+  // @ts-ignore `target` is guaranteed to be a number here
+  return ranges.some(([rangeStart, rangeEnd]) => target < rangeEnd && target >= rangeStart);
 }
 
 /** Convert a list of [start, stop] ranges (minutes since epoch) to unique dates they cover. Preserves order */

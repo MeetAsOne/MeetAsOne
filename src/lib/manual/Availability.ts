@@ -10,6 +10,9 @@ export type DateCompatible = number | string | Date;
 
 type GetEvent$availability = GetEvent$result["events"][number]["availabilities"][number];
 
+/** `loadAvailability` but assumes username = "me"
+ * @see loadAvailability
+ */
 export function loadAvailabilityOne(availability: Availability) {
   return loadAvailability({availability, username: "me"});
 }

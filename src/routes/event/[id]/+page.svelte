@@ -144,9 +144,6 @@
   <div class="flex gap-2 flex-wrap justify-between">
     <div class="flex gap-2 items-center">
       Availability:
-      <Button on:click={() => localStorage["general-availability"] = localStorage.draftAvailability}>
-        Save
-      </Button>
       {#if Object.keys(localAvailability).length}
         <Button on:click={loadSaved}>
           Load
@@ -189,7 +186,7 @@
         <h2>Group Availability</h2>
         <Checkbox class="dark:text-black justify-center" bind:checked={useMulticolor}>Multicolor</Checkbox>
         <ManualInput
-          allParticipants={Array.from(new Set(event.availabilities.map(person => person.username)).add(myName ?? "me"))}
+          allParticipants={Array.from(new Set(event.availabilities.filter(person => Object.values(person.availability).some(day => day.length)).map(person => person.username)).add(myName ?? "me"))}
           ranges={event.dates}
           availablePeople={selectedAvailability}
           tzOffset={-tzOffset}

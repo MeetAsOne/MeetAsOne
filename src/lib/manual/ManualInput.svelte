@@ -167,7 +167,7 @@
 <div class="flex flex-col items-stretch select-none">
     <!-- Column headers -->
     {#if dates.length > 0}
-        <div class="flex">
+        <div class="flex sticky top-0">
             <div class="w-20"></div> <!-- Empty space for row headers -->
             {#each dates as localDate}
                 <div class="flex-grow text-center" role="columnheader">
@@ -187,11 +187,11 @@
         </div>
     {/if}
     <!-- Rows -->
-    {#each blocks as block, idx}
+    {#each blocks as block}
         <div class="flex items-center">
             <!-- Row header -->
             <div class="text-right pr-1 w-20 leading-4 relative bottom-2">
-                {idx % 2 === 0 ? intToTime(block * TIME_STEP).replace(" ", "\xa0") : " "}
+                {block % 2 === 0 ? intToTime(block * TIME_STEP).replace(" ", "\xa0") : " "}
             </div>
             <!-- Cells -->
             {#each dates as localDate}
@@ -202,7 +202,7 @@
                 {@const blockIndex = ((DAY + localTime) % DAY) / TIME_STEP}
                 {#if datetimeInRange(ranges, offsetDate(date, blockIndex * TIME_STEP))}
                     <div class="availability-cell flex flex-grow" data-idx={blockIndex} data-date={date.getTime()}
-                         style:opacity={allParticipants.length && !useMulticolor ? (colAvailability[blockIndex]?.length ?? allParticipants.length) / allParticipants.length : "1"}
+                         style:--lightness={allParticipants.length && !useMulticolor ? (1 - (colAvailability[blockIndex]?.length ?? allParticipants.length) / allParticipants.length) * 70 + 30 + "%" : "30%"}
                          class:cursor-pointer={!availablePeople && !isDisabled}
                          class:cursor-not-allowed={isDisabled}
                          class:available={selectRectIncludesBlock([date.getTime(), blockIndex], dragStart, dragNow) ? dragState : colAvailability[blockIndex]?.length}
@@ -243,6 +243,10 @@
         background-color: var(--color-bg-1);
     }
 
+    [role="columnheader"], .availability-cell {
+        min-width: 2em;
+    }
+
     .availability-cell {
         border: 1px solid #ccc;
         height: 16px;
@@ -251,6 +255,7 @@
         display: flex;
     }
     .available {
-        background-color: #90ee90;
+        /* I like how https://www.schemecolor.com/light-dark-green-gradient.php looks, but don't know how to replicate in code */
+        background-color: hsl(120, 73%, var(--lightness));
     }
 </style>
