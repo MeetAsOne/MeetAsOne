@@ -1,5 +1,4 @@
-import type {GetEvent$result} from "$houdini";
-import type {DateStr} from "$lib/timeutils.ts";
+import type {DateStr} from "./timeutils.ts";
 
 /** Key: the date in any parsable format. Value: array of indices to time blocks.
  * For example, if you ask for times starting at 8am and use 15 min intervals, 9:30 will be index 5  */
@@ -8,7 +7,10 @@ export type InternalAvailability = Record<DateStr, string[][]>;
 export type GenericAvailability = Availability | InternalAvailability;
 export type DateCompatible = number | string | Date;
 
-type GetEvent$availability = GetEvent$result["events"][number]["availabilities"][number];
+interface UserAvailability {
+  availability: Availability,
+  username: string,
+}
 
 /** `loadAvailability` but assumes username = "me"
  * @see loadAvailability
@@ -18,7 +20,7 @@ export function loadAvailabilityOne(availability: Availability) {
 }
 
 /** Converts availability from format in database or localstorage into format component can read */
-export function loadAvailability(...availabilities: GetEvent$availability[]) {
+export function loadAvailability(...availabilities: UserAvailability[]) {
   const unpackedAvailability: InternalAvailability = {};
   for (const availability of availabilities) {
     for (const key in availability.availability) {

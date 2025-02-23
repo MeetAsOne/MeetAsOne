@@ -1,5 +1,5 @@
 <script lang="ts">
-  import range from "$lib/range";
+  import {range} from "./index.ts";
   import {
     canonicalDateStr,
     type Coord,
@@ -12,21 +12,19 @@
     offsetRange,
     rangesToDate,
     timeInRange
-  } from "$lib/timeutils.js";
+  } from "./timeutils.ts";
   import {
     type Availability,
     blankAvailability,
     compactAvailability,
     type InternalAvailability,
     mergeAvailability
-  } from "$lib/manual/Availability";
-  import {DAY, TIME_STEP} from "$lib/units";
+  } from "./Availability.ts";
+  import {DAY, TIME_STEP} from "./units.ts";
   import {page} from "$app/stores";
   import type {Writable} from "svelte/store";
-  import {importedEvents, workingAvailability} from "$lib/store";
-  import saveServer from "$lib/manual/saveServer.ts";
   import {Tooltip} from "flowbite-svelte";
-  import AvailabilityComponent from "$lib/Availability.svelte";
+  import AvailabilityComponent from "./Availability.svelte";
 
   /** Array of [start, stop] tuples, representing minutes since epoch. Does not change to timezone */
   export let ranges: DatetimeRange[];
@@ -47,7 +45,6 @@
   export let shouldUseWeekdays: boolean;
 
   export const clear = () => {
-    () => gtag('event', 'clear_availability');
     const blank = blankAvailability(UTCDates.map(canonicalDateStr));
     availability = blank;
     saveServer($page.params.id, availability);

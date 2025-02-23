@@ -1,4 +1,4 @@
-import {DAY, HOUR, MILLISECOND, MINUTE, TIME_STEP} from "$lib/units.ts";
+import {DAY, HOUR, MILLISECOND, MINUTE, TIME_STEP} from "./units.ts";
 
 /** Date formatted in en-US locale, m/dd/yy. TODO: tighten this type */
 export type DateStr = `${number}/${number}/${number}` | string;
@@ -105,9 +105,9 @@ export function offsetRange(ranges: DatetimeRange[], offsetMin: number) {
  * @return A timezone offset in minutes given a timezone name
  * @see https://stackoverflow.com/a/68593283
  */
-export function getTzOffset(timeZone = 'UTC', date = new Date()) {
-  const utcDate = new Date(date.toLocaleString('en-US', { timeZone: 'UTC' }));
-  const tzDate = new Date(date.toLocaleString('en-US', { timeZone }));
+export function getTzOffset(timeZone = "UTC", date = new Date()) {
+  const utcDate = new Date(date.toLocaleString("en-US", { timeZone: "UTC" }));
+  const tzDate = new Date(date.toLocaleString("en-US", { timeZone }));
   return (tzDate.getTime() - utcDate.getTime()) * MILLISECOND;
 }
 
@@ -115,7 +115,7 @@ export function getTzOffset(timeZone = 'UTC', date = new Date()) {
 
 export const getLocalTzName = () => Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-export const getAllTzNames = () => Intl.supportedValuesOf('timeZone');
+export const getAllTzNames = () => Intl.supportedValuesOf("timeZone");
 
 /**
  * Arbitrary dates within one week, one for each day from Monday to Sunday in that order
@@ -135,4 +135,4 @@ export const weekdayDates = (tzOffset = new Date().getTimezoneOffset()) => ([
 export const weekdayDateRanges = (tzOffset = new Date().getTimezoneOffset()) => weekdayDates(tzOffset).map(weekdayDate => ([
   weekdayDate.getTime() * MILLISECOND,
   weekdayDate.getTime() * MILLISECOND + 11 * HOUR + 59 * MINUTE,
-] as DatetimeRange))
+] as DatetimeRange));
