@@ -41,11 +41,13 @@
   /** Minutes difference from UTC */
   export let tzOffset: number;
 
-  /** if true, only show days of week (monday, tues, etc). Useful for recurring weekly meetings. If false, also show day of month (eg 13th) */
+  /** If true, only show days of week (monday, tues, etc). Useful for recurring weekly meetings. If false, also show day of month (eg 13th) */
   export let shouldUseWeekdays: boolean;
 
+  /** Write to this with events you want to add */
   export let importedEvents = readable<Availability>({});
 
+  /** Bind and read from this to access the current component state */
   export let workingAvailability = writable<Availability>({});
 
   const dispatch = createEventDispatcher<{
