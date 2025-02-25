@@ -21,10 +21,10 @@
     mergeAvailability
   } from "./Availability.ts";
   import {DAY, TIME_STEP} from "./units.ts";
-  import {page} from "$app/stores";
-  import type {Writable} from "svelte/store";
+  import {readable, writable, type Writable} from "svelte/store";
   import {Tooltip} from "flowbite-svelte";
   import AvailabilityComponent from "./Availability.svelte";
+  import {createEventDispatcher} from "svelte";
 
   /** Array of [start, stop] tuples, representing minutes since epoch. Does not change to timezone */
   export let ranges: DatetimeRange[];
@@ -44,10 +44,20 @@
   /** if true, only show days of week (monday, tues, etc). Useful for recurring weekly meetings. If false, also show day of month (eg 13th) */
   export let shouldUseWeekdays: boolean;
 
+  export let importedEvents = readable<Availability>({});
+
+  export let workingAvailability = writable<Availability>({});
+
+  const dispatch = createEventDispatcher<{
+    save: Availability;
+  }>();
+
+  const saveServer = () => dispatch("save", compactAvailability(availability)[0]);
+
   export const clear = () => {
     const blank = blankAvailability(UTCDates.map(canonicalDateStr));
     availability = blank;
-    saveServer($page.params.id, availability);
+    saveServer();
     workingAvailability.set(blank);
   };
 
@@ -139,7 +149,7 @@
     if (dragStart) {
       if (!availablePeople) {
         applyDragPreview();
-        saveServer($page.params.id, availability);
+        saveServer();
       }
       dragStart = dragNow = dragState = undefined;
     }
